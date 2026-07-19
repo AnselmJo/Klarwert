@@ -1,0 +1,10 @@
+Transaktionstyp,Buchungsdatum,Karteneinsatz,Betrag,Zahlungsempfänger,IBAN,BIC,Verwendungszweck,Beschreibung,Kontonummer,Kontoname,Kategorie,Unterkategorie,Bargeldabhebung
+Gutschrift,17.07.2026,,"341,31 €",PAYPAL,LU947510261215211218,,INSTANT TRANSFER,,32090596,Girokonto,Weitere Einnahmen,Weitere Einnahmen
+Abbuchung,17.07.2026,,"-5,47 €",HAMMA.GMBH...CO..KG/KEMPTEN,DE96120300009005290904,BYLADEM1001,VISA Debitkartenumsatz vom 16.07.2026,,32090596,Girokonto,Weitere Ausgaben,Weitere Ausgaben
+Abbuchung,16.07.2026,,"-4,14 €",Verifone Payments GmbH,DE43300500000001052042,WELADEDDXXX,DLV3Q2 Einkauf bei Netto vom 14.07.2026,,32090596,Girokonto,Lebensmittel,Supermarkt
+Abbuchung,16.07.2026,,"-0,69 €",S. Payment Solutions GmbH,DE74600400710521470501,COBADEFFXXX,Lidl sagt Danke DE144783063221195261 Lidl Pay,,32090596,Girokonto,Lebensmittel,Supermarkt
+Abbuchung,16.07.2026,,"-16,46 €",S. Payment Solutions GmbH,DE74600400710521470501,COBADEFFXXX,Lidl sagt Danke DE658404381399195261 Lidl Pay,,32090596,Girokonto,Lebensmittel,Supermarkt
+Abbuchung,16.07.2026,,"-4,28 €",Rewe,DE96120300009005290904,BYLADEM1001,VISA Debitkartenumsatz vom 15.07.2026,REWE.Samuel.Schoenle.oH/Isny.im.Allga,32090596,Girokonto,Lebensmittel,Supermarkt
+Abbuchung,16.07.2026,,"-50,00 €",SP.VEGANE.FLEISCHEREI/MUNCHEN,DE96120300009005290904,BYLADEM1001,VISA Debitkartenumsatz vom 15.07.2026,,32090596,Girokonto,Shopping,Sonstiges Shopping
+Abbuchung,14.07.2026,,"-10,20 €",dm,DE43300500000001052042,WELADEDDXXX,NL59UA Einkauf bei dm-drogerie markt vom 10.07.2026,Verifone Payments GmbH,32090596,Girokonto,Weitere Ausgaben,Weitere Ausgaben
+Abbuchung,14.07.2026,,"-22,68 €",S. Payment Solutions GmbH,DE74600400710521470501,COBADEFFXXX,Lidl sagt Danke DE372001258108191261 Lidl Pay,,32090596,Girokonto,Lebensmittel,Supermarkt

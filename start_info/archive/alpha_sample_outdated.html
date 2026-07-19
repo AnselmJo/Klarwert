@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Klarwert – Vollständiger Prototyp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --petrol:#123138; --petrol-light:#1d4750; --charcoal:#262321;
+    --brick:#b6503a; --sage:#6f9a6d; --gold:#b79a5b; --slate:#6b7a80;
+    --paper:#f3efe4; --card:#fffdf8; --line:rgba(38,35,34,.10); --glass:rgba(255,253,248,.62);
+    --radius:16px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{font-family:'Inter',sans-serif;background:var(--paper);color:var(--charcoal);display:flex;height:100vh;overflow:hidden;}
+  h1,h2,h3{font-family:'Fraunces',serif;font-weight:500;margin:0;}
+  .num{font-family:'IBM Plex Mono',monospace;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:'Inter';}
+  :focus-visible{outline:2px solid var(--petrol-light);outline-offset:2px;border-radius:6px;}
+
+  .sidebar{width:230px;flex:none;background:linear-gradient(165deg,var(--petrol),var(--petrol-light));color:#eef3ee;display:flex;flex-direction:column;padding:20px 12px;overflow-y:auto;}
+  .brand{display:flex;align-items:center;gap:10px;padding:0 8px 18px 8px;}
+  .brand .mark{width:28px;height:28px;border-radius:8px;background:var(--brick);display:flex;align-items:center;justify-content:center;}
+  .brand .mark svg{width:15px;height:15px;}
+  .brand span{font-family:'Fraunces',serif;font-size:18px;}
+  .navgroup-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(238,243,238,.4);padding:14px 12px 4px 12px;}
+  .navgroup-label:first-child{padding-top:2px;}
+  nav.navlist{display:flex;flex-direction:column;gap:1px;flex:1;}
+  .navitem{display:flex;align-items:center;gap:10px;padding:8px 11px;border-radius:10px;font-size:13.5px;font-weight:500;color:rgba(238,243,238,.72);cursor:pointer;}
+  .navitem svg{width:16px;height:16px;flex:none;opacity:.85;}
+  .navitem:hover{background:rgba(255,255,255,.06);color:#fff;}
+  .navitem.active{background:rgba(255,255,255,.13);color:#fff;}
+  .navitem.active svg{opacity:1;}
+  .navitem.soon{opacity:.45;cursor:default;}
+  .navitem.soon .tag{margin-left:auto;font-size:9px;background:rgba(255,255,255,.1);padding:2px 6px;border-radius:8px;}
+  .profile-pill{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:12px;background:rgba(255,255,255,.07);font-size:12.5px;cursor:pointer;margin-top:6px;}
+  .profile-pill .dot{width:19px;height:19px;border-radius:50%;background:var(--sage);flex:none;}
+  .profile-pill .gear{margin-left:auto;opacity:.6;width:14px;height:14px;}
+
+  .content{flex:1;display:flex;flex-direction:column;min-width:0;}
+  .globalbar{display:flex;gap:8px;align-items:center;padding:10px 30px;border-bottom:1px solid var(--line);background:var(--card);}
+  .globalbar select{width:auto;padding:6px 10px;font-size:12.5px;}
+  .globalbar .gb-label{font-size:11px;color:#9a9488;font-weight:600;}
+  .globalsearch{margin-left:auto;display:flex;align-items:center;gap:6px;background:var(--paper);border-radius:20px;padding:6px 12px;}
+  .globalsearch input{border:none;background:none;font-size:12.5px;width:190px;padding:0;}
+  .globalsearch input:focus{outline:none;}
+
+  .topbar{padding:16px 30px 0 30px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+  .topbar h1{font-size:23px;}
+  .topbar .sub{color:#6b6560;font-size:12.5px;margin-top:3px;}
+  .topbar .actions{display:flex;gap:8px;}
+  .scroll{flex:1;overflow-y:auto;padding:16px 30px 40px 30px;}
+  .view{display:none;} .view.active{display:block;}
+
+  .grid{display:grid;gap:14px;}
+  .cols-3{grid-template-columns:repeat(3,1fr);}
+  .tile{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;}
+  .tile.glass{background:var(--glass);backdrop-filter:blur(6px);}
+  .kpi-label{font-size:11.5px;color:#8a8479;font-weight:600;text-transform:uppercase;letter-spacing:.04em;}
+  .kpi-value{font-size:23px;margin-top:5px;}
+  .kpi-value.pos{color:var(--sage);} .kpi-value.neg{color:var(--brick);}
+  .kpi-sub{font-size:12px;color:#9a9488;margin-top:3px;}
+  .delta{font-size:11px;font-weight:700;margin-left:6px;}
+  .delta.up{color:var(--brick);} .delta.down{color:var(--sage);}
+
+  .btn{display:inline-flex;align-items:center;gap:7px;background:var(--petrol);color:#fff;border:none;border-radius:10px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;}
+  .btn.ghost{background:transparent;color:var(--charcoal);border:1px solid var(--line);}
+  .btn.brick{background:var(--brick);}
+  .btn.sage{background:var(--sage);}
+  .btn.sm{padding:6px 10px;font-size:12px;}
+  .btn:disabled{opacity:.4;cursor:not-allowed;}
+  .iconbtn{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--card);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#8a8479;flex:none;}
+  .iconbtn:hover{background:var(--paper);}
+  .chip{padding:6px 11px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--line);color:#6b6560;cursor:pointer;background:var(--card);}
+  .chip.active{background:var(--charcoal);color:#fff;border-color:var(--charcoal);}
+  .badge{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:20px;}
+  .badge.confirmed{background:rgba(111,154,109,.15);color:var(--sage);}
+  .badge.suggested{background:rgba(182,80,58,.12);color:var(--brick);}
+  .badge.changed{background:rgba(183,154,91,.18);color:#8a6d2e;}
+  .badge.custom{background:rgba(18,49,56,.08);color:var(--petrol);}
+  .badge.off{background:rgba(107,122,128,.12);color:var(--slate);}
+  .badge.ended{background:rgba(107,122,128,.12);color:var(--slate);}
+  .badge.currency{background:rgba(18,49,56,.08);color:var(--petrol);font-family:'IBM Plex Mono',monospace;}
+
+  input[type=text],select{width:100%;padding:9px 12px;border-radius:10px;border:1px solid var(--line);font-family:'Inter';font-size:13.5px;background:var(--card);}
+  .field-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#9a9488;margin-bottom:5px;}
+  .row2{display:flex;gap:8px;}
+  .help{font-size:11.5px;color:#9a9488;margin-top:5px;}
+
+  .tip{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--line);color:#8a8479;font-size:10px;font-weight:700;cursor:help;position:relative;}
+  .tip:hover::after{content:attr(data-tip);position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:var(--charcoal);color:#fff;padding:8px 10px;border-radius:8px;font-size:11.5px;font-weight:400;width:220px;white-space:normal;z-index:90;box-shadow:0 6px 16px rgba(0,0,0,.18);}
+  .tip:hover::before{content:"";position:absolute;bottom:15px;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--charcoal);}
+  .inline-explainer{font-size:12px;color:#8a8479;background:rgba(18,49,56,.04);border-radius:10px;padding:9px 12px;margin-bottom:12px;}
+
+  .period-switcher{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 8px;}
+  .seg-control{display:flex;background:var(--paper);border-radius:10px;padding:3px;}
+  .seg{padding:6px 12px;font-size:12.5px;font-weight:600;border-radius:8px;cursor:pointer;color:#8a8479;}
+  .seg.active{background:var(--card);color:var(--charcoal);}
+  .period-nav{display:flex;align-items:center;gap:6px;}
+  .pnav-arrow{width:26px;height:26px;border-radius:8px;border:1px solid var(--line);background:var(--card);cursor:pointer;color:#6b6560;}
+  .period-label-wrap{position:relative;}
+  .period-label{background:none;border:none;font-size:14px;font-weight:700;cursor:pointer;padding:4px 6px;display:flex;align-items:center;gap:5px;color:var(--charcoal);}
+  .period-cal{display:none;position:absolute;top:36px;left:0;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;box-shadow:0 8px 20px rgba(0,0,0,.1);z-index:30;width:200px;}
+  .period-cal.open{display:block;}
+  .cal-head{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:700;margin-bottom:8px;}
+  .cal-head button{border:none;background:none;cursor:pointer;color:#8a8479;font-size:14px;}
+  .cal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+  .cal-grid span{text-align:center;font-size:12px;padding:6px 0;border-radius:6px;cursor:pointer;}
+  .cal-grid span.sel{background:var(--petrol);color:#fff;}
+  .cal-grid span.dim{color:#c9c2b5;}
+  .period-quicklinks{display:flex;gap:10px;font-size:12px;color:var(--petrol-light);font-weight:600;margin-left:4px;}
+
+  .toggle-switch{display:inline-flex;align-items:center;gap:4px;background:var(--paper);border-radius:20px;padding:3px;}
+  .toggle-switch span{padding:5px 9px;font-size:11.5px;font-weight:700;border-radius:16px;cursor:pointer;color:#8a8479;}
+  .toggle-switch span.active{background:var(--card);color:var(--charcoal);}
+  .mini-toggle{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px;}
+  .mini-toggle:last-child{border-bottom:none;}
+  .switch{width:36px;height:20px;border-radius:20px;background:var(--line);position:relative;cursor:pointer;flex:none;}
+  .switch.on{background:var(--sage);}
+  .switch .knob{width:16px;height:16px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:left .15s;}
+  .switch.on .knob{left:18px;}
+  .tristate{display:flex;background:var(--paper);border-radius:8px;padding:2px;}
+  .tristate span{padding:5px 9px;font-size:11px;font-weight:600;border-radius:6px;cursor:pointer;color:#8a8479;}
+  .tristate span.active{background:var(--card);color:var(--charcoal);box-shadow:0 1px 2px rgba(0,0,0,.08);}
+  .disclosure summary{cursor:pointer;font-size:12.5px;font-weight:700;color:var(--petrol-light);padding:8px 0;list-style:none;}
+  .disclosure summary::before{content:"▸ ";}
+  .disclosure[open] summary::before{content:"▾ ";}
+
+  .dash-topline{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:10px;}
+  .freshness{font-size:12px;color:#8a8479;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:6px 12px;margin-bottom:14px;display:inline-flex;align-items:center;gap:6px;}
+  .dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start;}
+  .widget{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;position:relative;grid-column:span 2;}
+  .widget.span1{grid-column:span 1;}
+  .widget.span4{grid-column:span 4;}
+  .widget-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .widget-title h3{font-size:14px;}
+
+  .toggle-panel{width:340px;}
+  .toggle-panel .mini-toggle span.wname{font-weight:600;}
+  .toggle-panel .community-note{margin-top:14px;padding:12px;border-radius:10px;background:rgba(18,49,56,.04);font-size:12px;color:#8a8479;}
+
+  .sankey-box{height:200px;display:flex;align-items:center;justify-content:center;}
+  .progress-track{height:8px;border-radius:20px;background:var(--line);overflow:hidden;margin-top:8px;}
+  .progress-fill{height:100%;background:var(--sage);border-radius:20px;}
+  .compare-bar{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:12.5px;}
+  .compare-track{flex:1;height:10px;border-radius:6px;background:var(--line);overflow:hidden;}
+  .compare-fill{height:100%;}
+
+  .tx-topinfo{display:flex;gap:20px;margin-bottom:12px;align-items:center;flex-wrap:wrap;}
+  .tx-searchrow{display:flex;gap:8px;align-items:center;margin-bottom:10px;}
+  .tx-filters{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap;align-items:center;}
+  .tx-head{display:grid;grid-template-columns:24px 82px 1fr 150px 190px 110px 22px;gap:12px;padding:0 14px 8px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:#9a9488;border-bottom:1px solid var(--line);}
+  .tx-head span{cursor:pointer;user-select:none;}
+  .tx-head span:hover{color:var(--charcoal);}
+  .tx-row{display:grid;grid-template-columns:24px 82px 1fr 150px 190px 110px 22px;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;cursor:pointer;}
+  .tx-row:hover{background:var(--card);}
+  .tx-row .date{color:#9a9488;font-size:12px;}
+  .tx-row .payee{font-weight:600;font-size:13.5px;}
+  .tx-row .purpose{font-size:12px;color:#8a8479;margin-top:1px;}
+  .tx-row .cat{font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:5px;}
+  .tx-row .cat svg{width:13px;height:13px;flex:none;}
+  .tag-pill{font-size:10.5px;font-weight:700;color:#fff;padding:2px 7px;border-radius:20px;}
+  .tx-row .amt{text-align:right;font-size:14px;}
+  .tx-row .amt.pos{color:var(--sage);} .tx-row .amt.neg{color:var(--charcoal);}
+  .tx-list{border-top:1px solid var(--line);}
+  .tx-list .tx-row{border-bottom:1px solid var(--line);}
+  .rowcheck{width:16px;height:16px;border-radius:5px;border:1.5px solid #c9c2b5;cursor:pointer;}
+  .rowcheck.checked{background:var(--petrol);border-color:var(--petrol);}
+  .bulkbar{position:sticky;bottom:0;background:var(--charcoal);color:#fff;border-radius:14px;padding:12px 18px;display:none;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap;}
+  .bulkbar.show{display:flex;}
+  .bulkbar .action{font-size:12.5px;color:rgba(255,255,255,.85);cursor:pointer;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.08);}
+
+  .contextmenu{position:fixed;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 24px rgba(0,0,0,.15);padding:6px;z-index:95;display:none;min-width:200px;}
+  .contextmenu.open{display:block;}
+  .contextmenu div{padding:8px 10px;font-size:12.5px;border-radius:7px;cursor:pointer;}
+  .contextmenu div:hover{background:var(--paper);}
+  .contextmenu hr{border:none;border-top:1px solid var(--line);margin:4px 0;}
+
+  .card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .contract-card,.collection-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;position:relative;overflow:hidden;cursor:pointer;}
+  .contract-card::before,.collection-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;}
+  .contract-card::before{background:var(--sage);} .collection-card::before{background:var(--brick);}
+  .contract-card h3,.collection-card h3{font-size:15.5px;margin-bottom:3px;}
+  .contract-card .amt-line{font-size:19px;margin:8px 0 3px 0;}
+  .card-foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:12px;color:#8a8479;gap:8px;}
+  .konto-row{display:grid;grid-template-columns:1fr 90px 110px 90px 130px 32px 32px;align-items:center;gap:8px;}
+  .empty-state{border:1.5px dashed var(--line);border-radius:var(--radius);padding:40px 20px;text-align:center;color:#8a8479;}
+  .empty-state h3{font-size:15px;color:var(--charcoal);margin-bottom:6px;}
+  .demo-toggle{font-size:11.5px;color:#9a9488;text-decoration:underline;cursor:pointer;}
+
+  .drawer-overlay{position:fixed;inset:0;background:rgba(18,49,56,.28);display:none;align-items:stretch;justify-content:flex-end;z-index:50;}
+  .drawer-overlay.open{display:flex;}
+  .drawer{width:390px;background:var(--card);height:100%;padding:24px;box-shadow:-8px 0 24px rgba(0,0,0,.12);display:flex;flex-direction:column;gap:14px;overflow-y:auto;}
+  .drawer .close{align-self:flex-end;cursor:pointer;color:#9a9488;font-size:12.5px;}
+  .drawer .big-amt{font-size:26px;}
+  .rule-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:12.5px;}
+  .rule-row .icons{display:flex;gap:6px;color:#9a9488;cursor:pointer;}
+  .preview-box{background:rgba(111,154,109,.08);border:1px solid rgba(111,154,109,.25);border-radius:10px;padding:10px 12px;font-size:12px;color:#4b6b49;}
+  .hist-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:12.5px;}
+  .hist-row .undo{color:var(--brick);font-weight:700;cursor:pointer;}
+  .mini-tx-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:12.5px;}
+
+  .modal-overlay{position:fixed;inset:0;background:rgba(18,49,56,.35);display:none;align-items:center;justify-content:center;z-index:60;}
+  .modal-overlay.open{display:flex;}
+  .modal{width:480px;max-height:86vh;overflow-y:auto;background:var(--card);border-radius:var(--radius);padding:24px;}
+  .modal.wide{width:640px;}
+  .modal.narrow{width:400px;}
+  .step-dots{display:flex;gap:6px;margin-bottom:14px;}
+  .step-dots span{width:20px;height:4px;border-radius:4px;background:var(--line);}
+  .step-dots span.active{background:var(--brick);}
+  .dropzone{border:1.5px dashed var(--line);border-radius:12px;padding:24px;text-align:center;color:#8a8479;font-size:12.5px;margin:12px 0;}
+  .warn-box{background:rgba(182,80,58,.08);border:1px solid rgba(182,80,58,.2);border-radius:10px;padding:12px 14px;font-size:12px;color:#8a4331;margin:10px 0;}
+  .error-box{background:rgba(182,80,58,.1);border:1px solid rgba(182,80,58,.3);border-radius:10px;padding:12px 14px;font-size:12.5px;color:#8a4331;margin:10px 0;display:flex;gap:8px;align-items:flex-start;}
+  .ok-box{background:rgba(111,154,109,.1);border:1px solid rgba(111,154,109,.3);border-radius:10px;padding:12px 14px;font-size:12.5px;color:#3f5c3d;margin:10px 0;}
+  .loading-track{height:8px;border-radius:20px;background:var(--line);overflow:hidden;margin:14px 0 6px 0;}
+  .loading-fill{height:100%;width:64%;background:var(--petrol);border-radius:20px;transition:width 1.2s ease;}
+  .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;}
+  .choice-cards{display:flex;gap:10px;margin:12px 0;}
+  .choice-card{flex:1;border:1.5px solid var(--line);border-radius:12px;padding:12px;cursor:pointer;font-size:12.5px;}
+  .choice-card.sel{border-color:var(--petrol);background:rgba(18,49,56,.04);}
+  .choice-card strong{display:block;font-size:13px;margin-bottom:2px;}
+  .rule-cond-row{display:flex;gap:6px;margin-bottom:8px;align-items:center;}
+  .rule-preview{background:rgba(18,49,56,.05);border:1px solid var(--line);border-radius:10px;padding:12px;font-size:12.5px;margin-top:10px;}
+  .rule-templates{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px 0;}
+  .filter-section{margin-bottom:14px;}
+  .filter-section .field-label{margin-bottom:8px;}
+  .onb-progress{display:flex;gap:5px;margin-bottom:16px;}
+  .onb-progress span{flex:1;height:4px;border-radius:4px;background:var(--line);}
+  .onb-progress span.done{background:var(--sage);}
+
+  .fs-overlay{position:fixed;inset:0;background:rgba(18,49,56,.55);display:none;align-items:center;justify-content:center;z-index:70;}
+  .fs-overlay.open{display:flex;}
+  .fs-box{background:var(--card);border-radius:20px;padding:26px;width:90vw;max-width:1000px;}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--charcoal);color:#fff;padding:10px 16px;border-radius:10px;font-size:12.5px;display:none;z-index:90;align-items:center;gap:10px;}
+  .toast .undo{color:var(--gold);font-weight:700;cursor:pointer;text-decoration:underline;}
+  .empty-hint{color:#9a9488;font-size:13px;padding:20px 0;}
+  .cat-name{font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;}
+  .cat-icon{width:18px;height:18px;flex:none;}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="brand">
+    <div class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h10" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+    <span>Klarwert</span>
+  </div>
+  <nav class="navlist">
+    <div class="navgroup-label">Verfolgen</div>
+    <div class="navitem active" data-view="uebersicht"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Übersicht</div>
+    <div class="navitem" data-view="konten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg>Vermögen</div>
+    <div class="navitem" data-view="transaktionen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Transaktionen</div>
+    <div class="navitem" data-view="vertraege"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 3h10a1 1 0 0 1 1 1v16l-3-2-3 2-3-2-3 2V4a1 1 0 0 1 1-1Z"/></svg>Verträge</div>
+    <div class="navitem" data-view="sammlungen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 7l-8-4-8 4 8 4 8-4Z"/><path d="M4 7v10l8 4 8-4V7"/></svg>Sammlungen</div>
+
+    <div class="navgroup-label">Budgetieren</div>
+    <div class="navitem" data-view="kategorien"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Kategorien</div>
+    <div class="navitem" data-view="budgets"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v20M2 12h20"/></svg>Budgets</div>
+
+    <div class="navgroup-label">Planen</div>
+    <div class="navitem soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 3v18h18M7 15l4-5 3 3 5-7"/></svg>Wertpapiere<span class="tag">bald</span></div>
+    <div class="navitem soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h2M12 10h2M16 10h2M8 14h2M12 14h2M16 14h2"/></svg>Rechner<span class="tag">bald</span></div>
+  </nav>
+  <div class="profile-pill" onclick="go('profil')">
+    <div class="dot"></div>Ansi &amp; Kathi
+    <svg class="gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+  </div>
+</aside>
+
+<div class="content">
+  <div class="globalbar">
+    <span class="gb-label">Filter:</span>
+    <select><option>Konto: Alle</option><option>Girokonto Sparkasse</option><option>Tagesgeld ING</option><option>Depot Scalable</option></select>
+    <select><option>Person: Beide</option><option>Ansi</option><option>Kathi</option></select>
+    <span class="tip" data-tip="Gilt auf Seiten mit personen-/kontobezogenen Daten. Auf Kategorien-Verwaltung oder Profil ohne Wirkung.">i</span>
+    <div class="globalsearch"><span>🔎</span><input type="text" placeholder="Alles durchsuchen: Verträge, Sammlungen, Kategorien…" oninput="globalSearch(this.value)"></div>
+  </div>
+
+  <!-- ÜBERSICHT -->
+  <div class="view active" data-page="uebersicht">
+    <div class="topbar">
+      <div><h1>Übersicht</h1></div>
+      <div class="actions"><button class="btn ghost sm" onclick="openModal('toggle')">Elemente ein-/ausblenden</button></div>
+    </div>
+    <div class="scroll">
+      <div class="freshness">📅 Daten aktuell bis <strong>14.07.2026</strong> (letzter Import: Girokonto, heute 08:12)</div>
+
+      <div class="dash-grid" id="dashGrid">
+        <div class="widget span1" data-widget="einnahmen">
+          <div class="kpi-label">Einnahmen</div><div class="kpi-value num pos">4.820 €<span class="delta up">▲4%</span></div><div class="kpi-sub">im Juli · Vormonat: 4.630 €</div>
+        </div>
+        <div class="widget span1" data-widget="ausgaben">
+          <div class="kpi-label">Ausgaben</div><div class="kpi-value num neg">3.140 €<span class="delta up">▲8%</span></div><div class="kpi-sub">im Juli · Vormonat: 2.910 €</div>
+        </div>
+        <div class="widget span1" data-widget="sparquote">
+          <div class="kpi-label">Sparquote</div><div class="kpi-value num">34,8 %<span class="delta down">▼2%</span></div><div class="kpi-sub">Ø 6M: 31%</div>
+        </div>
+        <div class="widget span1" data-widget="saldo">
+          <div class="kpi-label">Saldo Ende Zeitraum</div><div class="kpi-value num">21.480 €</div>
+        </div>
+
+        <div class="widget span4" data-widget="sankey">
+          <div class="widget-title">
+            <h3>Geldfluss – Juli</h3>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <div class="toggle-switch"><span class="active">€</span><span>%</span></div>
+              <button class="iconbtn" onclick="openFullscreen()" title="Vollbild (Download nur hier verfügbar)" aria-label="Vollbild anzeigen">⤢</button>
+            </div>
+          </div>
+          <div class="sankey-box"><svg width="100%" height="190" viewBox="0 0 900 190">
+            <path d="M40,40 C300,40 300,25 560,25" stroke="#6f9a6d" stroke-width="24" fill="none" opacity="0.75"/>
+            <path d="M40,90 C300,90 300,70 560,70" stroke="#b6503a" stroke-width="18" fill="none" opacity="0.7"/>
+            <path d="M40,130 C300,130 300,110 560,110" stroke="#b79a5b" stroke-width="12" fill="none" opacity="0.75"/>
+            <path d="M40,160 C300,160 300,150 560,150" stroke="#123138" stroke-width="9" fill="none" opacity="0.6"/>
+            <text x="40" y="45" font-size="12" font-family="Inter">Gehalt</text>
+            <text x="575" y="29" font-size="12" font-family="Inter">Miete &amp; Fixkosten</text>
+            <text x="575" y="74" font-size="12" font-family="Inter">Lebensmittel</text>
+            <text x="575" y="114" font-size="12" font-family="Inter">Freizeit</text>
+            <text x="575" y="154" font-size="12" font-family="Inter">Sparen/Invest</text>
+          </svg></div>
+        </div>
+
+        <div class="widget span1" data-widget="fortschritt">
+          <div class="kpi-label">Kategorisierung</div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:5px;"><span class="num" style="font-size:18px;">92%</span><span style="font-size:11px;color:#9a9488;">165/180</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:92%;"></div></div>
+          <a class="chip" style="margin-top:8px;display:inline-block;" onclick="go('transaktionen')">15 offen →</a>
+        </div>
+
+        <div class="widget span1 glass" data-widget="sammlung" style="cursor:pointer;" onclick="go('sammlungen');openCollection();">
+          <div class="kpi-label">Sammlung im Fokus</div>
+          <h3 style="margin-top:5px;font-size:14.5px;">Urlaub Toskana →</h3>
+          <div class="kpi-value num" style="font-size:18px;">612 €</div>
+        </div>
+
+        <div class="widget span2" data-widget="kategorieverteilung">
+          <div class="widget-title"><h3>Ausgaben nach Kategorie</h3></div>
+          <svg width="150" height="150" viewBox="0 0 42 42" style="display:block;margin:0 auto;">
+            <circle r="15.9" cx="21" cy="21" fill="transparent" stroke="#123138" stroke-width="6" stroke-dasharray="40 60" stroke-dashoffset="25"/>
+            <circle r="15.9" cx="21" cy="21" fill="transparent" stroke="#b6503a" stroke-width="6" stroke-dasharray="25 75" stroke-dashoffset="-15"/>
+            <circle r="15.9" cx="21" cy="21" fill="transparent" stroke="#6f9a6d" stroke-width="6" stroke-dasharray="20 80" stroke-dashoffset="-40"/>
+          </svg>
+        </div>
+
+        <div class="widget span2" data-widget="cashflow">
+          <div class="widget-title"><h3>Cashflow – letzte 6 Monate</h3></div>
+          <svg width="100%" height="90" viewBox="0 0 260 90">
+            <polyline points="10,30 55,25 100,35 145,20 190,28 235,15" fill="none" stroke="#6f9a6d" stroke-width="2.5"/>
+            <polyline points="10,55 55,60 100,50 145,58 190,52 235,62" fill="none" stroke="#b6503a" stroke-width="2.5"/>
+          </svg>
+          <div style="font-size:11px;color:#8a8479;margin-top:4px;"><span style="color:#6f9a6d;">■</span> Einnahmen &nbsp; <span style="color:#b6503a;">■</span> Ausgaben</div>
+        </div>
+
+        <div class="widget span2" data-widget="vergleich">
+          <div class="widget-title"><h3>Vergleich nach Person</h3></div>
+          <div class="compare-bar"><span style="width:55px;">Ansi</span><div class="compare-track"><div class="compare-fill" style="width:62%;background:#123138;"></div></div><span class="num">1.940 €</span></div>
+          <div class="compare-bar"><span style="width:55px;">Kathi</span><div class="compare-track"><div class="compare-fill" style="width:38%;background:#6f9a6d;"></div></div><span class="num">1.200 €</span></div>
+        </div>
+
+        <div class="widget span2" data-widget="geplant">
+          <div class="widget-title"><h3>Geplante Buchungen</h3></div>
+          <div class="hist-row"><span>Steuerrückerstattung – Anfang August</span><span class="num pos">≈ +450 €</span></div>
+          <div class="hist-row"><span>Kfz-Versicherung – fällig 15.08.</span><span class="num neg">−312 €</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VERMÖGEN -->
+  <div class="view" data-page="konten">
+    <div class="topbar">
+      <div><h1>Konten &amp; Vermögenswerte</h1><div class="sub">4 Einträge · Gesamt: <span class="num">67.220,87 €</span> · Saldo-Prüfung wöchentlich</div></div>
+      <div class="actions"><button class="btn ghost sm" onclick="toggleEmptyDemo('konten')">Demo: leerer Zustand</button><button class="btn" onclick="openModal('acct')">+ Konto / Vermögenswert</button></div>
+    </div>
+    <div class="scroll">
+
+      <div class="warn-box">⚠ <strong>Depot Scalable:</strong> berechneter Saldo (41.968,15 €) weicht vom zuletzt importierten Kontostand (42.180,55 €) um 212,40 € ab – möglicherweise fehlen Transaktionen seit dem letzten Import. <a style="text-decoration:underline;font-weight:600;" onclick="openModal('import')">Jetzt aktualisieren</a></div>
+
+      <div id="kontenList" class="grid" style="grid-template-columns:1fr;gap:10px;">
+        <div class="tile konto-row">
+          <div><strong>Girokonto Sparkasse</strong><div class="kpi-sub">Girokonto · Owner: Ansi · Import: heute</div></div>
+          <span class="badge off">Girokonto</span>
+          <svg width="80" height="26" viewBox="0 0 100 30"><polyline points="0,20 15,18 30,22 45,10 60,14 75,6 90,8" fill="none" stroke="#6f9a6d" stroke-width="2"/></svg>
+          <span></span>
+          <div class="num" style="text-align:right;font-size:16px;">6.410,32 €</div>
+          <div class="iconbtn" onclick="openModal('acctEdit')" title="Bearbeiten" aria-label="Konto bearbeiten">✎</div>
+          <div class="iconbtn" onclick="confirmAction('Konto löschen?','Girokonto Sparkasse und alle 214 zugehörigen Transaktionen werden endgültig gelöscht.','Konto gelöscht')" title="Löschen" aria-label="Konto löschen">🗑</div>
+        </div>
+        <div class="tile konto-row">
+          <div><strong>Tagesgeld ING</strong><div class="kpi-sub">Tagesgeld · Owner: Ansi &amp; Kathi</div></div>
+          <span class="badge off">Tagesgeld</span>
+          <svg width="80" height="26" viewBox="0 0 100 30"><polyline points="0,22 15,21 30,20 45,19 60,17 75,16 90,14" fill="none" stroke="#6f9a6d" stroke-width="2"/></svg>
+          <span></span>
+          <div class="num" style="text-align:right;font-size:16px;">18.230,00 €</div>
+          <div class="iconbtn" onclick="openModal('acctEdit')" title="Bearbeiten" aria-label="Konto bearbeiten">✎</div>
+          <div class="iconbtn" onclick="confirmAction('Konto löschen?','Tagesgeld ING und alle zugehörigen Transaktionen werden endgültig gelöscht.','Konto gelöscht')" title="Löschen" aria-label="Konto löschen">🗑</div>
+        </div>
+        <div class="tile konto-row" style="border:1px solid rgba(182,80,58,.3);">
+          <div><strong>Depot Scalable</strong><div class="kpi-sub" style="color:#b6503a;">Depot · letzter Import vor 34 Tagen</div>
+            <button class="btn ghost sm" style="margin-top:6px;" onclick="openModal('import')">Neuer Import</button>
+          </div>
+          <span class="badge off">Depot</span>
+          <svg width="80" height="26" viewBox="0 0 100 30"><polyline points="0,18 15,14 30,16 45,8 60,10 75,4 90,6" fill="none" stroke="#b6503a" stroke-width="2"/></svg>
+          <span></span>
+          <div class="num" style="text-align:right;font-size:16px;">42.180,55 €</div>
+          <div class="iconbtn" onclick="openModal('acctEdit')" title="Bearbeiten" aria-label="Konto bearbeiten">✎</div>
+          <div class="iconbtn" onclick="confirmAction('Konto löschen?','Depot Scalable und alle zugehörigen Transaktionen werden endgültig gelöscht.','Konto gelöscht')" title="Löschen" aria-label="Konto löschen">🗑</div>
+        </div>
+        <div class="tile konto-row">
+          <div><strong>Bausparvertrag</strong><div class="kpi-sub">Nur Saldo · Owner: Kathi</div></div>
+          <span class="badge off">Nur Saldo</span>
+          <span style="font-size:11px;color:#c9c2b5;">– kein Verlauf –</span>
+          <span></span>
+          <div class="num" style="text-align:right;font-size:16px;">400,00 €</div>
+          <div class="iconbtn" onclick="openModal('acctEdit')" title="Bearbeiten" aria-label="Konto bearbeiten">✎</div>
+          <div class="iconbtn" onclick="confirmAction('Konto löschen?','Bausparvertrag wird endgültig entfernt.','Konto gelöscht')" title="Löschen" aria-label="Konto löschen">🗑</div>
+        </div>
+        <div class="tile konto-row">
+          <div><strong>Reisekasse CHF</strong><div class="kpi-sub">Nur Saldo · Fremdwährung, keine Umrechnung in v1</div></div>
+          <span class="badge off">Nur Saldo</span>
+          <span></span>
+          <span class="badge currency">CHF</span>
+          <div class="num" style="text-align:right;font-size:16px;">240,00</div>
+          <div class="iconbtn" onclick="openModal('acctEdit')" title="Bearbeiten" aria-label="Konto bearbeiten">✎</div>
+          <div class="iconbtn" onclick="confirmAction('Konto löschen?','Reisekasse CHF wird endgültig entfernt.','Konto gelöscht')" title="Löschen" aria-label="Konto löschen">🗑</div>
+        </div>
+      </div>
+
+      <div id="kontenEmpty" class="empty-state" style="display:none;">
+        <h3>Noch keine Konten erfasst</h3>
+        <p>Lege dein erstes Konto an – mit CSV-Import oder einfach nur mit einem aktuellen Kontostand.</p>
+        <button class="btn" onclick="openModal('acct')">+ Erstes Konto anlegen</button>
+      </div>
+
+      <div class="tile" style="margin-top:16px;">
+        <h3 style="font-size:14.5px;margin-bottom:10px;">Vermögensentwicklung</h3>
+        <svg width="100%" height="100" viewBox="0 0 600 100">
+          <polyline points="0,80 100,74 200,68 300,60 400,48 500,32 600,20" fill="none" stroke="#123138" stroke-width="2.5"/>
+        </svg>
+        <div class="kpi-sub">letzte 12 Monate · aktuell 67.220,87 €</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRANSAKTIONEN -->
+  <div class="view" data-page="transaktionen">
+    <div class="topbar">
+      <div><h1>Transaktionen</h1><div class="sub">412 Buchungen im gewählten Zeitraum</div></div>
+      <div class="actions"><button class="iconbtn" onclick="openHistory()" title="Änderungsverlauf" aria-label="Änderungsverlauf öffnen">🕐</button></div>
+    </div>
+    <div class="scroll">
+      <div class="period-switcher" style="margin-bottom:12px;">
+        <div class="period-nav">
+          <button class="pnav-arrow" aria-label="Vorheriger Zeitraum">‹</button>
+          <div class="period-label-wrap"><button class="period-label" onclick="toggleCal(this)"><span>Juli 2026</span><span>⌄</span></button>
+            <div class="period-cal"><div class="cal-head"><button>‹</button><span>2026</span><button>›</button></div>
+              <div class="cal-grid"><span>Jan</span><span>Feb</span><span>Mär</span><span>Apr</span><span>Mai</span><span>Jun</span><span class="sel">Jul</span><span>Aug</span><span class="dim">Sep</span><span class="dim">Okt</span><span class="dim">Nov</span><span class="dim">Dez</span></div>
+            </div>
+          </div>
+          <button class="pnav-arrow" aria-label="Nächster Zeitraum">›</button>
+          <span class="period-quicklinks"><a>Aktueller Monat</a><a>Letzter Monat</a></span>
+        </div>
+      </div>
+
+      <div class="tx-topinfo">
+        <div class="stat">Saldo Girokonto: <span class="num" style="font-weight:700;">6.410,32 €</span></div>
+        <div class="stat">Unkategorisiert: <span class="num" style="font-weight:700;color:var(--brick);">15</span></div>
+      </div>
+
+      <div class="tx-searchrow">
+        <input type="text" id="txsearch" placeholder="Suche nach Person, Verwendungszweck, Betrag oder Datum" oninput="filterTx()">
+        <button class="btn ghost sm" onclick="openModal('filter')">Filter</button>
+      </div>
+      <div class="tx-filters">
+        <span class="chip">Unkategorisiert</span>
+        <span class="chip">Ungeprüft</span>
+        <span class="chip">Vertrag: Miete Wohnung ✕</span>
+      </div>
+
+      <div class="tx-head">
+        <span></span>
+        <span onclick="sortBy('date')">Datum ↕</span>
+        <span onclick="sortBy('payee')">Empfänger / Zweck ↕</span>
+        <span onclick="sortBy('cat')">Kategorie ↕</span>
+        <span></span>
+        <span onclick="sortBy('amt')" style="text-align:right;">Betrag ↕</span>
+        <span></span>
+      </div>
+      <div class="tx-list" id="txlist"></div>
+
+      <div class="bulkbar" id="bulkbar">
+        <span class="count"><span id="bulkcount">0</span> ausgewählt</span>
+        <span class="action">Kategorie zuweisen ▾</span>
+        <span class="action">Tag zuweisen ▾</span>
+        <span class="action">Vertrag zuweisen ▾</span>
+        <span class="action">Als ungeprüft markieren</span>
+        <span class="action">Als Kontotransfer markieren</span>
+        <span class="action">Aus Statistik entfernen</span>
+        <span class="action" onclick="clearSelection()">Auswahl aufheben</span>
+      </div>
+      <p class="help">Rechtsklick auf eine Zeile öffnet ein Schnellmenü.</p>
+    </div>
+  </div>
+
+  <!-- VERTRÄGE -->
+  <div class="view" data-page="vertraege">
+    <div class="topbar"><div><h1>Verträge &amp; wiederkehrende Zahlungen</h1><div class="sub">9 Verträge · 812 € feste Kosten/Monat</div></div></div>
+    <div class="scroll">
+      <div class="inline-explainer"><strong>Verträge</strong> sind formelle, benannte Vereinbarungen (Miete, Versicherung, Abo). <strong>Weitere wiederkehrende Zahlungen</strong> sind erkannte Muster ohne Vertragscharakter (z. B. eine regelmäßige Überweisung an eine Person).</div>
+      <input type="text" placeholder="Verträge durchsuchen…" style="margin-bottom:12px;">
+      <div class="tx-filters" style="margin-top:0;">
+        <span class="chip active">Verträge</span>
+        <span class="chip">Weitere wiederkehrende Zahlungen</span>
+      </div>
+      <div class="card-grid">
+        <div class="contract-card" onclick="openContract()">
+          <span class="badge confirmed">Bestätigt</span>
+          <h3>Miete Wohnung</h3>
+          <div class="amt-line num">1.240 €</div>
+          <div class="kpi-sub">monatlich · Kategorie: Wohnen</div>
+          <div class="card-foot"><span>seit Jan 2024</span><span>18 Buchungen</span></div>
+        </div>
+        <div class="contract-card" style="border:1px solid rgba(183,154,91,.5);" onclick="openContract()">
+          <span class="badge changed">Preisänderung erkannt</span>
+          <h3>Fitnessstudio McFit</h3>
+          <div class="amt-line num">32,90 € <span style="font-size:12px;color:#9a9488;">statt 27,90 €</span></div>
+          <div class="card-foot" style="gap:8px;">
+            <button class="btn sage sm" onclick="event.stopPropagation();showToast('Bestätigt')">Bestätigen</button>
+            <button class="btn ghost sm" onclick="event.stopPropagation();showToast('Getrennt')">Trennen</button>
+          </div>
+        </div>
+        <div class="contract-card" style="border:1px solid rgba(182,80,58,.35);" onclick="openContract()">
+          <span class="badge suggested">Neu erkannt</span>
+          <h3>Netflix</h3>
+          <div class="amt-line num">14,99 €</div>
+          <div class="kpi-sub">erkannt über Empfänger + Verwendungszweck-Muster</div>
+        </div>
+        <div class="contract-card" onclick="openContract()">
+          <span class="badge ended">Beendet</span>
+          <h3>Vodafone DSL</h3>
+          <div class="amt-line num">39,99 €</div>
+          <div class="kpi-sub">seit 3 Monaten keine Zahlung mehr erkannt</div>
+        </div>
+      </div>
+      <div id="vertraegeEmpty" class="empty-state" style="display:none;margin-top:16px;">
+        <h3>Noch keine Verträge erkannt</h3>
+        <p>Sobald Transaktionen importiert sind, schlägt Klarwert wiederkehrende Zahlungen automatisch vor.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SAMMLUNGEN -->
+  <div class="view" data-page="sammlungen">
+    <div class="topbar">
+      <div><h1>Sammlungen</h1></div>
+      <button class="btn" onclick="openModal('collection')">+ Sammlung anlegen</button>
+    </div>
+    <div class="scroll">
+      <div class="inline-explainer"><strong>Tags</strong> sind schnelle, dauerhafte Label für einzelne Transaktionen. <strong>Sammlungen</strong> fassen mehrere Transaktionen zu einem zeitlich begrenzten Zweck zusammen – z. B. ein Urlaub oder ein Sparziel mit Zielbetrag.</div>
+      <div class="card-grid">
+        <div class="collection-card" onclick="openCollection()">
+          <h3>Urlaub Toskana</h3>
+          <div class="amt-line num">612 €</div>
+          <div class="kpi-sub">9 Transaktionen · 14.–21. Juli</div>
+          <div class="card-foot"><span onclick="event.stopPropagation();openModal('collection')">✎ Bearbeiten</span><span onclick="event.stopPropagation();confirmAction('Sammlung löschen?','Die Zuordnung der 9 Transaktionen zu dieser Sammlung wird entfernt, die Transaktionen selbst bleiben erhalten.','Sammlung gelöscht')">🗑</span></div>
+        </div>
+        <div class="collection-card" onclick="openCollection()">
+          <h3>Ziel: Notgroschen <span class="badge custom">Sparziel</span></h3>
+          <div class="amt-line num">3.100 € <span style="font-size:12px;color:#9a9488;">von 5.000 €</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:62%;"></div></div>
+          <div class="card-foot"><span onclick="event.stopPropagation();openModal('collection')">✎ Bearbeiten</span><span onclick="event.stopPropagation();confirmAction('Sammlung löschen?','Das Sparziel wird entfernt, zugeordnete Transaktionen bleiben erhalten.','Sammlung gelöscht')">🗑</span></div>
+        </div>
+        <div class="collection-card">
+          <h3>Umzug 2025</h3>
+          <div class="amt-line num">2.340 €</div>
+          <div class="kpi-sub">abgeschlossen</div>
+          <div class="card-foot"><span onclick="event.stopPropagation();openModal('collection')">✎ Bearbeiten</span><span onclick="event.stopPropagation();confirmAction('Sammlung löschen?','Die Zuordnung wird entfernt, Transaktionen bleiben erhalten.','Sammlung gelöscht')">🗑</span></div>
+        </div>
+      </div>
+      <div id="sammlungenEmpty" class="empty-state" style="display:none;margin-top:16px;">
+        <h3>Noch keine Sammlungen</h3>
+        <p>Fasse Transaktionen für einen Urlaub, ein Sparziel oder ein Projekt zusammen.</p>
+        <button class="btn" onclick="openModal('collection')">+ Erste Sammlung anlegen</button>
+      </div>
+      <div id="collectionDetail" style="display:none;margin-top:20px;">
+        <div class="tile">
+          <h3 style="font-size:16px;margin-bottom:10px;">Urlaub Toskana – Details</h3>
+          <div class="mini-tx-row"><span>Lufthansa – Flugticket</span><span class="num">−284,00 €</span></div>
+          <div class="mini-tx-row"><span>Trattoria da Marco</span><span class="num">−62,00 €</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KATEGORIEN -->
+  <div class="view" data-page="kategorien">
+    <div class="topbar">
+      <div><h1>Kategorien &amp; Tags</h1><div class="sub">Standard-Bibliothek aktivierbar · eigene ergänzbar</div></div>
+      <button class="btn" onclick="openModal('catNew')">+ eigene Kategorie</button>
+    </div>
+    <div class="scroll">
+      <input type="text" placeholder="Kategorien durchsuchen…" style="margin-bottom:12px;">
+      <div class="tile" style="padding:0;margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 18px;border-bottom:1px solid var(--line);">
+          <span class="cat-name" style="color:#123138;" onclick="openCategory()">
+            <svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="#123138" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
+            Wohnen
+          </span>
+          <div style="display:flex;align-items:center;gap:10px;"><span class="kpi-sub">1.326 € · 3 Regeln</span><span class="iconbtn" onclick="openModal('catEdit')" title="Bearbeiten" aria-label="Kategorie bearbeiten">✎</span><div class="switch on" onclick="this.classList.toggle('on')"><div class="knob"></div></div></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 18px;border-bottom:1px solid var(--line);">
+          <span class="cat-name" style="color:#b6503a;" onclick="openCategory()">
+            <svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="#b6503a" stroke-width="1.8"><path d="M6 3v8M9 3v8M6 7h3M7.5 11v10"/><path d="M16 3c-2 1-2 5 0 6v11"/></svg>
+            Essen &amp; Trinken
+          </span>
+          <div style="display:flex;align-items:center;gap:10px;"><span class="kpi-sub">614 € · 5 Regeln</span><span class="iconbtn" onclick="openModal('catEdit')" title="Bearbeiten" aria-label="Kategorie bearbeiten">✎</span><div class="switch on" onclick="this.classList.toggle('on')"><div class="knob"></div></div></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 18px;border-bottom:1px solid var(--line);">
+          <span class="cat-name" style="color:#6f9a6d;" onclick="openCategory()">
+            <svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="#6f9a6d" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M9 9l6 3-6 3V9Z" fill="#6f9a6d" stroke="none"/></svg>
+            Freizeit &amp; Medien
+          </span>
+          <div style="display:flex;align-items:center;gap:10px;"><span class="kpi-sub">480 € · 4 Regeln</span><span class="iconbtn" onclick="openModal('catEdit')" title="Bearbeiten" aria-label="Kategorie bearbeiten">✎</span>
+            <div class="switch on" onclick="deactivateCheck(this,'Freizeit &amp; Medien',12)"><div class="knob"></div></div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:13px 18px;">
+          <span class="cat-name" style="color:#b79a5b;">
+            <svg class="cat-icon" viewBox="0 0 24 24" fill="none" stroke="#b79a5b" stroke-width="1.8"><path d="M12 2l2.5 6.5L21 9l-5 4.5L17.5 21 12 17l-5.5 4L8 13.5 3 9l6.5-.5Z"/></svg>
+            Bahamas-Fonds <span class="badge custom">Eigene</span>
+          </span>
+          <div style="display:flex;align-items:center;gap:10px;"><span class="kpi-sub">0 € · 0 Regeln</span><span class="iconbtn" onclick="openModal('catEdit')" title="Bearbeiten" aria-label="Kategorie bearbeiten">✎</span><div class="switch on" onclick="this.classList.toggle('on')"><div class="knob"></div></div></div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <h3 style="font-size:15px;">Tags</h3>
+        <span class="chip" onclick="openModal('tagNew')">+ Tag</span>
+      </div>
+      <div class="tile" style="padding:0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 16px;border-bottom:1px solid var(--line);">
+          <span class="tag-pill" style="background:#b6503a;">Urlaub</span>
+          <div style="display:flex;align-items:center;gap:10px;"><span class="kpi-sub">9 Transaktionen</span><span class="iconbtn" onclick="openModal('tagEdit')" title="Bearbeiten" aria-label="Tag bearbeiten">✎</span><span class="iconbtn" onclick="confirmAction('Tag löschen?','Der Tag wird von allen 9 Transaktionen entfernt.','Tag gelöscht')" title="Löschen" aria-label="Tag löschen">🗑</span></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 16px;">
+          <span class="tag-pill" style="background:#6f9a6d;">Geschenk</span>
+          <div style="display:flex;align-items:center;gap:10px;"><span class="kpi-sub">3 Transaktionen</span><span class="iconbtn" onclick="openModal('tagEdit')" title="Bearbeiten" aria-label="Tag bearbeiten">✎</span><span class="iconbtn" onclick="confirmAction('Tag löschen?','Der Tag wird von allen 3 Transaktionen entfernt.','Tag gelöscht')" title="Löschen" aria-label="Tag löschen">🗑</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUDGETS -->
+  <div class="view" data-page="budgets">
+    <div class="topbar">
+      <div><h1>Budgets</h1><div class="sub">Monatliches Soll pro Kategorie · Juli 2026</div></div>
+      <button class="btn" onclick="openModal('budgetNew')">+ Budget</button>
+    </div>
+    <div class="scroll">
+      <div class="tile" style="margin-bottom:12px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><strong>Essen &amp; Trinken</strong><span class="num">614 € / 700 €</span></div>
+        <div class="progress-track"><div class="progress-fill" style="width:88%;background:#b6503a;"></div></div>
+        <div class="kpi-sub" style="margin-top:6px;">noch 86 € übrig · 12 Tage verbleibend</div>
+      </div>
+      <div class="tile" style="margin-bottom:12px;border:1px solid rgba(182,80,58,.3);">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><strong>Freizeit &amp; Medien</strong><span class="num" style="color:var(--brick);">480 € / 400 €</span></div>
+        <div class="progress-track"><div class="progress-fill" style="width:100%;background:#b6503a;"></div></div>
+        <div class="kpi-sub" style="margin-top:6px;color:var(--brick);">80 € über Budget</div>
+      </div>
+      <div class="empty-state" style="margin-top:20px;">
+        <h3>Weitere Kategorien ohne Budget</h3>
+        <p>Wohnen, Shopping, Sonstiges haben noch kein monatliches Limit.</p>
+        <button class="btn ghost sm" onclick="openModal('budgetNew')">+ Budget hinzufügen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFIL -->
+  <div class="view" data-page="profil">
+    <div class="topbar"><div><h1>Profil &amp; Einstellungen</h1></div></div>
+    <div class="scroll">
+      <div class="grid cols-3">
+        <div class="tile">
+          <h3 style="font-size:14.5px;margin-bottom:12px;">Personen</h3>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--line);">
+            <input type="text" value="Ansi" style="margin-right:8px;">
+            <span class="iconbtn" title="Entfernen" aria-label="Person entfernen" onclick="confirmAction('Person entfernen?','Konten und Transaktionen, die Ansi zugeordnet sind, bleiben erhalten, verlieren aber die Personen-Zuordnung.','Person entfernt')">✕</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <input type="text" value="Kathi" style="margin-right:8px;">
+            <span class="iconbtn" title="Entfernen" aria-label="Person entfernen" onclick="confirmAction('Person entfernen?','Konten und Transaktionen, die Kathi zugeordnet sind, bleiben erhalten, verlieren aber die Personen-Zuordnung.','Person entfernt')">✕</span>
+          </div>
+          <button class="btn ghost sm">+ Kind hinzufügen</button>
+        </div>
+        <div class="tile">
+          <h3 style="font-size:14.5px;margin-bottom:10px;">Steuer</h3>
+          <div class="mini-toggle"><span>Kirchensteuer (9%) <span class="tip" data-tip="Wird aus dem Bundesland der Person abgeleitet, hier überschreibbar.">i</span></span><div class="switch on" onclick="this.classList.toggle('on')"><div class="knob"></div></div></div>
+        </div>
+        <div class="tile">
+          <h3 style="font-size:14.5px;margin-bottom:10px;">Kategorien</h3>
+          <div class="kpi-sub" style="margin-bottom:10px;">Setzt Aktivierung, Namen &amp; Icons zurück, eigene Kategorien bleiben erhalten.</div>
+          <button class="btn ghost sm" onclick="showToast('Standardkategorien wiederhergestellt')">Standardkategorien wiederherstellen</button>
+        </div>
+        <div class="tile">
+          <h3 style="font-size:14.5px;margin-bottom:10px;">Backup &amp; Export</h3>
+          <div class="row2" style="margin-bottom:8px;"><button class="btn ghost sm">Exportieren</button><button class="btn ghost sm">Importieren</button></div>
+          <button class="btn ghost sm">Für Steuerberater exportieren</button>
+        </div>
+        <div class="tile">
+          <h3 style="font-size:14.5px;margin-bottom:10px;">Hilfe</h3>
+          <button class="btn ghost sm" onclick="openOnboarding()">Ersteinrichtung erneut ansehen</button>
+        </div>
+        <div class="tile" style="border:1px solid rgba(182,80,58,.35);">
+          <h3 style="font-size:14.5px;margin-bottom:10px;color:var(--brick);">Gefahrenzone</h3>
+          <button class="btn brick sm" onclick="openModal('deleteAll')">Alle Daten löschen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Kontextmenü -->
+<div class="contextmenu" id="ctxmenu">
+  <div onclick="closeCtx();showToast('Kategorie-Auswahl geöffnet')">Kategorie zuweisen</div>
+  <div onclick="closeCtx();showToast('Tag-Auswahl geöffnet')">Tag zuweisen</div>
+  <div onclick="closeCtx();showToast('Als Kontotransfer markiert')">Als Kontotransfer markieren</div>
+  <div onclick="closeCtx();openCollection();go('sammlungen')">Zu Sammlung hinzufügen</div>
+  <hr>
+  <div onclick="closeCtx();showToast('Aus Statistik entfernt')">Aus Statistik entfernen</div>
+</div>
+
+<!-- Drawers -->
+<div class="drawer-overlay" id="drawer"><div class="drawer">
+  <span class="close" onclick="closeAll()">Schließen ✕</span>
+  <div><div class="kpi-sub">16. Juli 2026 · Girokonto</div><h3 style="margin-top:2px;">Trattoria da Marco</h3><div class="big-amt num neg" style="margin-top:6px;">−62,00 €</div></div>
+  <div><div class="field-label">Kategorie · manuell <a style="text-decoration:underline;cursor:pointer;" onclick="closeAll();go('kategorien');openCategory();">Regel bearbeiten</a></div><select><option>Essen &amp; Trinken</option></select></div>
+  <div><div class="field-label">Tags</div><div style="display:flex;gap:6px;"><span class="tag-pill" style="background:#b6503a;">Urlaub</span><span class="chip">+ Tag</span></div></div>
+  <div class="mini-toggle"><span>Als ungeprüft markieren</span><div class="switch" onclick="this.classList.toggle('on')"><div class="knob"></div></div></div>
+  <div class="mini-toggle"><span>Als Kontotransfer markieren</span><div class="switch" onclick="this.classList.toggle('on')"><div class="knob"></div></div></div>
+  <div class="mini-toggle"><span>Aus Statistik entfernen</span><div class="switch" onclick="this.classList.toggle('on')"><div class="knob"></div></div></div>
+  <button class="btn" style="margin-top:auto;">Speichern</button>
+</div></div>
+
+<div class="drawer-overlay" id="drawerContract"><div class="drawer">
+  <span class="close" onclick="closeAll()">Schließen ✕</span>
+  <div><div class="kpi-sub">Vertrag · seit Jan 2024 · erkannt über Empfänger + Verwendungszweck</div><h3 style="margin-top:2px;">Miete Wohnung</h3></div>
+  <div><div class="field-label">Betrag</div><input type="text" value="1.240,00 €"></div>
+  <div><div class="field-label">Status</div><select><option>Aktiv</option><option>Beendet</option></select></div>
+  <div><div class="field-label">Entwicklung</div>
+    <svg width="100%" height="80" viewBox="0 0 300 80"><polyline points="0,50 60,50 120,45 180,45 240,40 300,40" fill="none" stroke="#6f9a6d" stroke-width="2.5"/></svg>
+  </div>
+  <div>
+    <div class="field-label" style="display:flex;justify-content:space-between;">Letzte Transaktionen <a style="text-decoration:underline;cursor:pointer;font-weight:600;" onclick="closeAll();go('transaktionen');showToast('Nach Vertrag gefiltert');">Alle ansehen →</a></div>
+    <div class="mini-tx-row"><span>01.07. Vermieter Huber</span><span class="num">−1.240 €</span></div>
+    <div class="mini-tx-row"><span>01.06. Vermieter Huber</span><span class="num">−1.240 €</span></div>
+  </div>
+  <button class="btn" style="margin-top:auto;">Speichern</button>
+</div></div>
+
+<div class="drawer-overlay" id="drawerCategory"><div class="drawer" style="width:430px;">
+  <span class="close" onclick="closeAll()">Schließen ✕</span>
+  <div><div class="kpi-sub">Kategorie</div><h3 style="margin-top:2px;color:#123138;">Wohnen</h3><div class="kpi-value num" style="font-size:22px;">1.326 €</div><div class="kpi-sub">18 Transaktionen</div></div>
+  <div>
+    <div class="field-label" style="display:flex;justify-content:space-between;">Regeln <a style="text-decoration:underline;cursor:pointer;font-weight:600;" onclick="openModal('rule')">+ neue Regel</a></div>
+    <div class="rule-row"><span>Verwendungszweck enthält „Miete“</span><span class="icons"><span onclick="openModal('rule')">✎</span> <span onclick="confirmAction('Regel löschen?','Betroffene Transaktionen bleiben kategorisiert, bis sie erneut geprüft werden.','Regel gelöscht')">🗑</span></span></div>
+    <div class="rule-row"><span>Empfänger = „E.ON“</span><span class="icons">✎ <span onclick="confirmAction('Regel löschen?','Betroffene Transaktionen bleiben kategorisiert, bis sie erneut geprüft werden.','Regel gelöscht')">🗑</span></span></div>
+  </div>
+</div></div>
+
+<div class="drawer-overlay" id="drawerHistory"><div class="drawer">
+  <span class="close" onclick="closeAll()">Schließen ✕</span>
+  <h3 style="font-size:17px;">Änderungsverlauf</h3>
+  <div class="hist-row"><span>Regel „Miete“ auf 4 Transaktionen angewendet</span><span class="undo">Rückgängig</span></div>
+  <div class="hist-row"><span>Sammelbearbeitung: Kategorie „Freizeit“ auf 3 Transaktionen</span><span class="undo">Rückgängig</span></div>
+  <div class="hist-row"><span>Konto „Vodafone-Kreditkarte“ gelöscht</span><span class="undo">Rückgängig</span></div>
+</div></div>
+
+<!-- Onboarding -->
+<div class="modal-overlay" id="modal-onboarding"><div class="modal">
+  <div class="onb-progress"><span class="done" id="onb1"></span><span id="onb2"></span><span id="onb3"></span></div>
+  <div id="onbStep1">
+    <h3 style="font-size:18px;">Willkommen bei Klarwert</h3>
+    <p class="kpi-sub" style="margin:10px 0;">100% lokal, keine Cloud, kein Login. Deine Daten bleiben auf diesem Gerät. In drei kurzen Schritten bist du eingerichtet.</p>
+    <div class="modal-actions"><button class="btn ghost" onclick="closeModal('onboarding')">Überspringen</button><button class="btn" onclick="onbNext(2)">Los geht's</button></div>
+  </div>
+  <div id="onbStep2" style="display:none;">
+    <h3 style="font-size:18px;">Wer nutzt Klarwert?</h3>
+    <p class="kpi-sub" style="margin:8px 0;">Einzelperson oder Haushalt – weitere Personen kannst du jederzeit ergänzen.</p>
+    <input type="text" placeholder="Dein Name" style="margin-bottom:8px;">
+    <a style="font-size:12.5px;font-weight:600;text-decoration:underline;cursor:pointer;">+ weitere Person</a>
+    <div class="modal-actions"><button class="btn ghost" onclick="onbNext(1)">Zurück</button><button class="btn" onclick="onbNext(3)">Weiter</button></div>
+  </div>
+  <div id="onbStep3" style="display:none;">
+    <h3 style="font-size:18px;">Erstes Konto anlegen</h3>
+    <p class="kpi-sub" style="margin:8px 0;">Mit CSV-Import oder nur mit dem aktuellen Kontostand – du kannst später jederzeit weitere hinzufügen.</p>
+    <div class="modal-actions"><button class="btn ghost" onclick="onbNext(2)">Zurück</button><button class="btn" onclick="closeModal('onboarding');openModal('acct')">Konto anlegen</button></div>
+  </div>
+</div></div>
+
+<!-- Generischer Bestätigungsdialog -->
+<div class="modal-overlay" id="modal-confirm"><div class="modal narrow">
+  <h3 id="confirmTitle" style="font-size:17px;color:var(--brick);">Wirklich löschen?</h3>
+  <p class="kpi-sub" id="confirmText" style="margin:10px 0;"></p>
+  <div class="modal-actions"><button class="btn ghost" onclick="closeModal('confirm')">Abbrechen</button><button class="btn brick" id="confirmBtn">Bestätigen</button></div>
+</div></div>
+
+<!-- Alle Daten löschen -->
+<div class="modal-overlay" id="modal-deleteAll"><div class="modal narrow">
+  <h3 style="font-size:17px;color:var(--brick);">Alle Daten löschen</h3>
+  <p class="kpi-sub" style="margin:10px 0;">Das entfernt unwiderruflich alle Konten, Transaktionen, Verträge und Einstellungen von diesem Gerät. Erstelle vorher ein Backup, wenn du unsicher bist.</p>
+  <div class="field-label">Zum Bestätigen "löschen" eingeben</div>
+  <input type="text" id="deleteConfirmInput" oninput="checkDeleteConfirm()" placeholder="löschen">
+  <div class="modal-actions"><button class="btn ghost" onclick="closeModal('deleteAll')">Abbrechen</button><button class="btn brick" id="deleteAllBtn" disabled onclick="closeModal('deleteAll');showToast('Alle Daten gelöscht')">Endgültig löschen</button></div>
+</div></div>
+
+<!-- Konto -->
+<div class="modal-overlay" id="modal-acct"><div class="modal">
+  <h3 style="font-size:17px;">Konto oder Vermögenswert hinzufügen</h3>
+  <div class="choice-cards" style="margin-top:10px;">
+    <div class="choice-card sel" onclick="selectChoice(this)"><strong>Mit Import</strong>CSV/Excel-Import, laufender Verlauf</div>
+    <div class="choice-card" onclick="selectChoice(this)"><strong>Nur Kontostand</strong>kein Import, nur aktueller Wert</div>
+  </div>
+  <div class="row2" style="margin-bottom:10px;">
+    <div style="flex:1;"><div class="field-label">Kontotyp</div><select><option>Girokonto</option><option>Tagesgeld</option><option>Kreditkarte</option><option>Depot</option><option>Darlehen</option><option>Sonstiges / nur Saldo</option></select></div>
+    <div style="flex:1;"><div class="field-label">Owner</div><select><option>Ansi</option><option>Kathi</option><option>Ansi &amp; Kathi</option></select></div>
+  </div>
+  <div class="row2" style="margin-bottom:10px;">
+    <div style="flex:1;"><div class="field-label">Name</div><input type="text" placeholder="z. B. Bausparvertrag"></div>
+    <div style="flex:1;"><div class="field-label">Währung <span class="tip" data-tip="Beträge in Fremdwährung werden angezeigt, aber in v1 nicht automatisch in Euro umgerechnet.">i</span></div><select><option>EUR</option><option>CHF</option><option>USD</option></select></div>
+  </div>
+  <div class="modal-actions"><button class="btn ghost" onclick="closeModal('acct')">Abbrechen</button><button class="btn" onclick="closeModal('acct')">Weiter</button></div>
+</div></div>
+
+<div class="modal-overlay" id="modal-acctEdit"><div class="modal">
+  <h3 style="font-size:17px;">Konto bearbeiten</h3>
+  <div class="field-label" style="margin-top:12px;">Name</div><input type="text" value="Girokonto Sparkasse" style="margin-bottom:10px;">
+  <div class="row2" style="margin-bottom:10px;">
+    <div style="flex:1;"><div class="field-label">Kontotyp</div><select><option>Girokonto</option><option>Tagesgeld</option><option>Kreditkarte</option><option>Depot</option><option>Darlehen</option></select></div>
+    <div style="flex:1;"><div class="field-label">Owner</div><select><option>Ansi</option><option>Kathi</option><option>Ansi &amp; Kathi</option></select></div>
+  </div>
+  <div class="modal-actions"><button class="btn ghost" onclick="closeModal('acctEdit')">Abbrechen</button><button class="btn" onclick="closeModal('acctEdit')">Speichern</button></div>
+</div></div>
+
+<!-- Import: mehrstufig mit Profil, Format, Fortschritt, Fehlern, Bericht -->
+<div class="modal-overlay" id="modal-import"><div class="modal wide">
+  <div class="step-dots"><span class="active" id="impDot1"></span><span id="impDot2"></span><span id="impDot3"></span><span id="impDot4"></span></div>
+
+  <div id="impStep1">
+    <h3 style="font-size:17px;">Datei importieren</h3>
+    <div class="field-label" style="margin-top:12px;">Importprofil <span class="tip" data-tip="Speichert, wie Spalten einer Bank-CSV zugeordnet werden – einmal einrichten, dann automatisch wiederverwendbar.">i</span></div>
+    <select style="margin-bottom:10px;"><option>Sparkasse Classic (CSV, Semikolon)</option><option>ING Girokonto (CSV, Komma)</option><option>Scalable Capital (Excel)</option><option>+ Neues Profil anlegen</option></select>
+    <div class="dropzone">Datei hierher ziehen oder auswählen<br><span style="font-size:11px;">Unterstützt: CSV (Komma oder Semikolon getrennt), Excel (.xlsx)</span></div>
+    <div class="row2" style="margin-bottom:10px;">
+      <div style="flex:1;"><div class="field-label">Wie einspielen?</div><select><option>Upsert – nur neue Buchungen ergänzen</option><option>Ersetzen – Zeitraum komplett neu einspielen</option></select></div>
+    </div>
+    <div class="modal-actions"><button class="btn ghost" onclick="closeModal('import')">Abbrechen</button><button class="btn" onclick="impGoto(2);simulateProgress();">Weiter</button></div>
+  </div>
+
+  <div id="impStep2" style="display:none;">
+    <h3 style="font-size:17px;">Import läuft…</h3>
+    <p class="kpi-sub" style="margin-top:8px;">128 von 200 Zeilen verarbeitet.</p>
+    <div class="loading-track"><div class="loading-fill" id="loadingFill"></div></div>
+    <div class="modal-actions">
+      <button class="btn ghost sm" onclick="impGoto(4)">Demo: Fehler simulieren</button>
+      <button class="btn sm" onclick="impGoto(3)">Demo: Weiter</button>
+    </div>
+  </div>
+
+  <div id="impStep3" style="display:none;">
+    <h3 style="font-size:17px;">Bevor wir speichern</h3>
+    <div class="warn-box">Deine Bank liefert Transaktionen erst ab <strong>01.03.2026</strong>. Trage bitte den Kontostand zu diesem Datum ein, damit der Verlauf vollständig bleibt.</div>
+    <input type="text" placeholder="Kontostand am 01.03.2026" style="margin-bottom:10px;">
+    <div class="modal-actions"><button class="btn ghost" onclick="impGoto(1)">Zurück</button><button class="btn" onclick="impGoto('done')">Importieren</button></div>
+  </div>
+
+  <div id="impStep4" style="display:none;">
+    <h3 style="font-size:17px;color:var(--brick);">Import fehlgeschlagen</h3>
+    <div class="error-box">⚠ <span>Die Datei konnte nicht gelesen werden – unbekanntes Format oder beschädigte Datei. Unterstützt werden CSV (Komma/Semikolon) und Excel (.xlsx).</span></div>
+    <div class="modal-actions"><button class="btn ghost" onclick="impGoto(1)">Andere Datei wählen</button><button class="btn" onclick="closeModal('import')">Schließen</button></div>
+  </div>
+
+  <div id="impStepDone" style="display:none;">
+    <h3 style="font-size:17px;">Import abgeschlossen</h3>
+    <div class="ok-box">✓ 200 Zeilen gelesen · 182 neue Transaktionen · 18 Duplikate übersprungen · 165 automatisch kategorisiert (91%)</div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal('import');showToast('Import abgeschlossen')">Fertig</button></div>
+  </div>
+</div></div>
+
+<div class="modal-overlay" id="modal-collection"><div class="modal">
+  <h3 style="font-size:17px;">Sammlung anlegen</h3>
+  <div class="field-label" style="margin-top:12px;">Name</div><input type="text" placeholder="z. B. Urlaub Portugal oder Ziel: Notgroschen" style="margin-bottom:10px;">
+  <div class="mini-toggle"><span>Sparziel mit Zielbetrag <span class="tip" data-tip="Zeigt einen Fortschrittsbalken zum Zielbetrag, statt nur die Summe zu addieren.">i</span></span><div class="switch" onclick="this.classList.toggle('on');document.getElementById('collGoalField').style.display=this.classList.contains('on')?'block':'none';"><div class="knob"></div></div></div>
+  <div id="collGoalField" style="display:none;margin-top:8px;"><input type="text" placeholder="Zielbetrag, z. B. 5.000 €"></div>
+  <div class="modal-actions" style="margin-top:14px;"><button class="btn ghost" onclick="closeModal('collection')">Abbrechen</button><button class="btn" onclick="closeModal('collection')">Anlegen</button></div>
+</div></div>
+
+<div class="modal-overlay" id="modal-catNew"><div class="modal">
+  <h3 style="font-size:17px;">Eigene Kategorie</h3>
+  <div class="field-label" style="margin-top:12px;">Name</div><input type="text" placeholder="z. B. Bahamas-Fonds" style="margin-bottom:10px;">
+  <div class="field-label">Farbe</div>
+  <div style="display:flex;gap:8px;margin-bottom:10px;">
+    <span style="width:24px;height:24px;border-radius:50%;background:#b79a5b;border:2px solid var(--charcoal);"></span>
+    <span style="width:24px;height:24px;border-radius:50%;background:#123138;"></span>
+    <span style="width:24px;height:24px;border-radius:50%;background:#b6503a;"></span>
+  </div>
+  <div class="modal-actions"><button class="btn ghost" onclick="closeModal('catNew')">Abbrechen</button><button class="btn" onclick="closeModal('catNew')">Anlegen</button></div>
+</div></div>
+
+<div class="modal-overlay" id="modal-catEdit"><div class="modal">
+  <h3 style="font-size:17px;">Kategorie bearbeiten</h3>
+  <div class="field-label" style="margin-top:12px;">Name</div><input type="text" value="Wohnen" style="margin-bottom:10px;">
+  <div class="field-label">Farbe</div>
+  <div style="display:flex;gap:8px;margin-bottom:10px;">
+    <span style="width:24px;height:24px;border-radius:50%;background:#123138;border:2px solid var(--charcoal);"></span>
+    <span style="width:24px;height:24px;border-radius:50%;background:#b6503a;"></span>
+    <span style="width:24px;height:24px;border-radius:50%;background:#6f9a6d;"></span>
+  </div>
+  <div class="field-label">Icon</div>
+  <div style="display:flex;gap:8px;">
+    <span class="iconbtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#123138" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span>
+    <span class="iconbtn">🏢</span><span class="iconbtn">🔑</span>
+  </div>
+  <div class="modal-actions"><button class="btn ghost" onclick="closeModal('catEdit')">Abbrechen</button><button class="btn" onclick="closeModal('catEdit')">Speichern</button></div>
+</div></div>
+
+<div class="modal-overlay" id="modal-tagNew"><div class="modal narrow">
+  <h3 style="font-size:17px;">Neuer Tag</h3>
+  <div class="field-label" style="margin-top:12px;">Name</div><input type="text" placeholder="z. B. Steuerlich relevant" style="margin-bottom:10px;">
+  <div class="field-label">Farbe</div>
+  <div style="display:flex;gap:8px;">
+    <span style="width:24px;height:24px;border-radius:50%;background:#b6503a;border:2px solid var(--charcoal);"></span>
+    <span style="width:24px;height:24px;border-radius:50%;background:#6f9a6d;"></span>
+    <span style="width:24px;height:24px;border-radius:50%;background:#b79a5b;"></span>
+  </div>
+  <div class="modal-actions"><button class="btn ghost" onclick="closeModal('tagNew')">Abbrechen</button><button class="btn" onclick="closeModal('tagNew')">Anlegen</button></div>
+</div></div>
+
+<div class="modal-overlay" id="modal-tagEdit"><div class="modal narrow">
+  <h3 style="font-size:17px;">Tag bearbeiten</h3>
+  <div class="field-label" style="margin-top:12px;">Name</div><input type="text" value="Urlaub" style="margin-bottom:10px;">
+  <div class="modal-actions"><button class="btn ghost" onclick="closeModal('tagEdit')">Abbrechen</button><button class="btn" onclick="closeModal('tagEdit')">Speichern</button></div>
+</div></div>
+
+<div class="modal-overlay" id="modal-budgetNew"><div class="modal narrow">
+  <h3 style="font-size:17px;">Budget anlegen</h3>
+  <div class="field-label" style="margin-top:12px;">Kategorie</div><select style="margin-bottom:10px;"><option>Wohnen</option><option>Shopping</option><option>Sonstiges</option></select>
+  <div class="field-label">Monatliches Limit</div><input type="text" placeholder="z. B. 400 €">
+  <div class="modal-actions"><button class="btn ghost" onclick="closeModal('budgetNew')">Abbrechen</button><button class="btn" onclick="closeModal('budgetNew')">Anlegen</button></div>
+</div></div>
+
+<div class="modal-overlay" id="modal-rule"><div class="modal wide">
+  <h3 style="font-size:17px;">Regel · Wohnen</h3>
+  <div class="field-label" style="margin-top:12px;">Häufige Vorlagen</div>
+  <div class="rule-templates">
+    <span class="chip" onclick="showToast('Vorlage übernommen')">Empfänger enthält…</span>
+    <span class="chip" onclick="showToast('Vorlage übernommen')">Betrag ≈ X monatlich</span>
+    <span class="chip" onclick="showToast('Vorlage übernommen')">Verwendungszweck enthält…</span>
+  </div>
+  <div class="field-label">Bedingungen (alle müssen zutreffen)</div>
+  <div class="rule-cond-row"><select style="flex:1;"><option>Verwendungszweck</option><option>Empfänger</option><option>Betrag</option><option>Konto</option></select><select style="flex:1;"><option>enthält</option><option>ist genau</option><option>≈</option></select><input type="text" placeholder="Miete" style="flex:1;"></div>
+  <a style="font-size:12.5px;font-weight:600;text-decoration:underline;cursor:pointer;">+ weitere Bedingung</a>
+  <div class="field-label" style="margin-top:14px;">Zuweisung</div>
+  <div class="row2"><select style="flex:1;"><option>Kategorie: Wohnen</option></select><select style="flex:1;"><option>Tag: – keiner –</option><option>Urlaub</option></select></div>
+  <div class="rule-preview"><strong>Vorschau:</strong> 18 Treffer aktuell. Bei Speichern: <span style="color:#4b6b49;">+2 neu</span>, keine bestehende entfernt.</div>
+  <div class="modal-actions"><button class="btn ghost" onclick="closeModal('rule')">Abbrechen</button><button class="btn" onclick="closeModal('rule')">Regel speichern</button></div>
+</div></div>
+
+<div class="modal-overlay" id="modal-filter"><div class="modal wide">
+  <h3 style="font-size:17px;margin-bottom:14px;">Detailfilter</h3>
+  <div class="filter-section"><div class="field-label">Konto / Zeitraum</div><div class="row2"><select><option>Alle Konten</option></select><input type="text" placeholder="Zeitraum"></div></div>
+  <div class="filter-section"><div class="field-label">Kategorie / Tags</div><div class="row2"><select><option>Alle Kategorien</option></select><select><option>Alle Tags</option></select></div></div>
+  <div class="filter-section"><div class="field-label">Betragsspanne</div><div class="row2"><input type="text" placeholder="Min €"><input type="text" placeholder="Max €"></div></div>
+  <details class="disclosure">
+    <summary>Erweitert</summary>
+    <div class="hist-row"><span>Vertrag</span><div class="tristate"><span class="active">Alle</span><span>Nur</span><span>Ohne</span></div></div>
+    <div class="hist-row"><span>Regelmäßig</span><div class="tristate"><span class="active">Alle</span><span>Nur</span><span>Ohne</span></div></div>
+    <div class="hist-row"><span>Kontotransfer</span><div class="tristate"><span class="active">Alle</span><span>Nur</span><span>Ohne</span></div></div>
+    <div class="hist-row"><span>Geprüft</span><div class="tristate"><span class="active">Alle</span><span>Nur</span><span>Ohne</span></div></div>
+    <div class="hist-row"><span>Aus Statistik entfernt</span><div class="tristate"><span class="active">Alle</span><span>Nur</span><span>Ohne</span></div></div>
+    <div class="hist-row"><span>Unkategorisiert</span><div class="tristate"><span class="active">Alle</span><span>Nur</span><span>Ohne</span></div></div>
+  </details>
+  <div class="modal-actions"><button class="btn ghost" onclick="closeModal('filter')">Zurücksetzen</button><button class="btn" onclick="closeModal('filter')">Anwenden</button></div>
+</div></div>
+
+<!-- Elemente ein-/ausblenden (ersetzt Drag/Resize-Editor) -->
+<div class="modal-overlay" id="modal-toggle"><div class="modal toggle-panel">
+  <h3 style="font-size:17px;margin-bottom:6px;">Elemente ein-/ausblenden</h3>
+  <p class="kpi-sub" style="margin-bottom:10px;">Reihenfolge und Größe sind fest – so bleibt das Dashboard für alle gleich verständlich.</p>
+  <div class="mini-toggle"><span class="wname">Einnahmen / Ausgaben / Sparquote</span><div class="switch on" onclick="toggleWidget(this,'einnahmen ausgaben sparquote saldo')"><div class="knob"></div></div></div>
+  <div class="mini-toggle"><span class="wname">Geldfluss (Sankey)</span><div class="switch on" onclick="toggleWidget(this,'sankey')"><div class="knob"></div></div></div>
+  <div class="mini-toggle"><span class="wname">Kategorisierungs-Fortschritt</span><div class="switch on" onclick="toggleWidget(this,'fortschritt')"><div class="knob"></div></div></div>
+  <div class="mini-toggle"><span class="wname">Sammlung im Fokus</span><div class="switch on" onclick="toggleWidget(this,'sammlung')"><div class="knob"></div></div></div>
+  <div class="mini-toggle"><span class="wname">Kategorie-Verteilung</span><div class="switch on" onclick="toggleWidget(this,'kategorieverteilung')"><div class="knob"></div></div></div>
+  <div class="mini-toggle"><span class="wname">Cashflow-Trend (6 Monate)</span><div class="switch on" onclick="toggleWidget(this,'cashflow')"><div class="knob"></div></div></div>
+  <div class="mini-toggle"><span class="wname">Vergleich nach Person</span><div class="switch on" onclick="toggleWidget(this,'vergleich')"><div class="knob"></div></div></div>
+  <div class="mini-toggle"><span class="wname">Geplante Buchungen</span><div class="switch on" onclick="toggleWidget(this,'geplant')"><div class="knob"></div></div></div>
+  <div class="community-note">🧩 Weitere Elemente können künftig aus der Community kommen (z. B. eigene Auswertungen). Die Architektur ist dafür vorbereitet – Auswahl &amp; Prüfung folgt in einer späteren Version.</div>
+  <div class="modal-actions"><button class="btn" onclick="closeModal('toggle')">Fertig</button></div>
+</div></div>
+
+<div class="fs-overlay" id="fsOverlay"><div class="fs-box">
+  <div style="display:flex;justify-content:space-between;margin-bottom:10px;"><h3 style="font-size:16px;">Geldfluss – Vollbild</h3><span class="close" style="cursor:pointer;" onclick="closeAll()">Schließen ✕</span></div>
+  <svg width="100%" height="400" viewBox="0 0 1000 400">
+    <path d="M40,80 C330,80 330,60 620,60" stroke="#6f9a6d" stroke-width="48" fill="none" opacity="0.75"/>
+    <path d="M40,180 C330,180 330,140 620,140" stroke="#b6503a" stroke-width="34" fill="none" opacity="0.7"/>
+    <text x="40" y="90" font-size="15" font-family="Inter">Gehalt</text>
+    <text x="635" y="64" font-size="15" font-family="Inter">Miete &amp; Fixkosten</text>
+  </svg>
+  <div style="text-align:right;margin-top:10px;"><button class="btn ghost sm" onclick="showToast('Als PNG exportiert')">Export als PNG</button></div>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let txData = [
+    {date:'2026-07-14', payee:'Lufthansa', purpose:'Flugticket Toskana', cat:'Reisekosten', color:'#123138', amt:-284},
+    {date:'2026-07-12', payee:'Arbeitgeber cinify GmbH', purpose:'Gehalt Juli', cat:'Einkommen', color:'#6f9a6d', amt:3420},
+    {date:'2026-07-10', payee:'Kathi Josek', purpose:'Anteil Miete', cat:'Interne Überweisung', color:'#8a8479', amt:620},
+    {date:'2026-07-08', payee:'REWE', purpose:'Supermarkt', cat:'Essen & Trinken', color:'#b6503a', amt:-64.20},
+    {date:'2026-07-05', payee:'Netflix', purpose:'Abo', cat:'Freizeit & Medien', color:'#6f9a6d', amt:-14.99},
+    {date:'2026-07-01', payee:'Vermieter Huber', purpose:'Miete Juli', cat:'Wohnen', color:'#123138', amt:-1240},
+  ];
+  let selected = new Set();
+  let sortState = {key:null, dir:1};
+  let ctxRowIndex = null;
+
+  function catIconSvg(color){
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>`;
+  }
+  function fmtDate(d){ const [y,m,day]=d.split('-'); return day+'.'+m+'.'; }
+  function renderTx(filter){
+    let data = txData.filter(t => !filter || (t.payee+t.purpose+t.cat+t.date).toLowerCase().includes(filter.toLowerCase()));
+    if(sortState.key){
+      data = [...data].sort((a,b)=>{
+        let va=a[sortState.key], vb=b[sortState.key];
+        if(sortState.key==='amt') return (va-vb)*sortState.dir;
+        return String(va).localeCompare(String(vb))*sortState.dir;
+      });
+    }
+    const list = document.getElementById('txlist');
+    list.innerHTML = '';
+    data.forEach((t,i) => {
+      const row = document.createElement('div');
+      row.className = 'tx-row';
+      row.innerHTML = `
+        <div class="rowcheck" onclick="toggleSelect(event,${i})"></div>
+        <div class="date">${fmtDate(t.date)}</div>
+        <div><div class="payee">${t.payee}</div><div class="purpose">${t.purpose}</div></div>
+        <div class="cat" style="color:${t.color};">${catIconSvg(t.color)}${t.cat}</div>
+        <div></div>
+        <div class="amt num ${t.amt>0?'pos':'neg'}">${t.amt>0?'+':'−'}${Math.abs(t.amt).toFixed(2)} €</div>
+        <div style="color:#c9c2b5;">›</div>`;
+      row.addEventListener('click', (e)=>{ if(!e.target.classList.contains('rowcheck')) openDrawer(); });
+      row.addEventListener('contextmenu', (e)=>{ e.preventDefault(); openCtx(e, i); });
+      list.appendChild(row);
+    });
+    if(!list.children.length) list.innerHTML = '<div class="empty-hint">Keine Treffer.</div>';
+  }
+  function sortBy(key){
+    sortState.dir = (sortState.key===key) ? -sortState.dir : 1;
+    sortState.key = key;
+    renderTx(document.getElementById('txsearch').value);
+  }
+  function filterTx(){ renderTx(document.getElementById('txsearch').value); }
+  function toggleSelect(e,i){
+    e.stopPropagation();
+    e.target.classList.toggle('checked');
+    if(selected.has(i)) selected.delete(i); else selected.add(i);
+    document.getElementById('bulkcount').textContent = selected.size;
+    document.getElementById('bulkbar').classList.toggle('show', selected.size>0);
+  }
+  function clearSelection(){
+    selected.clear();
+    document.querySelectorAll('.rowcheck').forEach(c=>c.classList.remove('checked'));
+    document.getElementById('bulkbar').classList.remove('show');
+  }
+
+  function openCtx(e,i){
+    ctxRowIndex = i;
+    const m = document.getElementById('ctxmenu');
+    m.style.left = e.pageX+'px'; m.style.top = e.pageY+'px';
+    m.classList.add('open');
+  }
+  function closeCtx(){ document.getElementById('ctxmenu').classList.remove('open'); }
+  document.addEventListener('click', (e)=>{ if(!e.target.closest('#ctxmenu')) closeCtx(); });
+
+  function go(viewName){
+    document.querySelectorAll('.navitem[data-view]').forEach(n=>n.classList.toggle('active', n.dataset.view===viewName));
+    document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active', v.dataset.page===viewName));
+    if(viewName==='transaktionen') renderTx('');
+  }
+  document.querySelectorAll('.navitem[data-view]').forEach(n=>n.addEventListener('click', ()=>go(n.dataset.view)));
+
+  function toggleWidget(sw, keys){
+    sw.classList.toggle('on');
+    const show = sw.classList.contains('on');
+    keys.split(' ').forEach(k=>{
+      const w = document.querySelector(`[data-widget="${k}"]`);
+      if(w) w.style.display = show ? '' : 'none';
+    });
+  }
+
+  function openDrawer(){ document.getElementById('drawer').classList.add('open'); }
+  function openContract(){ document.getElementById('drawerContract').classList.add('open'); }
+  function openCategory(){ document.getElementById('drawerCategory').classList.add('open'); }
+  function openHistory(){ document.getElementById('drawerHistory').classList.add('open'); }
+  function openModal(name){ document.getElementById('modal-'+name).classList.add('open'); }
+  function closeModal(name){ document.getElementById('modal-'+name).classList.remove('open'); }
+  function openFullscreen(){ document.getElementById('fsOverlay').classList.add('open'); }
+  function openCollection(){ document.getElementById('collectionDetail').style.display='block'; }
+  function selectChoice(el){ el.parentElement.querySelectorAll('.choice-card').forEach(c=>c.classList.remove('sel')); el.classList.add('sel'); }
+  function toggleCal(btn){ btn.nextElementSibling.classList.toggle('open'); }
+  function showToast(msg, undoable){
+    const t=document.getElementById('toast');
+    t.innerHTML = msg + (undoable ? ' <span class="undo" onclick="showToast(\'Rückgängig gemacht\')">Rückgängig</span>' : '');
+    t.style.display='flex';
+    setTimeout(()=>t.style.display='none',3000);
+  }
+  function closeAll(){ document.querySelectorAll('.drawer-overlay.open, .fs-overlay.open').forEach(o=>o.classList.remove('open')); }
+
+  function confirmAction(title, text, successMsg){
+    document.getElementById('confirmTitle').textContent = title;
+    document.getElementById('confirmText').textContent = text;
+    const btn = document.getElementById('confirmBtn');
+    btn.onclick = ()=>{ closeModal('confirm'); showToast(successMsg, true); };
+    openModal('confirm');
+  }
+  function checkDeleteConfirm(){
+    document.getElementById('deleteAllBtn').disabled = document.getElementById('deleteConfirmInput').value.trim().toLowerCase() !== 'löschen';
+  }
+  function deactivateCheck(sw, name, count){
+    if(sw.classList.contains('on')){
+      if(!confirm(name.replace(/&amp;/g,'&')+' wird von '+count+' Transaktionen verwendet. Trotzdem deaktivieren?')) return;
+    }
+    sw.classList.toggle('on');
+  }
+
+  // Import-Wizard
+  function impGoto(step){
+    ['impStep1','impStep2','impStep3','impStep4','impStepDone'].forEach(id=>document.getElementById(id).style.display='none');
+    if(step==='done'){ document.getElementById('impStepDone').style.display='block'; return; }
+    document.getElementById('impStep'+step).style.display='block';
+    for(let i=1;i<=4;i++){ const d=document.getElementById('impDot'+i); if(d) d.classList.toggle('active', i===step); }
+  }
+  function simulateProgress(){
+    const fill = document.getElementById('loadingFill');
+    fill.style.width='10%';
+    setTimeout(()=>fill.style.width='64%', 150);
+  }
+
+  // Onboarding
+  function onbNext(step){
+    [1,2,3].forEach(i=>{ document.getElementById('onbStep'+i).style.display = (i===step)?'block':'none'; document.getElementById('onb'+i).classList.toggle('done', i<=step); });
+  }
+  function openOnboarding(){ onbNext(1); openModal('onboarding'); }
+  window.addEventListener('load', openOnboarding);
+
+  // Empty-State-Demo-Toggles
+  function toggleEmptyDemo(page){
+    if(page==='konten'){
+      const list=document.getElementById('kontenList'), empty=document.getElementById('kontenEmpty');
+      const show = list.style.display!=='none';
+      list.style.display = show?'none':'';
+      empty.style.display = show?'block':'none';
+    }
+  }
+
+  // Esc schließt alles
+  document.addEventListener('keydown', (e)=>{
+    if(e.key==='Escape'){
+      document.querySelectorAll('.drawer-overlay.open, .modal-overlay.open, .fs-overlay.open').forEach(o=>o.classList.remove('open'));
+      closeCtx();
+    }
+  });
+  document.querySelectorAll('.drawer-overlay, .modal-overlay, .fs-overlay').forEach(ov=>{
+    ov.addEventListener('click', (e)=>{ if(e.target===ov) ov.classList.remove('open'); });
+  });
+  document.querySelectorAll('.tristate').forEach(ts=>{
+    ts.querySelectorAll('span').forEach(s=>s.addEventListener('click', ()=>{
+      ts.querySelectorAll('span').forEach(x=>x.classList.remove('active'));
+      s.classList.add('active');
+    }));
+  });
+
+  function globalSearch(v){
+    if(v.length>1) showToast('Treffer in: Verträge, Sammlungen, Kategorien (Demo)');
+  }
+
+  renderTx('');
+</script>
+
+</body>
+</html>
