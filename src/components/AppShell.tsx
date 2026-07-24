@@ -7,6 +7,7 @@ import { TransaktionenPage } from "@/features/transaktionen/TransaktionenPage";
 import { KategorienPage } from "@/features/kategorien/KategorienPage";
 import { VertraegePage } from "@/features/vertraege/VertraegePage";
 import { SammlungenPage } from "@/features/sammlungen/SammlungenPage";
+import { UebersichtPage } from "@/features/uebersicht/UebersichtPage";
 
 export function AppShell() {
   const currentPage = useNavigationStore((s) => s.currentPage);
@@ -19,7 +20,7 @@ export function AppShell() {
         <main className="min-h-0 flex-1 overflow-y-auto p-6">
           {currentPage === "vermoegen" && <VermoegenPage />}
           {currentPage === "transaktionen" && <TransaktionenPage />}
-          {currentPage === "uebersicht" && <ComingSoonPage title="Übersicht" />}
+          {currentPage === "uebersicht" && <UebersichtPage />}
           {currentPage === "kategorien" && <KategorienPage />}
           {currentPage === "vertraege" && <VertraegePage />}
           {currentPage === "sammlungen" && <SammlungenPage />}
