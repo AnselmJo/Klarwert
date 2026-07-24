@@ -8,6 +8,7 @@ import { KategorienPage } from "@/features/kategorien/KategorienPage";
 import { VertraegePage } from "@/features/vertraege/VertraegePage";
 import { SammlungenPage } from "@/features/sammlungen/SammlungenPage";
 import { UebersichtPage } from "@/features/uebersicht/UebersichtPage";
+import { BudgetsPage } from "@/features/budgets/BudgetsPage";
 
 export function AppShell() {
   const currentPage = useNavigationStore((s) => s.currentPage);
@@ -24,7 +25,7 @@ export function AppShell() {
           {currentPage === "kategorien" && <KategorienPage />}
           {currentPage === "vertraege" && <VertraegePage />}
           {currentPage === "sammlungen" && <SammlungenPage />}
-          {currentPage === "budgets" && <ComingSoonPage title="Budgets" />}
+          {currentPage === "budgets" && <BudgetsPage />}
           {currentPage === "steuer" && <ComingSoonPage title="Steuer" />}
           {currentPage === "rechner" && <ComingSoonPage title="Rechner" />}
           {currentPage === "profil" && <ComingSoonPage title="Profil & Einstellungen" />}
