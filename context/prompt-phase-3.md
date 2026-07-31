@@ -53,6 +53,8 @@ Phase 1+2 sind gebaut, zwei Bugfix-Runden sind abgeschlossen (Checkpoint erreich
 
 ## Checkpoint-Verifikation
 
+**Automatisiert geprüft (Claude Code, ohne GUI-Zugriff):** `tsc` kompiliert ohne Fehler, `npm run build` (tsc + vite build) läuft fehlerfrei durch. Port 1420 war bereits belegt (vermutlich ein laufender `npm run tauri dev`/Vite-Prozess) – es wurde bewusst **kein** weiterer Dev-Server gestartet und kein bestehender Prozess beendet, um eine evtl. offene Session nicht zu stören. Die folgenden vier Punkte erfordern echte Klicks in der laufenden Desktop-App und sind **manuell** vom Nutzer zu verifizieren:
+
 - [ ] 19. Beide Test-Fixtures erneut importieren, jetzt mit allen Spalten (DKB/C24-Default) – prüfen, dass der Kontostand-Anker korrekt befüllt wird (nicht 0,00 €).
 - [ ] 20. Einen Händler-Vorschlag im Aufräum-Modus prüfen, eine Korrektur vornehmen und den Lern-Dialog durchlaufen (beide Zweige: neue Regel, neuer Alias).
 - [ ] 21. App-Neustart nach einem DB-Reset: Template-Kategorien müssen vollständig und mit vorherigen Ausblendungen/Umbenennungen intakt wieder da sein.
