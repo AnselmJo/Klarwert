@@ -99,6 +99,57 @@ async function spentForPeriod(
   return rows[0]?.spent ?? 0;
 }
 
+/**
+ * Budgetperioden-Snapshot (`budget_periods`): friert Limit + verbrauchten Betrag einer abgeschlossenen
+ * Periode dauerhaft ein, damit eine spätere Limit-Änderung die Historie nicht rückwirkend verfälscht
+ * (siehe Kommentar in 001_schema.sql). Nur ohne aktiven Konto-/Personen-Filter aktiv – ein gefilterter
+ * Wert wäre für eine andere Filterauswahl beim nächsten Aufruf falsch, deshalb dort weiterhin live berechnet.
+ */
+async function spentAndLimitForPeriod(
+  budgetId: number,
+  categoryIds: number[],
+  period: BudgetPeriod,
+  filter: BudgetFilter,
+  currentLimitCents: number,
+  isCurrent: boolean,
+): Promise<{ spentCents: number; limitCents: number }> {
+  const hasFilter = !!(filter.assetId || filter.personId);
+  if (hasFilter) {
+    return { spentCents: await spentForPeriod(categoryIds, period, filter), limitCents: currentLimitCents };
+  }
+
+  const db = await getDb();
+  const existing = await db.select<{ id: number; limit_snapshot_cents: number; spent_cents_frozen: number | null }[]>(
+    "select id, limit_snapshot_cents, spent_cents_frozen from budget_periods where budget_id = $1 and period_start = $2",
+    [budgetId, period.from],
+  );
+
+  if (existing.length > 0 && existing[0].spent_cents_frozen !== null && !isCurrent) {
+    return { spentCents: existing[0].spent_cents_frozen, limitCents: existing[0].limit_snapshot_cents };
+  }
+
+  const liveSpent = await spentForPeriod(categoryIds, period, filter);
+
+  if (existing.length === 0) {
+    await db.execute(
+      `insert into budget_periods (budget_id, period_start, period_end, limit_snapshot_cents, spent_cents_frozen)
+       values ($1, $2, $3, $4, $5)`,
+      [budgetId, period.from, period.to, currentLimitCents, isCurrent ? null : liveSpent],
+    );
+    return { spentCents: liveSpent, limitCents: currentLimitCents };
+  }
+
+  if (isCurrent) {
+    // Noch laufend: Limit-Snapshot mit dem aktuell gültigen Limit synchron halten, solange nicht eingefroren.
+    await db.execute("update budget_periods set limit_snapshot_cents = $1 where id = $2", [currentLimitCents, existing[0].id]);
+    return { spentCents: liveSpent, limitCents: currentLimitCents };
+  }
+
+  // Periode ist abgeschlossen, aber noch nicht eingefroren: jetzt einmalig einfrieren.
+  await db.execute("update budget_periods set spent_cents_frozen = $1 where id = $2", [liveSpent, existing[0].id]);
+  return { spentCents: liveSpent, limitCents: existing[0].limit_snapshot_cents };
+}
+
 function getBudgetPeriods(type: PeriodType, anchorIso: string): {
   current: BudgetPeriod;
   history: BudgetPeriod[];
@@ -145,14 +196,24 @@ export async function listBudgets(
       const ids = await categoryIdsForBudget(budget.category_id);
       const periods = getBudgetPeriods(budget.period_type, anchorIso);
       const currentPeriod = periods.current;
-      const spentCents = await spentForPeriod(ids, currentPeriod, filter);
+
       const history = await Promise.all(
-        periods.history.map(async (period) => ({
-          label: period.label,
-          spentCents: await spentForPeriod(ids, period, filter),
-          limitCents: budget.limit_cents,
-        })),
+        periods.history.map(async (period) => {
+          const isCurrent = period.from === currentPeriod.from && period.to === currentPeriod.to;
+          const { spentCents, limitCents } = await spentAndLimitForPeriod(
+            budget.id,
+            ids,
+            period,
+            filter,
+            budget.limit_cents,
+            isCurrent,
+          );
+          return { label: period.label, spentCents, limitCents };
+        }),
       );
+      const currentEntry = history[history.length - 1];
+      const spentCents = currentEntry?.spentCents ?? 0;
+
       return {
         ...budget,
         spentCents,
