@@ -3,11 +3,6 @@ export type AccountType = "giro" | "tagesgeld" | "kreditkarte" | "depot" | "darl
 export type ValuableType = "bausparvertrag" | "bargeld" | "sonstiges";
 export type ValueHistorySource = "manual" | "anchor";
 export type PersonRole = "adult" | "child";
-export type TransactionSource = "import" | "manual";
-export type CategorizationSource = "none" | "manual" | "rule" | "contract";
-export type TransferStatus = "suggested" | "confirmed" | null;
-export type ImportMode = "upsert" | "replace_all";
-export type ImportStatus = "success" | "failed";
 
 export interface Person {
   id: number;
@@ -16,6 +11,8 @@ export interface Person {
   birth_year: number | null;
   is_active: 0 | 1;
   created_at: string;
+  kirchensteuer_aktiv: 0 | 1;
+  bundesland: string | null;
 }
 
 export interface Sparzweck {
@@ -25,6 +22,56 @@ export interface Sparzweck {
   target_cents: number | null;
   sort_order: number;
   is_deleted: 0 | 1;
+}
+export type TransactionSource = "import" | "manual";
+export type CategorizationSource = "none" | "manual" | "rule" | "contract" | "merchant" | "similarity";
+export type TransferStatus = "suggested" | "confirmed" | null;
+export type ImportMode = "upsert" | "replace_all";
+export type ImportStatus = "success" | "failed";
+
+export type MerchantAliasMatchType = "iban" | "name_exact" | "name_fuzzy" | "regex";
+export type CategorizationMatchedBy =
+  | "manual"
+  | "user_rule"
+  | "contract"
+  | "transfer"
+  | "merchant_iban"
+  | "merchant_alias"
+  | "similarity"
+  | "none";
+
+export interface Merchant {
+  id: number;
+  canonical_name: string;
+  display_name: string;
+  default_category_id: number | null;
+  source_version: string | null;
+  is_builtin: 0 | 1;
+  is_active: 0 | 1;
+}
+
+export interface MerchantAlias {
+  id: number;
+  merchant_id: number;
+  match_type: MerchantAliasMatchType;
+  match_value: string;
+  priority: number;
+}
+
+export interface MerchantSuppression {
+  id: number;
+  merchant_id: number;
+  suppressed_at: string;
+}
+
+export interface CategorizationLog {
+  id: number;
+  transaction_id: number;
+  matched_by: CategorizationMatchedBy;
+  rule_id: number | null;
+  merchant_id: number | null;
+  confidence: number;
+  applied_at: string;
 }
 
 export interface ImportProfile {
@@ -37,6 +84,7 @@ export interface ImportProfile {
   date_format: string | null;
   decimal_format: "de" | "en" | null;
   column_map_json: string;
+  source_version?: string | null;
   is_deleted: 0 | 1;
 }
 
@@ -68,17 +116,22 @@ export interface ValueHistoryEntry {
   source: ValueHistorySource;
 }
 
+export type CategoryDirection = "ausgabe" | "einnahme";
+
 export interface Category {
   id: number;
   name: string;
   color: string;
   icon: string | null;
+  direction: CategoryDirection;
   parent_id: number | null;
   is_template: 0 | 1;
   is_system: 0 | 1;
   is_hidden: 0 | 1;
   sort_order: number;
   is_deleted: 0 | 1;
+  template_key: string | null;
+  aliases?: string[]; // Join on category_aliases
 }
 
 export interface Tag {
@@ -88,14 +141,32 @@ export interface Tag {
   is_deleted: 0 | 1;
 }
 
-export type RuleField = "purpose" | "counterparty" | "amount" | "asset";
+export type RuleField = "purpose" | "counterparty" | "amount" | "asset" | "custom";
 export type RuleOperator = "contains" | "equals" | "approx";
+export type RuleCreatedFrom = "manual" | "aufraeumen" | "vertrag";
 
 export interface RuleCondition {
   id: number;
   rule_id: number;
   field: RuleField;
+  custom_field_id: number | null;
   operator: RuleOperator;
+  value: string;
+}
+
+export type CustomFieldDataType = "text" | "integer" | "decimal" | "boolean" | "date" | "datetime";
+
+export interface CustomField {
+  id: number;
+  name: string;
+  data_type: CustomFieldDataType;
+  sort_order: number;
+  is_deleted: 0 | 1;
+}
+
+export interface TransactionCustomValue {
+  transaction_id: number;
+  custom_field_id: number;
   value: string;
 }
 
@@ -111,7 +182,7 @@ export interface Collection {
   created_at: string;
 }
 
-export type ContractInterval = "monthly" | "yearly" | "irregular";
+export type ContractInterval = "monthly" | "quarterly" | "yearly" | "irregular";
 export type ContractStatus = "detected" | "confirmed" | "price_changed" | "paused" | "ended";
 
 export interface Contract {
@@ -123,6 +194,8 @@ export interface Contract {
   status: ContractStatus;
   category_id: number | null;
   detection_method: string | null;
+  is_manual: 0 | 1;
+  generated_rule_id: number | null;
   detected_at: string;
   is_dismissed: 0 | 1;
   is_deleted: 0 | 1;
@@ -132,6 +205,7 @@ export interface RecurringPayment {
   id: number;
   name: string;
   typical_amount_cents: number;
+  category_id: number | null;
   detected_at: string;
   is_dismissed: 0 | 1;
   is_deleted: 0 | 1;
@@ -145,6 +219,8 @@ export interface Rule {
   mark_as_transfer: 0 | 1;
   mark_as_saving: 0 | 1;
   sparzweck_id: number | null;
+  created_from: RuleCreatedFrom;
+  source_contract_id: number | null;
   created_at: string;
   is_deleted: 0 | 1;
 }
@@ -159,11 +235,14 @@ export interface Transaction {
   source: TransactionSource;
   external_id: string | null;
   extra_fields_json: string | null;
+  custom_values?: Record<number, string>; // custom_field_id -> value
   fingerprint: string;
   import_id: number | null;
   category_id: number | null;
   categorization_source: CategorizationSource;
   applied_rule_id: number | null;
+  merchant_id?: number | null;
+  categorization_confidence?: number | null;
   is_reviewed: 0 | 1;
   is_transfer: 0 | 1;
   transfer_pair_id: number | null;
@@ -208,4 +287,32 @@ export type SettingsMap = {
   kirchensteuer_aktiv: "0" | "1";
   kirchensteuer_satz: "8" | "9";
   onboarding_done: "0" | "1";
+  date_display_format: "dd.MM.yyyy" | "yyyy-MM-dd";
 };
+
+export type NotificationType =
+  | "import_reminder"
+  | "balance_mismatch"
+  | "import_failed"
+  | "contract_detected"
+  | "price_change"
+  | "contract_ended"
+  | "transfer_detected"
+  | "budget_80"
+  | "budget_exceeded"
+  | "sparzweck_reached";
+
+export type NotificationPriority = "info" | "warning" | "critical";
+
+export interface NotificationItem {
+  id: number;
+  type: NotificationType;
+  ref_table: string | null;
+  ref_id: number | null;
+  message: string;
+  priority: NotificationPriority;
+  is_read: 0 | 1;
+  is_archived: 0 | 1;
+  created_at: string;
+}
+
