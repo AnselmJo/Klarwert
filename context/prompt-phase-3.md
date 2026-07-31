@@ -39,7 +39,7 @@ Phase 1+2 sind gebaut, zwei Bugfix-Runden sind abgeschlossen (Checkpoint erreich
 - [x] 10. **Händler-Editor-UI** (Kategorien-Seite, Component Library B14): durchsuchbare Tabelle, eigene Händler voll editierbar, kuratierte nur "Unterdrücken". Aktionen "Vorschläge teilen" (Export + Zeile-für-Zeile-Vorschau via B15 + vorausgefülltes GitHub-Issue) und "Regel-Update prüfen" (Diff via B15 gegen die statische Repo-Datei, siehe `klarwert-community-haendler-db.md`).
 - [x] 11. **Sparen-Zuordnung über Regeln**: Regel-Aktion "Als Sparen markieren (+Sparzweck)" muss auch für Überweisungen an *fremde* Konten funktionieren (nicht nur die automatische Transfer-Erkennung zwischen eigenen Konten) – Product Spec Kap. 3, "Wie eine Transaktion zu Sparen kommt".
 - [x] 12. **Transfer-/Sparen-Kategorie-Kopplung**, falls in Runde 2 noch nicht vollständig umgesetzt: Kategorie bei `Transfer=ja`/`Sparen=ja` abgeleitet + schreibgeschützt, nur Sparzweck frei wählbar.
-- [ ] 13. **Sammlungen: zweistufige Transaktions-Zuordnung** (Product Spec 4.5): Stufe 1 Filter (Zeitraum + Konto + Kategorien einschließen/ausschließen), Stufe 2 Ergebnisliste mit Checkbox je Zeile, alle vorausgewählt, gezielt abwählbar, "Alle/Keine"-Kopfzeile.
+- [x] 13. **Sammlungen: zweistufige Transaktions-Zuordnung** (Product Spec 4.5): Stufe 1 Filter (Zeitraum + Konto + Kategorien einschließen/ausschließen), Stufe 2 Ergebnisliste mit Checkbox je Zeile, alle vorausgewählt, gezielt abwählbar, "Alle/Keine"-Kopfzeile.
 
 ## Teil B – Phase 3 (regulär)
 

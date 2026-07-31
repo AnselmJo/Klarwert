@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CategorySelect } from "@/components/CategorySelect";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -18,8 +18,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAssets } from "@/hooks/useAssets";
-import { addTransactionsToCollection, previewBulkAdd, type BulkAddPreview } from "@/db/repositories/collections";
-import { todayIso } from "@/lib/dates";
+import { useCategories, groupCategories } from "@/hooks/useCategories";
+import {
+  addTransactionsToCollection,
+  previewBulkAdd,
+  BULK_ADD_MAX_RESULTS,
+  type BulkAddCandidate,
+} from "@/db/repositories/collections";
+import { todayIso, formatDate } from "@/lib/dates";
+import { formatEur } from "@/lib/money";
+import { useSettingsStore } from "@/stores/settingsStore";
 import { toast } from "sonner";
 
 interface AddByPeriodModalProps {
@@ -29,93 +37,217 @@ interface AddByPeriodModalProps {
   onAdded: () => void;
 }
 
+/** Kompakte Kategorie-Checkbox-Liste (Ober-/Unterkategorien), analog SteuerThemaEditorModal. */
+function CategoryCheckboxTree({
+  selected,
+  onToggle,
+}: {
+  selected: number[];
+  onToggle: (id: number, checked: boolean) => void;
+}) {
+  const { data: categories } = useCategories();
+  const groups = groupCategories(categories ?? []);
+  return (
+    <div className="max-h-[160px] overflow-y-auto rounded-klein border border-border p-2">
+      {groups.map((group) => (
+        <div key={group.parent.id} className="mb-2 last:mb-0">
+          <label className="flex items-center gap-2 text-xs font-medium text-charcoal">
+            <Checkbox checked={selected.includes(group.parent.id)} onCheckedChange={(c) => onToggle(group.parent.id, c === true)} />
+            {group.parent.name}
+          </label>
+          <div className="mt-1 grid grid-cols-2 gap-1 pl-5">
+            {group.options
+              .filter((o) => o.category.id !== group.parent.id)
+              .map((o) => (
+                <label key={o.category.id} className="flex items-center gap-2 text-xs text-slate">
+                  <Checkbox checked={selected.includes(o.category.id)} onCheckedChange={(c) => onToggle(o.category.id, c === true)} />
+                  {o.category.name}
+                </label>
+              ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function AddByPeriodModal({ open, collectionId, onOpenChange, onAdded }: AddByPeriodModalProps) {
   const { data: assets } = useAssets(false);
+  const dateDisplayFormat = useSettingsStore((s) => s.dateDisplayFormat);
+  const [step, setStep] = useState<"filter" | "results">("filter");
   const [dateFrom, setDateFrom] = useState(todayIso());
   const [dateTo, setDateTo] = useState(todayIso());
   const [assetId, setAssetId] = useState<number | null>(null);
-  const [categoryId, setCategoryId] = useState<number | null>(null);
-  const [preview, setPreview] = useState<BulkAddPreview | null>(null);
+  const [includeCategoryIds, setIncludeCategoryIds] = useState<number[]>([]);
+  const [excludeCategoryIds, setExcludeCategoryIds] = useState<number[]>([]);
+  const [candidates, setCandidates] = useState<BulkAddCandidate[]>([]);
+  const [totalMatches, setTotalMatches] = useState(0);
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  async function handlePreview() {
-    const result = await previewBulkAdd(collectionId, dateFrom, dateTo, assetId, categoryId);
-    setPreview(result);
+  function toggleInclude(id: number, checked: boolean) {
+    setIncludeCategoryIds((prev) => (checked ? [...prev, id] : prev.filter((x) => x !== id)));
+  }
+  function toggleExclude(id: number, checked: boolean) {
+    setExcludeCategoryIds((prev) => (checked ? [...prev, id] : prev.filter((x) => x !== id)));
   }
 
+  async function handleContinue() {
+    setLoading(true);
+    try {
+      const result = await previewBulkAdd(collectionId, dateFrom, dateTo, assetId, includeCategoryIds, excludeCategoryIds);
+      setCandidates(result.candidates);
+      setTotalMatches(result.totalMatches);
+      setSelectedIds(new Set(result.candidates.map((c) => c.id)));
+      setStep("results");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function toggleRow(id: number) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  const allSelected = candidates.length > 0 && selectedIds.size === candidates.length;
+
   async function handleConfirm() {
-    if (!preview) return;
     setSubmitting(true);
     try {
-      await addTransactionsToCollection(collectionId, preview.matchingIds);
-      toast.success(`${preview.matchingIds.length - preview.alreadyIncluded} Transaktionen hinzugefügt`);
+      const ids = [...selectedIds];
+      await addTransactionsToCollection(collectionId, ids);
+      const newCount = candidates.filter((c) => selectedIds.has(c.id) && !c.alreadyIncluded).length;
+      toast.success(`${newCount} Transaktionen hinzugefügt`);
       onAdded();
-      setPreview(null);
-      onOpenChange(false);
+      resetAndClose();
     } finally {
       setSubmitting(false);
     }
+  }
+
+  function resetAndClose() {
+    setStep("filter");
+    setCandidates([]);
+    setSelectedIds(new Set());
+    onOpenChange(false);
   }
 
   return (
     <Dialog
       open={open}
       onOpenChange={(o) => {
-        if (!o) setPreview(null);
-        onOpenChange(o);
+        if (!o) resetAndClose();
+        else onOpenChange(o);
       }}
     >
-      <DialogContent className="max-w-[480px]">
+      <DialogContent className="max-w-[560px]">
         <DialogHeader>
-          <DialogTitle>Transaktionen im Zeitraum hinzufügen</DialogTitle>
+          <DialogTitle>
+            {step === "filter" ? "Transaktionen im Zeitraum hinzufügen" : `${candidates.length} Treffer – auswählen`}
+          </DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <Label htmlFor="add-from">Von</Label>
-              <Input id="add-from" type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
+
+        {step === "filter" ? (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="add-from">Von</Label>
+                <Input id="add-from" type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="add-to">Bis</Label>
+                <Input id="add-to" type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
+              </div>
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="add-to">Bis</Label>
-              <Input id="add-to" type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
+              <Label>Konto (optional)</Label>
+              <Select value={assetId ? String(assetId) : "all"} onValueChange={(v) => setAssetId(v === "all" ? null : Number(v))}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Alle Konten</SelectItem>
+                  {assets?.map((a) => (
+                    <SelectItem key={a.id} value={String(a.id)}>
+                      {a.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label>Kategorien einschließen (optional, leer = alle)</Label>
+              <CategoryCheckboxTree selected={includeCategoryIds} onToggle={toggleInclude} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Kategorien ausschließen (optional)</Label>
+              <CategoryCheckboxTree selected={excludeCategoryIds} onToggle={toggleExclude} />
             </div>
           </div>
-          <div className="space-y-1.5">
-            <Label>Konto (optional)</Label>
-            <Select value={assetId ? String(assetId) : "all"} onValueChange={(v) => setAssetId(v === "all" ? null : Number(v))}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Alle Konten</SelectItem>
-                {assets?.map((a) => (
-                  <SelectItem key={a.id} value={String(a.id)}>
-                    {a.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+        ) : (
+          <div className="space-y-2">
+            <div className="flex items-center justify-between border-b border-border pb-2">
+              <label className="flex items-center gap-2 text-sm font-medium text-charcoal">
+                <Checkbox
+                  checked={allSelected}
+                  onCheckedChange={(c) => setSelectedIds(c === true ? new Set(candidates.map((r) => r.id)) : new Set())}
+                />
+                Alle / Keine
+              </label>
+              <span className="text-xs text-slate">{selectedIds.size} von {candidates.length} ausgewählt</span>
+            </div>
+            {totalMatches > candidates.length && (
+              <p className="text-xs text-slate">
+                Zeigt die neuesten {BULK_ADD_MAX_RESULTS} von {totalMatches} Treffern. Zeitraum eingrenzen, um alle zu erfassen.
+              </p>
+            )}
+            <div className="max-h-[360px] space-y-1 overflow-y-auto">
+              {candidates.map((c) => (
+                <label
+                  key={c.id}
+                  className={`flex items-center gap-2 rounded-md border border-border p-2 text-sm ${
+                    selectedIds.has(c.id) ? "" : "opacity-50"
+                  }`}
+                >
+                  <Checkbox checked={selectedIds.has(c.id)} onCheckedChange={() => toggleRow(c.id)} />
+                  <span className="w-20 shrink-0 text-xs text-slate">{formatDate(c.booking_date, dateDisplayFormat)}</span>
+                  <span className="flex-1 truncate text-charcoal">{c.counterparty}</span>
+                  <span className="num shrink-0 text-xs text-slate">{formatEur(c.amount_cents)}</span>
+                  {c.alreadyIncluded && (
+                    <span className="shrink-0 text-[10px] text-slate">bereits enthalten</span>
+                  )}
+                </label>
+              ))}
+              {candidates.length === 0 && <p className="p-3 text-sm text-slate">Keine Treffer für diesen Filter.</p>}
+            </div>
           </div>
-          <div className="space-y-1.5">
-            <Label>Kategorie (optional)</Label>
-            <CategorySelect value={categoryId} onChange={setCategoryId} allowNone={false} placeholder="Alle Kategorien" />
-          </div>
-          {preview && (
-            <p className="text-sm text-slate">
-              {preview.matchingIds.length} Treffer, {preview.alreadyIncluded} bereits enthalten.
-            </p>
-          )}
-        </div>
+        )}
+
         <DialogFooter>
-          <Button variant="ghost" onClick={() => onOpenChange(false)}>
-            Abbrechen
-          </Button>
-          {!preview ? (
-            <Button onClick={() => void handlePreview()}>Vorschau</Button>
+          {step === "filter" ? (
+            <>
+              <Button variant="ghost" onClick={() => onOpenChange(false)}>
+                Abbrechen
+              </Button>
+              <Button onClick={() => void handleContinue()} disabled={loading}>
+                Weiter
+              </Button>
+            </>
           ) : (
-            <Button onClick={() => void handleConfirm()} disabled={submitting}>
-              Hinzufügen
-            </Button>
+            <>
+              <Button variant="ghost" onClick={() => setStep("filter")}>
+                Zurück
+              </Button>
+              <Button onClick={() => void handleConfirm()} disabled={submitting || selectedIds.size === 0}>
+                {selectedIds.size} hinzufügen
+              </Button>
+            </>
           )}
         </DialogFooter>
       </DialogContent>

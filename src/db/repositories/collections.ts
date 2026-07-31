@@ -94,19 +94,31 @@ export async function removeTransactionFromCollection(collectionId: number, tran
   );
 }
 
-export interface BulkAddPreview {
-  matchingIds: number[];
-  alreadyIncluded: number;
+export interface BulkAddCandidate {
+  id: number;
+  booking_date: string;
+  counterparty: string;
+  amount_cents: number;
+  category_id: number | null;
+  alreadyIncluded: boolean;
 }
 
-/** Vorschau für "Transaktionen im Zeitraum hinzufügen" (einmaliger Vollzug, keine Dauerregel). */
+export const BULK_ADD_MAX_RESULTS = 500;
+
+/**
+ * Stufe 1 der zweistufigen Sammlungs-Zuordnung (Product Spec 4.5): liefert die Kandidaten-Zeilen
+ * für Stufe 2 (Checkbox-Liste), inkl. Markierung bereits enthaltener Transaktionen.
+ * Ergebnis wird auf BULK_ADD_MAX_RESULTS begrenzt (neueste zuerst) – der Aufrufer zeigt bei
+ * Überschreitung einen Hinweis an, statt still abzuschneiden.
+ */
 export async function previewBulkAdd(
   collectionId: number,
   dateFrom: string,
   dateTo: string,
   assetId?: number | null,
-  categoryId?: number | null,
-): Promise<BulkAddPreview> {
+  includeCategoryIds: number[] = [],
+  excludeCategoryIds: number[] = [],
+): Promise<{ candidates: BulkAddCandidate[]; totalMatches: number }> {
   const db = await getDb();
   const clauses = ["is_deleted = 0", "booking_date >= $1", "booking_date <= $2"];
   const params: unknown[] = [dateFrom, dateTo];
@@ -115,22 +127,43 @@ export async function previewBulkAdd(
     clauses.push(`asset_id = $${i++}`);
     params.push(assetId);
   }
-  if (categoryId) {
-    clauses.push(`category_id = $${i++}`);
-    params.push(categoryId);
+  if (includeCategoryIds.length > 0) {
+    clauses.push(`category_id in (${includeCategoryIds.map(() => `$${i++}`).join(", ")})`);
+    params.push(...includeCategoryIds);
   }
-  const matches = await db.select<{ id: number }[]>(
-    `select id from transactions where ${clauses.join(" and ")}`,
+  if (excludeCategoryIds.length > 0) {
+    clauses.push(`(category_id is null or category_id not in (${excludeCategoryIds.map(() => `$${i++}`).join(", ")}))`);
+    params.push(...excludeCategoryIds);
+  }
+  const where = clauses.join(" and ");
+
+  const totalRows = await db.select<{ count: number }[]>(
+    `select count(*) as count from transactions where ${where}`,
     params,
   );
-  const matchingIds = matches.map((m) => m.id);
-  if (matchingIds.length === 0) return { matchingIds: [], alreadyIncluded: 0 };
-  const placeholders = matchingIds.map((_, idx) => `$${idx + 2}`).join(", ");
+  const totalMatches = totalRows[0]?.count ?? 0;
+
+  const matches = await db.select<
+    { id: number; booking_date: string; counterparty: string; amount_cents: number; category_id: number | null }[]
+  >(
+    `select id, booking_date, counterparty, amount_cents, category_id from transactions
+     where ${where} order by booking_date desc limit ${BULK_ADD_MAX_RESULTS}`,
+    params,
+  );
+  if (matches.length === 0) return { candidates: [], totalMatches: 0 };
+
+  const ids = matches.map((m) => m.id);
+  const placeholders = ids.map((_, idx) => `$${idx + 2}`).join(", ");
   const existing = await db.select<{ transaction_id: number }[]>(
     `select transaction_id from collection_transactions where collection_id = $1 and transaction_id in (${placeholders})`,
-    [collectionId, ...matchingIds],
+    [collectionId, ...ids],
   );
-  return { matchingIds, alreadyIncluded: existing.length };
+  const existingIds = new Set(existing.map((e) => e.transaction_id));
+
+  return {
+    candidates: matches.map((m) => ({ ...m, alreadyIncluded: existingIds.has(m.id) })),
+    totalMatches,
+  };
 }
 
 export async function addTransactionsToCollection(collectionId: number, transactionIds: number[]): Promise<void> {
@@ -141,4 +174,16 @@ export async function addTransactionsToCollection(collectionId: number, transact
       [collectionId, txId],
     );
   }
+}
+
+/** Returns the IDs of all active collections that contain this transaction. */
+export async function getTransactionCollectionIds(transactionId: number): Promise<number[]> {
+  const db = await getDb();
+  const rows = await db.select<{ collection_id: number }[]>(
+    `select ct.collection_id from collection_transactions ct
+     join collections c on c.id = ct.collection_id
+     where ct.transaction_id = $1 and c.is_deleted = 0`,
+    [transactionId],
+  );
+  return rows.map((r) => r.collection_id);
 }
