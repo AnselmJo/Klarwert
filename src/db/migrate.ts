@@ -11,6 +11,7 @@ import fixForeignKeys008 from "@/db/migrations/008_fix_foreign_keys.sql?raw";
 import fixAllForeignKeys009 from "@/db/migrations/009_fix_all_foreign_keys.sql?raw";
 import personKirchensteuer010 from "@/db/migrations/010_person_kirchensteuer.sql?raw";
 import communityDatenbanken011 from "@/db/migrations/011_community_datenbanken.sql?raw";
+import contractsDropCircularFk012 from "@/db/migrations/012_contracts_drop_circular_fk.sql?raw";
 
 interface MigrationDef {
   version: number;
@@ -30,6 +31,7 @@ const MIGRATIONS: MigrationDef[] = [
   { version: 9, name: "fix_all_foreign_keys", sql: fixAllForeignKeys009 },
   { version: 10, name: "person_kirchensteuer", sql: personKirchensteuer010 },
   { version: 11, name: "community_datenbanken", sql: communityDatenbanken011 },
+  { version: 12, name: "contracts_drop_circular_fk", sql: contractsDropCircularFk012 },
 ];
 
 /**
@@ -185,7 +187,9 @@ async function ensureEssentialColumnsExist(): Promise<void> {
 
     // contracts
     "alter table contracts add column is_manual integer not null default 0",
-    "alter table contracts add column generated_rule_id integer",
+    "alter table contracts add column amount_tolerance_percent real not null default 5",
+    "alter table contracts add column merchant_id integer",
+    "alter table contracts add column confidence real",
 
     // recurring_payments
     "alter table recurring_payments add column category_id integer",

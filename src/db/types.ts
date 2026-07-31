@@ -190,12 +190,14 @@ export interface Contract {
   name: string;
   current_amount_cents: number;
   previous_amount_cents: number | null;
+  amount_tolerance_percent: number;
   interval: ContractInterval;
   status: ContractStatus;
   category_id: number | null;
+  merchant_id: number | null;
   detection_method: string | null;
   is_manual: 0 | 1;
-  generated_rule_id: number | null;
+  confidence: number | null;
   detected_at: string;
   is_dismissed: 0 | 1;
   is_deleted: 0 | 1;
