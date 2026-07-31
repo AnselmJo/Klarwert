@@ -17,6 +17,13 @@ export function formatEurCompact(cents: number): string {
   return `${compactFormatter.format(Math.round(cents / 100))} €`;
 }
 
+/** Formatiert eine Betrags-Texteingabe beim Verlassen des Feldes mit Tausenderpunkt (ohne €-Symbol). */
+export function formatAmountInputOnBlur(input: string): string {
+  if (!input.trim()) return input;
+  const cents = parseAmountToCents(input);
+  return formatter.format(cents / 100);
+}
+
 /** Formatiert eine Zahl mit Tausender-Punkten für deutsche Darstellung, z. B. 100000 -> "100.000". */
 export function formatNumberDe(num: number): string {
   return compactFormatter.format(num);

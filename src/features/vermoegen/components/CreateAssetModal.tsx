@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AmountInput } from "@/components/AmountInput";
+import { DateInput } from "@/components/DateInput";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -278,23 +280,19 @@ export function CreateAssetModal({ open, onOpenChange, onCreated }: CreateAssetM
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label htmlFor="asset-value">Wert</Label>
-                <Input
+                <AmountInput
                   id="asset-value"
-                  inputMode="decimal"
                   placeholder="0,00"
                   value={value}
-                  onChange={(e) => setValue(e.target.value)}
+                  onChange={setValue}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !submitting && name.trim() && value.trim()) void handleSubmit();
+                  }}
                 />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="asset-value-date">Datum</Label>
-                <Input
-                  id="asset-value-date"
-                  type="date"
-                  max={todayIso()}
-                  value={valueDate}
-                  onChange={(e) => setValueDate(e.target.value)}
-                />
+                <DateInput id="asset-value-date" max={todayIso()} value={valueDate} onChange={setValueDate} />
               </div>
             </div>
           )}

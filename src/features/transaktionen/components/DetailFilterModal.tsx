@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DateInput } from "@/components/DateInput";
 import { Label } from "@/components/ui/label";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
@@ -126,20 +127,18 @@ export function DetailFilterModal({ open, initial, onOpenChange, onApply }: Deta
               <div className="grid grid-cols-2 gap-3 pt-1">
                 <div className="space-y-1.5">
                   <Label htmlFor="filter-date-from">Von</Label>
-                  <Input
+                  <DateInput
                     id="filter-date-from"
-                    type="date"
                     value={state.customDateFrom}
-                    onChange={(e) => setState((p) => ({ ...p, customDateFrom: e.target.value }))}
+                    onChange={(v) => setState((p) => ({ ...p, customDateFrom: v }))}
                   />
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="filter-date-to">Bis</Label>
-                  <Input
+                  <DateInput
                     id="filter-date-to"
-                    type="date"
                     value={state.customDateTo}
-                    onChange={(e) => setState((p) => ({ ...p, customDateTo: e.target.value }))}
+                    onChange={(v) => setState((p) => ({ ...p, customDateTo: v }))}
                   />
                 </div>
               </div>

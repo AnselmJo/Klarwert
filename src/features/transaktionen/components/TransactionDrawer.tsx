@@ -14,6 +14,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Lock, Trash2, Plus, ChevronDown } from "lucide-react";
 import { CategorySelect } from "@/components/CategorySelect";
 import { Input } from "@/components/ui/input";
+import { AmountInput } from "@/components/AmountInput";
+import { DateInput } from "@/components/DateInput";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   Select,
@@ -324,23 +326,15 @@ export function TransactionDrawer({ transaction, onOpenChange, onSaved }: Transa
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <Label htmlFor="tx-date">Datum</Label>
-                  <Input
-                    id="tx-date"
-                    type="date"
-                    max={todayIso()}
-                    value={bookingDate}
-                    onChange={(e) => setBookingDate(e.target.value)}
-                  />
+                  <DateInput id="tx-date" max={todayIso()} value={bookingDate} onChange={setBookingDate} />
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="tx-amount">Betrag</Label>
                   <div className="relative">
-                    <Input
+                    <AmountInput
                       id="tx-amount"
-                      type="text"
-                      inputMode="decimal"
                       value={amount}
-                      onChange={(e) => setAmount(e.target.value)}
+                      onChange={setAmount}
                       className="pr-6 text-right"
                     />
                     <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-sm text-slate">

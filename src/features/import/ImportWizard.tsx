@@ -53,6 +53,7 @@ import {
 import { parseAmountWithFormat, formatEur, parseAmountToCents } from "@/lib/money";
 import { parseDateWithFormat } from "@/lib/dates";
 import type { ImportMode } from "@/db/types";
+import { toast } from "sonner";
 
 const CORE_ROLE_OPTIONS: { value: ColumnRole | "ignore"; label: string }[] = [
   { value: "date", label: "Datum" },
@@ -96,6 +97,8 @@ const STEP_DOT_INDEX: Record<WizardStep, number> = {
 
 /** Sentinel-Wert im Konto-Select der Kontokennungs-Zuordnung: "neues Konto anlegen". */
 const NEW_ACCOUNT_VALUE = "__new__";
+/** Diesen in der Datei gefundenen Kontokennungs-Wert nicht importieren (z. B. nur 2 von 3 Konten). */
+const SKIP_ACCOUNT_VALUE = "__skip__";
 
 interface ImportWizardProps {
   open: boolean;
@@ -105,7 +108,7 @@ interface ImportWizardProps {
   forceMappingMode?: boolean;
 }
 
-export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: ImportWizardProps) {
+export function ImportWizard({ open, assetId, onOpenChange, onCompleted, forceMappingMode }: ImportWizardProps) {
   const queryClient = useQueryClient();
   const [step, setStep] = useState<WizardStep>("file");
   const [selectedAssetId, setSelectedAssetId] = useState(assetId);
@@ -122,6 +125,8 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
   const [roleByColumn, setRoleByColumn] = useState<Record<number, ColumnRole | "ignore" | "keep">>({});
   const [dataTypeByColumn, setDataTypeByColumn] = useState<Record<number, string>>({});
   const [extractCounterpartyFromPurpose, setExtractCounterpartyFromPurpose] = useState(false);
+  /** True, sobald der Nutzer die automatisch vorgeschlagene Spaltenzuordnung manuell geändert hat. */
+  const [hasManuallyEditedMapping, setHasManuallyEditedMapping] = useState(false);
   const [selectedAccountLabel, setSelectedAccountLabel] = useState<string | null>(null);
 
   const [mode, setMode] = useState<ImportMode>("upsert");
@@ -135,7 +140,7 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
   // --- Mehrkonto-Import (z. B. C24) ---
   const { data: persons } = usePersons();
   const [useMultiAccount, setUseMultiAccount] = useState(false);
-  const [accountMapDraft, setAccountMapDraft] = useState<Record<string, number | typeof NEW_ACCOUNT_VALUE>>({});
+  const [accountMapDraft, setAccountMapDraft] = useState<Record<string, number | typeof NEW_ACCOUNT_VALUE | typeof SKIP_ACCOUNT_VALUE>>({});
   const [newAccountNames, setNewAccountNames] = useState<Record<string, string>>({});
   const [savingAccountMapping, setSavingAccountMapping] = useState(false);
   
@@ -162,6 +167,7 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
       setRoleByColumn({});
       setDataTypeByColumn({});
       setExtractCounterpartyFromPurpose(false);
+      setHasManuallyEditedMapping(false);
       setSelectedAccountLabel(null);
       setMode("upsert");
       setBalanceInput("");
@@ -338,12 +344,32 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
         column_map_json: JSON.stringify(columnMap),
       });
       setMatchedProfileId(profileId);
+    } else if (forceMappingMode || hasManuallyEditedMapping) {
+      // Zuordnung nur persistieren, wenn der Nutzer sie bewusst geöffnet ("Import-Format ändern") oder
+      // tatsächlich manuell verändert hat – sonst würde bereits der allererste, ganz normale Import
+      // eines Standardprofils (Nutzer klickt nur "Weiter") es sofort als "lokal verändert" einfrieren
+      // und künftige Korrekturen am mitgelieferten Standard-Mapping (bankProfiles.ts) nie mehr ankommen.
+      await updateImportProfile(profileId, {
+        column_map_json: JSON.stringify(columnMap),
+        delimiter: parsedFile.detected.delimiter ?? undefined,
+        encoding: parsedFile.detected.encoding,
+        date_format: parsedFile.detected.dateFormat,
+        decimal_format: parsedFile.detected.decimalFormat,
+        locally_modified: true,
+      });
+    }
+
+    if (forceMappingMode) {
+      toast.success("Bankprofil aktualisiert");
+      onCompleted();
+      onOpenChange(false);
+      return;
     }
 
     if (accountLabels.length > 1) {
       setUseMultiAccount(true);
       const existingMap = await listAccountMapForProfile(profileId);
-      const draft: Record<string, number | typeof NEW_ACCOUNT_VALUE> = {};
+      const draft: Record<string, number | typeof NEW_ACCOUNT_VALUE | typeof SKIP_ACCOUNT_VALUE> = {};
       for (const label of accountLabels) {
         const mapped = existingMap.find((m) => m.source_value === label);
         if (mapped) draft[label] = mapped.asset_id;
@@ -358,12 +384,18 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
   }
 
   function accountMappingComplete(): boolean {
-    return accountLabels.every((label) => {
+    const allDecided = accountLabels.every((label) => {
       const value = accountMapDraft[label];
       if (value === undefined) return false;
       if (value === NEW_ACCOUNT_VALUE) return !!newAccountNames[label]?.trim();
       return true;
     });
+    // Mindestens ein Konto muss tatsächlich importiert werden (nicht alle übersprungen).
+    const hasAtLeastOneMapped = accountLabels.some((label) => {
+      const value = accountMapDraft[label];
+      return value !== undefined && value !== SKIP_ACCOUNT_VALUE;
+    });
+    return allDecided && hasAtLeastOneMapped;
   }
 
   async function handleContinueFromAccountMapping() {
@@ -373,6 +405,7 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
       const firstPersonId = persons?.[0]?.id;
       for (const label of accountLabels) {
         let value = accountMapDraft[label];
+        if (value === SKIP_ACCOUNT_VALUE) continue;
         if (value === NEW_ACCOUNT_VALUE) {
           if (!firstPersonId) throw new Error("Keine Person vorhanden, um ein neues Konto anzulegen.");
           const newAssetId = await createAsset({
@@ -637,6 +670,7 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
                             value={roleByColumn[i] ?? "keep"}
                             onValueChange={(v) => {
                               setRoleByColumn((prev) => ({ ...prev, [i]: v as ColumnRole | "ignore" | "keep" }));
+                              setHasManuallyEditedMapping(true);
                               if (v === "keep" && !dataTypeByColumn[i] && parsedFile) {
                                 setDataTypeByColumn((prev) => ({ ...prev, [i]: autoDetectDataType(i, parsedFile.rows) }));
                               }
@@ -734,7 +768,8 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
                       onValueChange={(v) =>
                         setAccountMapDraft((prev) => ({
                           ...prev,
-                          [label]: v === NEW_ACCOUNT_VALUE ? NEW_ACCOUNT_VALUE : Number(v),
+                          [label]:
+                            v === NEW_ACCOUNT_VALUE || v === SKIP_ACCOUNT_VALUE ? v : Number(v),
                         }))
                       }
                     >
@@ -748,6 +783,7 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
                           </SelectItem>
                         ))}
                         <SelectItem value={NEW_ACCOUNT_VALUE}>+ Neues Konto anlegen</SelectItem>
+                        <SelectItem value={SKIP_ACCOUNT_VALUE}>Nicht importieren</SelectItem>
                       </SelectContent>
                     </Select>
                     {accountMapDraft[label] === NEW_ACCOUNT_VALUE && (
@@ -813,7 +849,11 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
                     ).length;
                     const value = accountMapDraft[label];
                     const assetName =
-                      typeof value === "number" ? accountAssets.find((a) => a.id === value)?.name ?? "?" : "?";
+                      typeof value === "number"
+                        ? accountAssets.find((a) => a.id === value)?.name ?? "?"
+                        : value === SKIP_ACCOUNT_VALUE
+                          ? "wird übersprungen"
+                          : "?";
                     return (
                       <p key={label} className="text-xs text-slate">
                         {label} → {assetName}: {count} Zeilen

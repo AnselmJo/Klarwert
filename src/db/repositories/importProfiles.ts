@@ -28,6 +28,7 @@ export interface CreateImportProfileInput {
   column_map_json: string;
   import_all_columns?: boolean;
   account_column_index?: number | null;
+  locally_modified?: boolean;
 }
 
 export async function createImportProfile(input: CreateImportProfileInput): Promise<number> {
@@ -66,8 +67,9 @@ export async function updateImportProfile(
       decimal_format = coalesce($5, decimal_format),
       column_map_json = coalesce($6, column_map_json),
       import_all_columns = coalesce($7, import_all_columns),
-      account_column_index = coalesce($8, account_column_index)
-     where id = $9`,
+      account_column_index = coalesce($8, account_column_index),
+      locally_modified = coalesce($9, locally_modified)
+     where id = $10`,
     [
       input.header_fingerprint ?? null,
       input.delimiter ?? null,
@@ -77,6 +79,7 @@ export async function updateImportProfile(
       input.column_map_json ?? null,
       input.import_all_columns === undefined ? null : (input.import_all_columns ? 1 : 0),
       input.account_column_index ?? null,
+      input.locally_modified === undefined ? null : (input.locally_modified ? 1 : 0),
       id,
     ],
   );

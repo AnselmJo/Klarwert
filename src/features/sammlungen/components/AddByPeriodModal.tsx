@@ -7,7 +7,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { DateInput } from "@/components/DateInput";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -158,11 +158,11 @@ export function AddByPeriodModal({ open, collectionId, onOpenChange, onAdded }: 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label htmlFor="add-from">Von</Label>
-                <Input id="add-from" type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
+                <DateInput id="add-from" value={dateFrom} onChange={setDateFrom} />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="add-to">Bis</Label>
-                <Input id="add-to" type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
+                <DateInput id="add-to" value={dateTo} onChange={setDateTo} />
               </div>
             </div>
             <div className="space-y-1.5">

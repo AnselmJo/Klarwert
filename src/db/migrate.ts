@@ -15,6 +15,8 @@ import contractsDropCircularFk012 from "@/db/migrations/012_contracts_drop_circu
 import categorizationLogAlternatives013 from "@/db/migrations/013_categorization_log_alternatives.sql?raw";
 import multiAccountImport014 from "@/db/migrations/014_multi_account_import.sql?raw";
 import transferIbanPersonAliases015 from "@/db/migrations/015_transfer_iban_person_aliases.sql?raw";
+import fixStaleContractsReference016 from "@/db/migrations/016_fix_stale_contracts_reference.sql?raw";
+import importProfileLocallyModified017 from "@/db/migrations/017_import_profile_locally_modified.sql?raw";
 
 interface MigrationDef {
   version: number;
@@ -38,6 +40,8 @@ const MIGRATIONS: MigrationDef[] = [
   { version: 13, name: "categorization_log_alternatives", sql: categorizationLogAlternatives013 },
   { version: 14, name: "multi_account_import", sql: multiAccountImport014 },
   { version: 15, name: "transfer_iban_person_aliases", sql: transferIbanPersonAliases015 },
+  { version: 16, name: "fix_stale_contracts_reference", sql: fixStaleContractsReference016 },
+  { version: 17, name: "import_profile_locally_modified", sql: importProfileLocallyModified017 },
 ];
 
 /**
@@ -188,6 +192,7 @@ async function ensureEssentialColumnsExist(): Promise<void> {
     "alter table import_profiles add column source_version text",
     "alter table import_profiles add column import_all_columns integer not null default 0",
     "alter table import_profiles add column account_column_index integer",
+    "alter table import_profiles add column locally_modified integer not null default 0",
 
     // assets
     "alter table assets add column iban text",
@@ -282,24 +287,15 @@ async function applyMigrations(): Promise<void> {
     }
   }
 
-  // Self-healing check: Überprüfen, ob in sqlite_master noch verwaiste Referenzen auf _old/_fix_temp existieren
-  try {
-    const corrupted = await db.select<{ name: string }[]>(
-      "select name from sqlite_master where type = 'table' and (sql like '%_old%' or sql like '%_fix_temp%')",
-    );
-    if (corrupted.length > 0) {
-      await db.execute("PRAGMA foreign_keys = OFF;");
-      try {
-        for (const statement of splitStatements(fixAllForeignKeys009)) {
-          await db.execute(statement);
-        }
-      } finally {
-        await db.execute("PRAGMA foreign_keys = ON;");
-      }
-    }
-  } catch {
-    /* Self-healing Check ignorieren falls Schema intakt */
-  }
+  // HINWEIS: Der frühere "Self-healing check" hier wurde entfernt (verursachte selbst einen Bug).
+  // Er suchte per `sql like '%_old%'` nach vermeintlich verwaisten Tabellen und spielte bei jedem
+  // App-Start pauschal fixAllForeignKeys009 erneut ein. Problem: `rules.source_contract_id` enthielt
+  // dauerhaft die Textreferenz "contracts_old" (Altlast einer früheren Rename-Migration) – das ließ
+  // die Prüfung auf JEDEM Start anschlagen und den alten (Vor-012-)contracts-Rebuild erneut laufen,
+  // wodurch migrate.ts Migration 012 (merchant_id/confidence/amount_tolerance_percent) bei jedem
+  // Neustart wieder rückgängig gemacht wurde ("no such column: merchant_id" beim Import). Migration
+  // 016 behebt den Ist-Zustand einmalig und endgültig; ein pauschaler Text-Scan über alle Tabellen
+  // ist zu fehleranfällig, um ihn als wiederkehrenden Automatismus zu behalten.
 
   // Stellt sicher, dass Standard-Kategorien und Händler immer existieren (idempotent, siehe CLAUDE.md "Daten-Robustheit")
   await seedTemplateCategories();

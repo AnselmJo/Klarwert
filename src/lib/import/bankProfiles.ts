@@ -114,7 +114,7 @@ export const BUILTIN_BANK_PROFILES: BuiltinBankProfile[] = [
       counterparty_incoming: "Zahlungspflichtige*r",
       counterparty_outgoing: "Zahlungsempfänger*in",
       purpose: "Verwendungszweck",
-      transaction_type: "Status",
+      transaction_type: "Umsatztyp",
       recipient_iban: "IBAN",
       description: "Gläubiger-ID",
       external_id: "Kundenreferenz",
@@ -253,7 +253,10 @@ export async function ensureBuiltinBankProfiles(): Promise<void> {
         column_map_json: JSON.stringify(profile.columnMap),
         import_all_columns: profile.importAllColumns ?? false,
       });
-    } else {
+    } else if (!found.locally_modified) {
+      // Nur synchronisieren, solange der Nutzer dieses mitgelieferte Profil nicht selbst über den
+      // Import-Wizard bearbeitet hat (siehe locally_modified, Migration 017) – sonst würden App-Updates
+      // eine bewusste Nutzer-Korrektur bei jedem Start wieder überschreiben.
       await updateImportProfile(found.id, {
         header_fingerprint: computeHeaderFingerprint(profile.headers),
         delimiter: profile.delimiter,

@@ -410,11 +410,13 @@ export function ProfilPage() {
                     <tr key={asset.id} className="border-b border-border last:border-0">
                       <td className="px-3 py-2 text-charcoal">{asset.name}</td>
                       {persons.map((person) => (
-                        <td key={person.id} className="px-3 py-2 text-center">
-                          <Checkbox
-                            checked={isChecked(asset.id, person.id)}
-                            onCheckedChange={() => void handleToggleOwner(asset.id, person.id)}
-                          />
+                        <td key={person.id} className="px-3 py-2">
+                          <div className="flex justify-center">
+                            <Checkbox
+                              checked={isChecked(asset.id, person.id)}
+                              onCheckedChange={() => void handleToggleOwner(asset.id, person.id)}
+                            />
+                          </div>
                         </td>
                       ))}
                     </tr>

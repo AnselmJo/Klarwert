@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AmountInput } from "@/components/AmountInput";
+import { DateInput } from "@/components/DateInput";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -127,23 +129,11 @@ export function CreateTransactionModal({
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="tx-date">Datum</Label>
-              <Input
-                id="tx-date"
-                type="date"
-                max={todayIso()}
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-              />
+              <DateInput id="tx-date" max={todayIso()} value={date} onChange={setDate} />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="tx-amount">Betrag</Label>
-              <Input
-                id="tx-amount"
-                inputMode="decimal"
-                placeholder="-45,00"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-              />
+              <AmountInput id="tx-amount" placeholder="-45,00" value={amount} onChange={setAmount} />
             </div>
           </div>
 

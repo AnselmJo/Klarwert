@@ -7,7 +7,8 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { AmountInput } from "@/components/AmountInput";
+import { DateInput } from "@/components/DateInput";
 import { Label } from "@/components/ui/label";
 import { addValueHistoryEntry } from "@/db/repositories/valueHistory";
 import { parseAmountToCents } from "@/lib/money";
@@ -65,24 +66,20 @@ export function UpdateValueModal({ asset, onOpenChange, onSaved }: UpdateValueMo
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1.5">
             <Label htmlFor="update-value">Betrag</Label>
-            <Input
+            <AmountInput
               id="update-value"
-              inputMode="decimal"
               placeholder="0,00"
               value={value}
-              onChange={(e) => setValue(e.target.value)}
+              onChange={setValue}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !submitting && value.trim()) void handleSubmit();
+              }}
               autoFocus
             />
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="update-value-date">Datum</Label>
-            <Input
-              id="update-value-date"
-              type="date"
-              max={todayIso()}
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
+            <DateInput id="update-value-date" max={todayIso()} value={date} onChange={setDate} />
           </div>
         </div>
         <DialogFooter>

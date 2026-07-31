@@ -96,6 +96,7 @@ export interface ImportProfile {
   source_version?: string | null;
   import_all_columns: 0 | 1;
   account_column_index: number | null;
+  locally_modified: 0 | 1;
   is_deleted: 0 | 1;
 }
 
