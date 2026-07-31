@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Icons from "lucide-react";
-import { MoreHorizontal, Pencil, Plus, EyeOff, Trash2 } from "lucide-react";
+import { MoreHorizontal, Pencil, Plus, EyeOff, Trash2, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,13 +13,14 @@ import {
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { useCategories } from "@/hooks/useCategories";
 import { useRules } from "@/hooks/useRules";
-import { getCategoryYearSums, countCategoryUsage, deleteCategory, setCategoryHidden } from "@/db/repositories/categories";
+import { getCategoryYearSums, countCategoryUsage, deleteCategory, setCategoryHidden, restoreDefaultCategories } from "@/db/repositories/categories";
 import { CategoryEditorModal } from "@/features/kategorien/components/CategoryEditorModal";
 import { CategoryDrawer } from "@/features/kategorien/components/CategoryDrawer";
 import { TemplateVisibilityDrawer } from "@/features/kategorien/components/TemplateVisibilityDrawer";
 import { RulesManagerDrawer } from "@/features/kategorien/components/RulesManagerDrawer";
 import { SparzweckSection } from "@/features/kategorien/components/SparzweckSection";
 import { TagSection } from "@/features/kategorien/components/TagSection";
+import { HaendlerSection } from "@/features/kategorien/components/HaendlerSection";
 import { useGlobalFilterStore } from "@/stores/globalFilterStore";
 import { formatEur } from "@/lib/money";
 import type { Category } from "@/db/types";
@@ -38,6 +40,7 @@ export function KategorienPage() {
   const selectedPersonId = useGlobalFilterStore((s) => s.selectedPersonId);
 
   const [scope, setScope] = useState<"all" | "own">("all");
+  const [search, setSearch] = useState("");
   const [editorOpen, setEditorOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [drawerCategory, setDrawerCategory] = useState<Category | null>(null);
@@ -61,13 +64,37 @@ export function KategorienPage() {
 
   const topLevel = useMemo(() => {
     const visible = (categories ?? []).filter((c) => scope === "all" || c.is_template === 0);
-    return visible.filter((c) => c.parent_id === null).sort((a, b) => a.sort_order - b.sort_order || a.name.localeCompare(b.name));
-  }, [categories, scope]);
+    const searchLower = search.trim().toLowerCase();
+    
+    if (!searchLower) {
+      return visible.filter((c) => c.parent_id === null).sort((a, b) => a.sort_order - b.sort_order || a.name.localeCompare(b.name));
+    }
+
+    // When searching, show all matching categories flat (parent + children)
+    const matchingIds = new Set<number>();
+    for (const c of visible) {
+      const nameMatch = c.name.toLowerCase().includes(searchLower);
+      const aliasMatch = (c.aliases ?? []).some((a) => a.toLowerCase().includes(searchLower));
+      if (nameMatch || aliasMatch) {
+        matchingIds.add(c.id);
+        // Also show parent
+        if (c.parent_id) matchingIds.add(c.parent_id);
+      }
+    }
+    return visible.filter((c) => c.parent_id === null && matchingIds.has(c.id)).sort((a, b) => a.sort_order - b.sort_order || a.name.localeCompare(b.name));
+  }, [categories, scope, search]);
 
   function childrenOf(parentId: number): Category[] {
-    return (categories ?? []).filter(
+    const searchLower = search.trim().toLowerCase();
+    const children = (categories ?? []).filter(
       (c) => c.parent_id === parentId && (scope === "all" || c.is_template === 0),
     );
+    if (!searchLower) return children;
+    return children.filter((c) => {
+      const nameMatch = c.name.toLowerCase().includes(searchLower);
+      const aliasMatch = (c.aliases ?? []).some((a) => a.toLowerCase().includes(searchLower));
+      return nameMatch || aliasMatch;
+    });
   }
 
   async function handleDeleteOrHide(category: Category) {
@@ -139,11 +166,30 @@ export function KategorienPage() {
     );
   }
 
+  async function handleRestoreDefaults() {
+    try {
+      await restoreDefaultCategories();
+      invalidateCategories();
+      toast.success("Standard-Kategorien wurden wiederhergestellt.");
+    } catch (e) {
+      toast.error(`Fehler beim Wiederherstellen: ${String(e)}`);
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="font-heading text-xl text-charcoal">Kategorien</h1>
         <div className="flex items-center gap-2">
+          <div className="relative">
+            <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-slate" />
+            <Input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Suchen…"
+              className="h-8 w-40 pl-8 text-sm"
+            />
+          </div>
           <Button
             size="sm"
             onClick={() => {
@@ -163,6 +209,9 @@ export function KategorienPage() {
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => setTemplateDrawerOpen(true)}>
                 Standard-Kategorien verwalten
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => void handleRestoreDefaults()}>
+                Standard-Kategorien wiederherstellen
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setRulesDrawerOpen(true)}>Regeln verwalten</DropdownMenuItem>
             </DropdownMenuContent>
@@ -199,6 +248,7 @@ export function KategorienPage() {
 
       <SparzweckSection />
       <TagSection />
+      <HaendlerSection />
 
       <CategoryEditorModal
         open={editorOpen}

@@ -158,6 +158,66 @@ export async function getCategorizationLogForTransaction(
   return rows[0] ?? null;
 }
 
+export interface MerchantDataReleaseMerchant {
+  canonical_name: string;
+  display_name: string;
+  default_category_template_key: string | null;
+  aliases: { type: MerchantAlias["match_type"]; value: string }[];
+}
+
+export interface MerchantDataRelease {
+  source_version: string;
+  merchants: MerchantDataReleaseMerchant[];
+}
+
+/**
+ * Übernimmt eine kuratierte Daten-Datei aus dem Community-Repo (siehe klarwert-community-haendler-db.md,
+ * Abschnitt 4). Kategorie-Referenz läuft über den stabilen `template_key`, nicht über eine lokale ID.
+ * Legt neue Händler an bzw. aktualisiert bestehende kuratierte Händler (Aliase werden ersetzt).
+ */
+export async function applyMerchantDataRelease(release: MerchantDataRelease): Promise<void> {
+  const db = await getDb();
+  for (const m of release.merchants) {
+    let categoryId: number | null = null;
+    if (m.default_category_template_key) {
+      const catRows = await db.select<{ id: number }[]>(
+        "select id from categories where template_key = $1",
+        [m.default_category_template_key],
+      );
+      categoryId = catRows[0]?.id ?? null;
+    }
+
+    const existing = await db.select<{ id: number }[]>(
+      "select id from merchants where canonical_name = $1",
+      [m.canonical_name],
+    );
+
+    let merchantId: number;
+    if (existing.length > 0) {
+      merchantId = existing[0].id;
+      await db.execute(
+        "update merchants set display_name = $1, default_category_id = $2, source_version = $3, is_builtin = 1 where id = $4",
+        [m.display_name, categoryId, release.source_version, merchantId],
+      );
+      await db.execute("delete from merchant_aliases where merchant_id = $1", [merchantId]);
+    } else {
+      const res = await db.execute(
+        `insert into merchants (canonical_name, display_name, default_category_id, source_version, is_builtin, is_active)
+         values ($1, $2, $3, $4, 1, 1)`,
+        [m.canonical_name, m.display_name, categoryId, release.source_version],
+      );
+      merchantId = res.lastInsertId as number;
+    }
+
+    for (const [i, alias] of m.aliases.entries()) {
+      await db.execute(
+        "insert into merchant_aliases (merchant_id, match_type, match_value, priority) values ($1, $2, $3, $4)",
+        [merchantId, alias.type, alias.value.trim().toLowerCase(), (i + 1) * 10],
+      );
+    }
+  }
+}
+
 /** Seed default curated merchants */
 export async function seedDefaultMerchants(): Promise<void> {
   const db = await getDb();
