@@ -46,7 +46,7 @@ Phase 1+2 sind gebaut, zwei Bugfix-Runden sind abgeschlossen (Checkpoint erreich
 - [x] 14. **Übersicht/Dashboard** (Product Spec 4.1) vollständig: Zeitraum-Switcher, Freshness-Banner, alle 12 Widgets (KPI ×4, Sankey, Kategorisierungs-Fortschritt, Sammlung im Fokus, Ausgaben-Donut, Cashflow-Trend, Sparen nach Zweck, Vergleich nach Person, Geplante Buchungen), "Elemente ein-/ausblenden".
 - [x] 15. **Budgets** (Product Spec 4.7) vollständig: Kacheln mit Fortschrittsbalken + Mini-Verlauf, Anlegen/Bearbeiten-Modal mit Zeitraum-Typ, Budgetperioden-Snapshots, Benachrichtigung bei 80 %/100 %.
 - [x] 16. **Steuer-Seite** (Product Spec 4.8): Jahresauswahl, Steuer-Themen-Blöcke (Default-Set aus seed-data.md), CSV-Export je Block und gesamt, Themen-Editor.
-- [ ] 17. **Benachrichtigungs-Logik** (nicht nur die Glocke, die schon existiert): tatsächliche Erzeugung aller Typen aus R14 (Import-Erinnerung, Saldo-Abweichung, Import fehlgeschlagen, Vertrag neu/Preisänderung/beendet, Transfer erkannt, Budget 80 %/überschritten, Sparzweck erreicht), Upsert je Typ+Bezug, Auto-Archiv bei behobener Ursache.
+- [x] 17. **Benachrichtigungs-Logik** (nicht nur die Glocke, die schon existiert): tatsächliche Erzeugung aller Typen aus R14 (Import-Erinnerung, Saldo-Abweichung, Import fehlgeschlagen, Vertrag neu/Preisänderung/beendet, Transfer erkannt, Budget 80 %/überschritten, Sparzweck erreicht), Upsert je Typ+Bezug, Auto-Archiv bei behobener Ursache.
 - [ ] 18. **Änderungsverlauf/Undo-System** vollständig (Product Spec 5.6, R11): Verlauf-Drawer, 30-Tage/50-Aktionen-Fenster, Rückgängig je Eintrag, für alle Bulk-/Regel-/Lösch-Aktionen aus Phase 1–3.
 
 ---
