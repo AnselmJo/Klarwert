@@ -40,6 +40,7 @@ import { useSettingsStore } from "@/stores/settingsStore";
 import { useCustomFields } from "@/hooks/useCustomFields";
 import { useTransactionCustomValues } from "@/hooks/useTransactionCustomValues";
 import { setCustomValue } from "@/db/repositories/customFields";
+import { LearnDialog } from "@/features/transaktionen/components/LearnDialog";
 import { useCategories } from "@/hooks/useCategories";
 import { getCategorizationLogForTransaction, listMerchants } from "@/db/repositories/merchants";
 import { listRules } from "@/db/repositories/rules";
@@ -108,6 +109,11 @@ export function TransactionDrawer({ transaction, onOpenChange, onSaved }: Transa
   const activeCollections = (allCollections ?? []).filter((c: any) => c.is_deleted === 0 && c.status === "active");
   const [newTagName, setNewTagName] = useState("");
   const [ruleEditorOpen, setRuleEditorOpen] = useState(false);
+  const [learnDialogState, setLearnDialogState] = useState<{
+    original: TransactionWithTags;
+    newCategoryId: number;
+    newCategoryName: string;
+  } | null>(null);
 
   const [bookingDate, setBookingDate] = useState("");
   const [counterparty, setCounterparty] = useState("");
@@ -254,7 +260,20 @@ export function TransactionDrawer({ transaction, onOpenChange, onSaved }: Transa
 
       toast.success("Änderungen gespeichert");
       onSaved();
-      onOpenChange(false);
+
+      const wasAutomatic = (
+        ["rule", "contract", "transfer", "merchant", "similarity"] as string[]
+      ).includes(transaction.categorization_source);
+      const categoryChanged = categoryId !== null && categoryId !== transaction.category_id;
+      if (wasAutomatic && categoryChanged) {
+        setLearnDialogState({
+          original: transaction,
+          newCategoryId: categoryId!,
+          newCategoryName: categoryLabel(categoryId),
+        });
+      } else {
+        onOpenChange(false);
+      }
     } catch (e) {
       toast.error(`Fehler: ${String(e)}`);
     } finally {
@@ -582,6 +601,24 @@ export function TransactionDrawer({ transaction, onOpenChange, onSaved }: Transa
           </Button>
         </SheetFooter>
       </SheetContent>
+      {learnDialogState && (
+        <LearnDialog
+          open={!!learnDialogState}
+          onOpenChange={(o) => {
+            if (!o) {
+              setLearnDialogState(null);
+              onOpenChange(false);
+            }
+          }}
+          transaction={learnDialogState.original}
+          newCategoryId={learnDialogState.newCategoryId}
+          newCategoryName={learnDialogState.newCategoryName}
+          onDone={() => {
+            setLearnDialogState(null);
+            onOpenChange(false);
+          }}
+        />
+      )}
     </Sheet>
   );
 }
