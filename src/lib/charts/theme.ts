@@ -1,5 +1,5 @@
 import type { EChartsOption } from "echarts";
-import { formatEur } from "@/lib/money";
+import { formatEur, formatEurCompact, formatAxisAmount } from "@/lib/money";
 
 export const chartColors = {
   petrol: "#123138",
@@ -32,6 +32,19 @@ interface SankeySeriesInput {
   expenseCategories: { name: string; cents: number; color?: string }[];
 }
 
+/**
+ * Zentrale Y-Achsen-Beschriftung für Beträge (z. B. Rechner-Charts): Werte in der Chart-Einheit Euro
+ * (nicht Cent!) werden gestuft abgekürzt (siehe formatAxisAmount) und gegen Überlappung abgesichert.
+ * `narrow` reduziert bei schmalem Container zusätzlich die Anzahl der Ticks.
+ */
+export function amountAxisLabel(narrow = false) {
+  return {
+    formatter: (value: number) => formatAxisAmount(Math.round(value * 100)),
+    hideOverlap: true,
+    ...(narrow ? { interval: 1 as const } : {}),
+  };
+}
+
 /** D2 Standard/Groß: beschriftete Y-Achse, Hover-Tooltip je Datenpunkt, echte Datenpunkte. */
 export function createLineChartOption({ labels, values, name }: LineSeriesInput): EChartsOption {
   return {
@@ -47,7 +60,7 @@ export function createLineChartOption({ labels, values, name }: LineSeriesInput)
       axisLabel: {
         color: chartColors.slate,
         fontSize: 11,
-        formatter: (v: number) => formatEur(v),
+        formatter: (v: number) => formatEurCompact(v),
       },
       splitLine: { lineStyle: { color: "#e7e0d0" } },
     },
@@ -102,7 +115,34 @@ export function createCashflowBarOption({
     legend: { top: 0, textStyle: { color: chartColors.slate, fontSize: 11 } },
     tooltip: {
       trigger: "axis",
-      valueFormatter: (v) => formatEur(Number(v)),
+      formatter: (params: any) => {
+        if (!Array.isArray(params) || params.length === 0) return "";
+        const label = params[0].name;
+        let inc = 0;
+        let exp = 0;
+        for (const p of params) {
+          if (p.seriesName === "Einnahmen") inc = Number(p.value) || 0;
+          if (p.seriesName === "Ausgaben") exp = Number(p.value) || 0;
+        }
+        const diff = inc - exp;
+        const diffStr = (diff >= 0 ? "+" : "") + formatEur(diff);
+        const pct = inc > 0 ? ` (${Math.round((diff / inc) * 100)} %)` : "";
+        return `
+          <div style="font-weight: 600; margin-bottom: 4px;">${label}</div>
+          <div style="display: flex; justify-content: space-between; gap: 12px; font-size: 12px;">
+            <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${chartColors.sage};margin-right:4px;"></span>Einnahmen:</span>
+            <span>${formatEur(inc)}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; gap: 12px; font-size: 12px;">
+            <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${chartColors.brick};margin-right:4px;"></span>Ausgaben:</span>
+            <span>${formatEur(exp)}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; gap: 12px; font-size: 12px; margin-top: 4px; border-top: 1px solid #e7e0d0; padding-top: 4px; font-weight: 600;">
+            <span>Differenz (Netto):</span>
+            <span style="color: ${diff >= 0 ? chartColors.sage : chartColors.brick};">${diffStr}${pct}</span>
+          </div>
+        `;
+      },
     },
     xAxis: {
       type: "category",
@@ -115,7 +155,7 @@ export function createCashflowBarOption({
       axisLabel: {
         color: chartColors.slate,
         fontSize: 11,
-        formatter: (v: number) => formatEur(v),
+        formatter: (v: number) => formatEurCompact(v),
       },
       splitLine: { lineStyle: { color: "#e7e0d0" } },
     },

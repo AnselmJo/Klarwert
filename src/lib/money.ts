@@ -3,18 +3,80 @@ const formatter = new Intl.NumberFormat("de-DE", {
   maximumFractionDigits: 2,
 });
 
+const compactFormatter = new Intl.NumberFormat("de-DE", {
+  maximumFractionDigits: 0,
+});
+
 /** Formatiert Integer-Cents als deutschen Euro-Betrag, z. B. 124000 -> "1.240,00 €". */
 export function formatEur(cents: number): string {
   return `${formatter.format(cents / 100)} €`;
 }
 
-/** Parst eine deutsche oder englische Betragsangabe (Text) in Integer-Cents. */
+/** Formatiert Integer-Cents als kompakten deutschen Euro-Betrag ohne Cent-Stellen, z. B. 124000 -> "1.240 €". */
+export function formatEurCompact(cents: number): string {
+  return `${compactFormatter.format(Math.round(cents / 100))} €`;
+}
+
+/** Formatiert eine Zahl mit Tausender-Punkten für deutsche Darstellung, z. B. 100000 -> "100.000". */
+export function formatNumberDe(num: number): string {
+  return compactFormatter.format(num);
+}
+
+/**
+ * Y-Achsen-Beschriftung für Charts (Rechner u. a.): unter 1 Mio. € voller, gerundeter Betrag mit
+ * Tausenderpunkt (z. B. "120.000 €"), ab 1 Mio. € abgekürzt (z. B. "1,2 Mio. €").
+ */
+export function formatAxisAmount(cents: number): string {
+  const amount = cents / 100;
+  if (Math.abs(amount) >= 1_000_000) {
+    const mio = amount / 1_000_000;
+    return `${mio.toLocaleString("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} Mio. €`;
+  }
+  return formatEurCompact(cents);
+}
+
+
+/** Parst eine deutsche oder englische Betragsangabe (Text) in Integer-Cents nach der "Letztes Zeichen gewinnt"-Regel. */
 export function parseAmountToCents(input: string): number {
-  const trimmed = input.trim();
-  const hasComma = trimmed.includes(",");
-  const normalized = hasComma
-    ? trimmed.replace(/\./g, "").replace(",", ".")
-    : trimmed;
+  let normalized = input.trim().replace(/[€\s+]/g, "");
+  const lastComma = normalized.lastIndexOf(",");
+  const lastPoint = normalized.lastIndexOf(".");
+
+  if (lastComma === -1 && lastPoint === -1) {
+    // Weder noch: Ganzzahl
+  } else if (lastPoint === -1) {
+    // Nur Komma -> letztes Komma ist Dezimaltrenner
+    normalized =
+      normalized.substring(0, lastComma).replace(/,/g, "") +
+      "." +
+      normalized.substring(lastComma + 1);
+  } else if (lastComma === -1) {
+    // Nur Punkt -> letzter Punkt ist Dezimaltrenner
+    normalized =
+      normalized.substring(0, lastPoint).replace(/\./g, "") +
+      "." +
+      normalized.substring(lastPoint + 1);
+  } else {
+    // Beides vorhanden -> was zuletzt kommt, ist der Dezimaltrenner
+    if (lastComma > lastPoint) {
+      // Komma ist Dezimaltrenner (DE)
+      normalized = normalized.replace(/\./g, ""); // Tausender-Punkte weg
+      const newComma = normalized.lastIndexOf(",");
+      normalized =
+        normalized.substring(0, newComma).replace(/,/g, "") +
+        "." +
+        normalized.substring(newComma + 1);
+    } else {
+      // Punkt ist Dezimaltrenner (EN)
+      normalized = normalized.replace(/,/g, ""); // Tausender-Kommas weg
+      const newPoint = normalized.lastIndexOf(".");
+      normalized =
+        normalized.substring(0, newPoint).replace(/\./g, "") +
+        "." +
+        normalized.substring(newPoint + 1);
+    }
+  }
+
   const value = Number.parseFloat(normalized);
   if (Number.isNaN(value)) {
     throw new Error(`Ungültiger Betrag: "${input}"`);
@@ -26,16 +88,10 @@ export function addCents(...values: number[]): number {
   return values.reduce((sum, v) => sum + v, 0);
 }
 
-/** Parst einen Betrag gemäß explizit bekanntem Dezimalformat (Import: de "1.234,56" / en "1,234.56"). */
-export function parseAmountWithFormat(input: string, format: "de" | "en"): number {
-  let normalized = input.trim().replace(/[€\s]/g, "");
-  normalized =
-    format === "de"
-      ? normalized.replace(/\./g, "").replace(",", ".")
-      : normalized.replace(/,/g, "");
-  const value = Number.parseFloat(normalized);
-  if (Number.isNaN(value)) {
-    throw new Error(`Ungültiger Betrag: "${input}"`);
-  }
-  return Math.round(value * 100);
+/** 
+ * Parst einen Betrag. Der format-Parameter wird ignoriert, da der 
+ * "Letztes Zeichen gewinnt"-Algorithmus robuster ist (Punkt 6).
+ */
+export function parseAmountWithFormat(input: string, _format: "de" | "en"): number {
+  return parseAmountToCents(input);
 }
