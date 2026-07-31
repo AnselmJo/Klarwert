@@ -43,20 +43,22 @@ export interface CreateAssetInput {
   account_type?: AccountType | null;
   valuable_type?: ValuableType | null;
   default_sparzweck_id?: number | null;
+  iban?: string | null;
   owner_ids: number[];
 }
 
 export async function createAsset(input: CreateAssetInput): Promise<number> {
   const db = await getDb();
   const result = await db.execute(
-    `insert into assets (name, kind, account_type, valuable_type, default_sparzweck_id)
-     values ($1, $2, $3, $4, $5)`,
+    `insert into assets (name, kind, account_type, valuable_type, default_sparzweck_id, iban)
+     values ($1, $2, $3, $4, $5, $6)`,
     [
       input.name,
       input.kind,
       input.account_type ?? null,
       input.valuable_type ?? null,
       input.default_sparzweck_id ?? null,
+      input.iban?.trim().replace(/\s+/g, "").toUpperCase() || null,
     ],
   );
   const assetId = result.lastInsertId as number;
@@ -73,6 +75,7 @@ export interface UpdateAssetInput {
   name?: string;
   account_type?: AccountType | null;
   default_sparzweck_id?: number | null;
+  iban?: string | null;
   owner_ids?: number[];
 }
 
@@ -81,7 +84,10 @@ export async function updateAsset(id: number, input: UpdateAssetInput): Promise<
   const fields: string[] = [];
   const values: unknown[] = [];
   let i = 1;
-  for (const key of ["name", "account_type", "default_sparzweck_id"] as const) {
+  if ("iban" in input) {
+    input.iban = input.iban?.trim().replace(/\s+/g, "").toUpperCase() || null;
+  }
+  for (const key of ["name", "account_type", "default_sparzweck_id", "iban"] as const) {
     if (key in input) {
       fields.push(`${key} = $${i}`);
       values.push(input[key]);

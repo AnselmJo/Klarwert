@@ -116,6 +116,7 @@ export interface Asset {
   import_profile_id: number | null;
   last_import_at: string | null;
   last_confirmed_balance_cents: number | null;
+  iban: string | null;
   is_archived: 0 | 1;
   is_deleted: 0 | 1;
   created_at: string;
@@ -124,6 +125,12 @@ export interface Asset {
 export interface AssetOwner {
   asset_id: number;
   person_id: number;
+}
+
+export interface PersonAlias {
+  id: number;
+  person_id: number;
+  alias: string;
 }
 
 export interface ValueHistoryEntry {

@@ -45,6 +45,7 @@ interface EditAssetModalProps {
 
 export function EditAssetModal({ asset, onOpenChange, onSaved }: EditAssetModalProps) {
   const [name, setName] = useState("");
+  const [iban, setIban] = useState("");
   const [accountType, setAccountType] = useState<AccountType>("giro");
   const [valuableType, setValuableType] = useState<ValuableType>("sonstiges");
   const [ownerIds, setOwnerIds] = useState<number[]>([]);
@@ -57,6 +58,7 @@ export function EditAssetModal({ asset, onOpenChange, onSaved }: EditAssetModalP
   useEffect(() => {
     if (asset) {
       setName(asset.name);
+      setIban(asset.iban ?? "");
       if (asset.account_type) setAccountType(asset.account_type);
       if (asset.valuable_type) setValuableType(asset.valuable_type);
       setOwnerIds(asset.owner_ids);
@@ -78,6 +80,7 @@ export function EditAssetModal({ asset, onOpenChange, onSaved }: EditAssetModalP
         name: name.trim(),
         account_type: asset.kind === "account" ? accountType : undefined,
         default_sparzweck_id: showSparzweck ? sparzweckId : null,
+        iban: asset.kind === "account" ? iban : undefined,
         owner_ids: ownerIds,
       });
       toast.success("Änderungen gespeichert");
@@ -107,6 +110,21 @@ export function EditAssetModal({ asset, onOpenChange, onSaved }: EditAssetModalP
               onChange={(e) => setName(e.target.value)}
             />
           </div>
+
+          {asset.kind === "account" && (
+            <div className="space-y-1.5">
+              <Label htmlFor="edit-asset-iban">IBAN (optional)</Label>
+              <Input
+                id="edit-asset-iban"
+                value={iban}
+                placeholder="DE12 3456 7890 1234 5678 90"
+                onChange={(e) => setIban(e.target.value)}
+              />
+              <p className="text-xs text-slate">
+                Grundlage für die sichere Transfer-/Sparen-Erkennung, auch ohne Gegenbuchung.
+              </p>
+            </div>
+          )}
 
           <div className="space-y-1.5">
             <Label htmlFor="edit-asset-type">Typ</Label>

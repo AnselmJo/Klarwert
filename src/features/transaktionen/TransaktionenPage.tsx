@@ -26,7 +26,6 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { PeriodSwitcher } from "@/components/PeriodSwitcher";
 import { ColumnVisibilityPopover } from "@/components/ColumnVisibilityPopover";
 import { OPTIONAL_COLUMNS, useColumnVisibility } from "@/hooks/useColumnVisibility";
@@ -50,6 +49,7 @@ import {
 } from "@/db/repositories/transactions";
 import { getCurrentBalances } from "@/db/repositories/networth";
 import { listHistory, undoSoftDelete } from "@/db/repositories/historyLog";
+import { TransferSuggestionPopover } from "@/features/transaktionen/components/TransferSuggestionPopover";
 import { applyBulkFieldUpdate, undoBulkFieldUpdate, undoBulkJoinAdd } from "@/lib/transactionBulkActions";
 import { cn } from "@/lib/utils";
 import { formatEur } from "@/lib/money";
@@ -452,34 +452,11 @@ export function TransaktionenPage() {
                             <Badge className="bg-sage text-card hover:bg-sage">Transfer</Badge>
                           )}
                           {t.is_transfer === 1 && t.transfer_status === "suggested" && (
-                            <Popover>
-                              <PopoverTrigger asChild onClick={(e) => e.stopPropagation()}>
-                                <button type="button">
-                                  <Badge className="bg-gold text-charcoal hover:bg-gold">Transfer?</Badge>
-                                </button>
-                              </PopoverTrigger>
-                              <PopoverContent
-                                className="w-48 space-y-2"
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                <p className="text-xs text-slate">Als Transfer-Paar erkannt.</p>
-                                <div className="flex gap-2">
-                                  <Button
-                                    size="sm"
-                                    onClick={() => void confirmTransferPair(t.id).then(invalidate)}
-                                  >
-                                    Bestätigen
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    variant="ghost"
-                                    onClick={() => void dismissTransferPair(t.id).then(invalidate)}
-                                  >
-                                    Trennen
-                                  </Button>
-                                </div>
-                              </PopoverContent>
-                            </Popover>
+                            <TransferSuggestionPopover
+                              transactionId={t.id}
+                              onConfirm={() => void confirmTransferPair(t.id).then(invalidate)}
+                              onDismiss={() => void dismissTransferPair(t.id).then(invalidate)}
+                            />
                           )}
                           {t.is_saving === 1 && <span className="size-1.5 rounded-full bg-sage" />}
                         </div>

@@ -52,6 +52,7 @@ export function CreateAssetModal({ open, onOpenChange, onCreated }: CreateAssetM
   const [accountType, setAccountType] = useState<AccountType>("giro");
   const [valuableType, setValuableType] = useState<ValuableType>("sonstiges");
   const [name, setName] = useState("");
+  const [iban, setIban] = useState("");
   const [ownerIds, setOwnerIds] = useState<number[]>([]);
   const [sparzweckId, setSparzweckId] = useState<number | null>(null);
   const [value, setValue] = useState("");
@@ -78,6 +79,7 @@ export function CreateAssetModal({ open, onOpenChange, onCreated }: CreateAssetM
     setAccountType("giro");
     setValuableType("sonstiges");
     setName("");
+    setIban("");
     setOwnerIds([]);
     setSparzweckId(null);
     setValue("");
@@ -95,6 +97,7 @@ export function CreateAssetModal({ open, onOpenChange, onCreated }: CreateAssetM
         account_type: kind === "account" ? accountType : null,
         valuable_type: kind === "valuable" ? valuableType : null,
         default_sparzweck_id: showSparzweck ? sparzweckId : null,
+        iban: kind === "account" ? iban : null,
         owner_ids: ownerIds,
       });
 
@@ -212,6 +215,21 @@ export function CreateAssetModal({ open, onOpenChange, onCreated }: CreateAssetM
               onChange={(e) => setName(e.target.value)}
             />
           </div>
+
+          {kind === "account" && (
+            <div className="space-y-1.5">
+              <Label htmlFor="asset-iban">IBAN (optional)</Label>
+              <Input
+                id="asset-iban"
+                value={iban}
+                placeholder="DE12 3456 7890 1234 5678 90"
+                onChange={(e) => setIban(e.target.value)}
+              />
+              <p className="text-xs text-slate">
+                Grundlage für die sichere Transfer-/Sparen-Erkennung, auch ohne Gegenbuchung.
+              </p>
+            </div>
+          )}
 
           {requiresOwnerChoice && (
             <div className="space-y-1.5">

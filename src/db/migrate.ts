@@ -14,6 +14,7 @@ import communityDatenbanken011 from "@/db/migrations/011_community_datenbanken.s
 import contractsDropCircularFk012 from "@/db/migrations/012_contracts_drop_circular_fk.sql?raw";
 import categorizationLogAlternatives013 from "@/db/migrations/013_categorization_log_alternatives.sql?raw";
 import multiAccountImport014 from "@/db/migrations/014_multi_account_import.sql?raw";
+import transferIbanPersonAliases015 from "@/db/migrations/015_transfer_iban_person_aliases.sql?raw";
 
 interface MigrationDef {
   version: number;
@@ -36,6 +37,7 @@ const MIGRATIONS: MigrationDef[] = [
   { version: 12, name: "contracts_drop_circular_fk", sql: contractsDropCircularFk012 },
   { version: 13, name: "categorization_log_alternatives", sql: categorizationLogAlternatives013 },
   { version: 14, name: "multi_account_import", sql: multiAccountImport014 },
+  { version: 15, name: "transfer_iban_person_aliases", sql: transferIbanPersonAliases015 },
 ];
 
 /**
@@ -186,6 +188,9 @@ async function ensureEssentialColumnsExist(): Promise<void> {
     "alter table import_profiles add column source_version text",
     "alter table import_profiles add column import_all_columns integer not null default 0",
     "alter table import_profiles add column account_column_index integer",
+
+    // assets
+    "alter table assets add column iban text",
 
     // rules
     "alter table rules add column created_from text not null default 'manual'",

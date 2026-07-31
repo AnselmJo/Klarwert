@@ -39,6 +39,7 @@ import {
   calculateSimilarity,
 } from "./merchant-match";
 import { logCategorization } from "@/db/repositories/merchants";
+import { createOrUpdateNotification } from "@/db/repositories/notifications";
 
 interface MerchantMatchResult {
   merchant_id: number;
@@ -263,6 +264,83 @@ async function findTransferPartner(tx: PipelineTx, db: Database): Promise<Pipeli
   return candidates.find((c: any) => !isDismissed(c.asset_id, c.amount_cents)) ?? null;
 }
 
+function extractCounterpartyIban(tx: PipelineTx): string | null {
+  if (!(tx as any).extra_fields_json) return null;
+  try {
+    const extra = JSON.parse((tx as any).extra_fields_json);
+    if (!extra?.recipient_iban) return null;
+    return String(extra.recipient_iban).trim().toUpperCase().replace(/\s+/g, "");
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Stufe 1 (höchste Konfidenz): Gegenpartei-IBAN gegen assets.iban aller eigenen Konten. Funktioniert
+ * auch OHNE Gegenbuchung (z. B. Depot ohne CSV-Export) und ignoriert dismissed_transfer_patterns
+ * bewusst – ein IBAN-Treffer ist ein stärkeres Signal als das unterdrückte Betragsmuster.
+ */
+async function findTransferPartnerByIban(tx: PipelineTx, db: Database): Promise<{ assetId: number } | null> {
+  const counterpartyIban = extractCounterpartyIban(tx);
+  if (!counterpartyIban) return null;
+  const rows = await db.select<{ id: number }[]>(
+    "select id from assets where is_deleted = 0 and iban is not null and upper(replace(iban, ' ', '')) = $1 and id != $2",
+    [counterpartyIban, tx.asset_id],
+  );
+  return rows[0] ? { assetId: rows[0].id } : null;
+}
+
+/**
+ * Stufe 3 (niedrigste Konfidenz, nur Hinweis): normalisierter Empfängername gegen person_aliases.
+ * Erzeugt bewusst KEINE automatische Transfer-Markierung (Namensgleichheit allein ist zu unsicher),
+ * sondern nur eine Benachrichtigung mit dem Hinweis, die IBAN zu ergänzen.
+ */
+async function findTransferPartnerByName(
+  tx: PipelineTx,
+  db: Database,
+): Promise<{ personId: number; personName: string } | null> {
+  const normCounterparty = normalizeCounterparty(tx.counterparty);
+  if (!normCounterparty) return null;
+  const aliases = await db.select<{ person_id: number; alias: string; person_name: string }[]>(
+    `select pa.person_id, pa.alias, p.name as person_name
+     from person_aliases pa join persons p on p.id = pa.person_id`,
+  );
+  for (const a of aliases) {
+    const normAlias = normalizeCounterparty(a.alias);
+    if (!normAlias) continue;
+    if (normCounterparty === normAlias || normCounterparty.includes(normAlias) || normAlias.includes(normCounterparty)) {
+      return { personId: a.person_id, personName: a.person_name };
+    }
+  }
+  return null;
+}
+
+/** Wendet Transfer+Sparen-Markierung auf EINE Transaktion an (Stufe 1 – Gegenbuchung ggf. nicht vorhanden). */
+async function applySingleSidedTransfer(
+  tx: PipelineTx,
+  destinationAssetId: number,
+  categoryId: number | null,
+  db: Database,
+): Promise<void> {
+  await db.execute(
+    "update transactions set is_transfer = 1, transfer_status = 'confirmed', category_id = coalesce(category_id, $1) where id = $2",
+    [categoryId, tx.id],
+  );
+  if (tx.amount_cents < 0) {
+    const destination = await db.select<{ account_type: string | null; default_sparzweck_id: number | null }[]>(
+      "select account_type, default_sparzweck_id from assets where id = $1",
+      [destinationAssetId],
+    );
+    const dest = destination[0];
+    if (dest && (dest.account_type === "tagesgeld" || dest.account_type === "depot")) {
+      await db.execute("update transactions set is_saving = 1, sparzweck_id = coalesce(sparzweck_id, $1) where id = $2", [
+        dest.default_sparzweck_id,
+        tx.id,
+      ]);
+    }
+  }
+}
+
 async function applyTransferPair(txA: PipelineTx, txB: PipelineTx, categoryId: number | null, db: Database): Promise<void> {
   await db.execute(
     "update transactions set is_transfer = 1, transfer_pair_id = $1, transfer_status = 'suggested', category_id = coalesce(category_id, $2) where id = $3",
@@ -356,11 +434,11 @@ export async function runPipelineForTransactions(
       continue;
     }
 
-    // 2. Transfer-Erkennung
+    // 2. Transfer-Erkennung – drei gestaffelte Signale (Stufe 1 IBAN > Stufe 2 Gegenbuchung > Stufe 3 Namenshinweis)
     if (!tx.is_transfer) {
-      const partner = await findTransferPartner(tx, db);
-      if (partner) {
-        await applyTransferPair(tx, partner, kontentransferCategoryId, db);
+      const ibanMatch = await findTransferPartnerByIban(tx, db);
+      if (ibanMatch) {
+        await applySingleSidedTransfer(tx, ibanMatch.assetId, kontentransferCategoryId, db);
         await logCategorization({
           transaction_id: id,
           matched_by: "transfer",
@@ -368,6 +446,33 @@ export async function runPipelineForTransactions(
         }, db);
         transfersFound += 1;
         continue;
+      }
+
+      const partner = await findTransferPartner(tx, db);
+      if (partner) {
+        await applyTransferPair(tx, partner, kontentransferCategoryId, db);
+        await logCategorization({
+          transaction_id: id,
+          matched_by: "transfer",
+          confidence: 0.9,
+        }, db);
+        transfersFound += 1;
+        continue;
+      }
+
+      const nameHint = await findTransferPartnerByName(tx, db);
+      if (nameHint) {
+        // Eigener ref_table-Namensraum (nicht "transactions"): die Auto-Archiv-Logik in
+        // notifications.ts verwaltet transfer_detected sonst nur für is_transfer=1/'suggested'-Zeilen
+        // (Stufe 2) – ein Namenshinweis (Stufe 3, keine automatische Markierung) soll davon unberührt
+        // bleiben und nicht bei jedem Pipeline-Lauf verschwinden/neu erscheinen.
+        await createOrUpdateNotification({
+          type: "transfer_detected",
+          ref_table: "transfer_name_hint",
+          ref_id: id,
+          message: `Möglicher Transfer an ${nameHint.personName} – IBAN des Zielkontos ergänzen für sichere Erkennung?`,
+          priority: "info",
+        });
       }
     }
 
