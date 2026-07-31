@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Lock, Trash2, Plus, ChevronDown } from "lucide-react";
 import { CategorySelect } from "@/components/CategorySelect";
 import { Input } from "@/components/ui/input";
@@ -217,6 +218,11 @@ export function TransactionDrawer({ transaction, onOpenChange, onSaved }: Transa
     }
   }
 
+  // Transfer=ja/Sparen=ja: Kategorie wird durch die Markierung abgeleitet und ist gesperrt
+  // (Product Spec Kap. 3, "Kategorie-Kopplung"). Zum Ändern muss die Markierung zuerst aufgehoben werden.
+  const categoryLocked = isTransfer || isSaving;
+  const kontentransferCategoryId = allCategoriesFlat?.find((c) => c.template_key === "bank_kredit.kontentransfer")?.id ?? null;
+
   async function handleCreateTag() {
     if (!newTagName.trim()) return;
     const color = NEW_TAG_COLORS[Math.floor(Math.random() * NEW_TAG_COLORS.length)];
@@ -357,12 +363,25 @@ export function TransactionDrawer({ transaction, onOpenChange, onSaved }: Transa
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
               <Label>Kategorie</Label>
+              {categoryLocked && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="inline-flex cursor-help text-slate" aria-label="Kategorie durch Markierung gesperrt">
+                      <Lock className="size-3.5" />
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    Kategorie wird durch die Markierung gesetzt – zum Ändern zuerst Markierung aufheben
+                  </TooltipContent>
+                </Tooltip>
+              )}
             </div>
             <div>
-              <CategorySelect 
-                value={categoryId} 
-                onChange={setCategoryId} 
+              <CategorySelect
+                value={categoryId}
+                onChange={setCategoryId}
                 amountCents={transaction.amount_cents}
+                disabled={categoryLocked}
               />
             </div>
             <div className="rounded-md border border-cream-dark/60 bg-cream/40 p-2">
@@ -478,7 +497,14 @@ export function TransactionDrawer({ transaction, onOpenChange, onSaved }: Transa
           </div>
           <div className="flex items-center justify-between">
             <Label htmlFor="tx-transfer">Transfer</Label>
-            <Switch id="tx-transfer" checked={isTransfer} onCheckedChange={setIsTransfer} />
+            <Switch
+              id="tx-transfer"
+              checked={isTransfer}
+              onCheckedChange={(checked) => {
+                setIsTransfer(checked);
+                if (checked && kontentransferCategoryId) setCategoryId(kontentransferCategoryId);
+              }}
+            />
           </div>
           <div className="flex items-center justify-between">
             <Label htmlFor="tx-exclude">Aus Statistik entfernt</Label>
