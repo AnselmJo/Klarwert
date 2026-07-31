@@ -14,6 +14,7 @@ import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { useCategories } from "@/hooks/useCategories";
 import { useRules } from "@/hooks/useRules";
 import { getCategoryYearSums, countCategoryUsage, deleteCategory, setCategoryHidden, restoreDefaultCategories } from "@/db/repositories/categories";
+import { logSoftDelete } from "@/db/repositories/historyLog";
 import { CategoryEditorModal } from "@/features/kategorien/components/CategoryEditorModal";
 import { CategoryDrawer } from "@/features/kategorien/components/CategoryDrawer";
 import { TemplateVisibilityDrawer } from "@/features/kategorien/components/TemplateVisibilityDrawer";
@@ -111,6 +112,7 @@ export function KategorienPage() {
   async function confirmDelete() {
     if (!deleteTarget) return;
     await deleteCategory(deleteTarget.category.id);
+    await logSoftDelete("categories", deleteTarget.category.id, `Kategorie "${deleteTarget.category.name}" gelöscht`);
     toast.success(`"${deleteTarget.category.name}" gelöscht`);
     setDeleteTarget(null);
     invalidateCategories();

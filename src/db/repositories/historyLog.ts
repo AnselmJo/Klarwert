@@ -1,6 +1,12 @@
 import { getDb } from "@/db/client";
 import type { HistoryLogEntry } from "@/db/types";
 
+const HISTORY_WINDOW_DAYS = 30;
+const HISTORY_WINDOW_MAX_ACTIONS = 50;
+
+/** Tabellen, für die generisches Soft-Delete-Undo (is_deleted = 0 zurücksetzen) sicher ist. */
+const SOFT_DELETE_TABLES = new Set(["categories", "rules", "tags", "collections"]);
+
 export async function addHistoryEntry(input: {
   action_type: string;
   description: string;
@@ -14,7 +20,43 @@ export async function addHistoryEntry(input: {
   return result.lastInsertId as number;
 }
 
+/** Löscht (soft) eine Zeile in einer der SOFT_DELETE_TABLES und protokolliert einen rückgängig machbaren Verlaufseintrag. */
+export async function logSoftDelete(table: string, id: number, description: string): Promise<void> {
+  if (!SOFT_DELETE_TABLES.has(table)) {
+    throw new Error(`logSoftDelete: Tabelle "${table}" ist nicht für generisches Undo freigegeben`);
+  }
+  await addHistoryEntry({ action_type: "soft_delete", description, payload: { table, id } });
+}
+
+export async function undoSoftDelete(payload: { table: string; id: number }): Promise<void> {
+  if (!SOFT_DELETE_TABLES.has(payload.table)) {
+    throw new Error(`undoSoftDelete: Tabelle "${payload.table}" ist nicht für generisches Undo freigegeben`);
+  }
+  const db = await getDb();
+  await db.execute(`update ${payload.table} set is_deleted = 0 where id = $1`, [payload.id]);
+}
+
+/**
+ * Setzt `is_undoable = 0` für Einträge außerhalb des 30-Tage/50-Aktionen-Fensters
+ * (Product Spec 5.6, R11) – läuft bei jedem Abruf des Verlaufs.
+ */
+async function enforceHistoryWindow(): Promise<void> {
+  const db = await getDb();
+  const cutoff = new Date(Date.now() - HISTORY_WINDOW_DAYS * 86_400_000).toISOString();
+  await db.execute("update history_log set is_undoable = 0 where is_undoable = 1 and created_at < $1", [cutoff]);
+
+  const recent = await db.select<{ id: number }[]>(
+    "select id from history_log where is_undoable = 1 order by created_at desc",
+  );
+  const staleIds = recent.slice(HISTORY_WINDOW_MAX_ACTIONS).map((r) => r.id);
+  if (staleIds.length > 0) {
+    const placeholders = staleIds.map((_, i) => `$${i + 1}`).join(", ");
+    await db.execute(`update history_log set is_undoable = 0 where id in (${placeholders})`, staleIds);
+  }
+}
+
 export async function listHistory(limit = 50): Promise<HistoryLogEntry[]> {
+  await enforceHistoryWindow();
   const db = await getDb();
   return db.select<HistoryLogEntry[]>(
     "select * from history_log order by created_at desc limit $1",

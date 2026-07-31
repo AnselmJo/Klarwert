@@ -13,6 +13,7 @@ import {
 import { CollectionEditorModal } from "@/features/sammlungen/components/CollectionEditorModal";
 import { AddByPeriodModal } from "@/features/sammlungen/components/AddByPeriodModal";
 import { formatEur } from "@/lib/money";
+import { logSoftDelete } from "@/db/repositories/historyLog";
 import type { Collection } from "@/db/types";
 import { toast } from "sonner";
 
@@ -50,6 +51,7 @@ export function SammlungenPage() {
   async function handleDelete() {
     if (!deleteTarget) return;
     await deleteCollection(deleteTarget.id);
+    await logSoftDelete("collections", deleteTarget.id, `Sammlung "${deleteTarget.name}" gelöscht`);
     toast.success(`"${deleteTarget.name}" gelöscht (Transaktionen bleiben erhalten)`);
     setDeleteTarget(null);
     if (activeId === deleteTarget.id) setActiveId(null);

@@ -23,7 +23,8 @@ import { useRules } from "@/hooks/useRules";
 import { useCategories } from "@/hooks/useCategories";
 import { useTags } from "@/hooks/useTags";
 import { deleteRule, reorderRules, swapRulePriority, type RuleWithConditions } from "@/db/repositories/rules";
-import { addHistoryEntry } from "@/db/repositories/historyLog";
+import { addHistoryEntry, logSoftDelete } from "@/db/repositories/historyLog";
+import { reevaluateAllRuleBasedTransactions } from "@/lib/pipeline";
 import { RuleEditorModal } from "@/features/kategorien/components/RuleEditorModal";
 import { toast } from "sonner";
 
@@ -105,6 +106,8 @@ function SortableRuleRow({
           {tagName && <Badge variant="outline">{tagName}</Badge>}
           {rule.mark_as_transfer === 1 && <Badge variant="outline">Transfer</Badge>}
           {rule.mark_as_saving === 1 && <Badge variant="outline">Sparen</Badge>}
+          {rule.created_from === "aufraeumen" && <Badge variant="secondary" className="bg-slate/10 text-slate">Auto (Aufräumen)</Badge>}
+          {rule.created_from === "vertrag" && <Badge variant="secondary" className="bg-slate/10 text-slate">Auto (Vertrag)</Badge>}
         </div>
       </div>
       <Button size="icon" variant="ghost" aria-label="Bearbeiten" onClick={onEdit}>
@@ -148,6 +151,7 @@ export function RulesManagerDrawer({ open, onOpenChange }: RulesManagerDrawerPro
       description: "Regel-Reihenfolge geändert",
       payload: { previousOrder },
     });
+    await reevaluateAllRuleBasedTransactions();
     void refetch();
     toast.success("Reihenfolge aktualisiert");
   }
@@ -163,12 +167,15 @@ export function RulesManagerDrawer({ open, onOpenChange }: RulesManagerDrawerPro
       description: "Regel-Reihenfolge geändert",
       payload: { previousOrder },
     });
+    await reevaluateAllRuleBasedTransactions();
     void refetch();
   }
 
   async function handleDelete() {
     if (!deleteTarget) return;
     await deleteRule(deleteTarget.id);
+    await logSoftDelete("rules", deleteTarget.id, `Regel gelöscht: ${ruleText(deleteTarget)}`);
+    await reevaluateAllRuleBasedTransactions();
     setDeleteTarget(null);
     void refetch();
     toast.success("Regel gelöscht");

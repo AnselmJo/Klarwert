@@ -6,6 +6,7 @@ import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import { useTags } from "@/hooks/useTags";
 import { countTagUsage, deleteTag } from "@/db/repositories/tags";
+import { logSoftDelete } from "@/db/repositories/historyLog";
 import { TagEditorModal } from "@/features/kategorien/components/TagEditorModal";
 import type { Tag } from "@/db/types";
 import { toast } from "sonner";
@@ -34,6 +35,7 @@ export function TagSection() {
   async function handleDelete() {
     if (!deleteTarget) return;
     await deleteTag(deleteTarget.tag.id);
+    await logSoftDelete("tags", deleteTarget.tag.id, `Tag "${deleteTarget.tag.name}" gelöscht`);
     toast.success(`Tag "${deleteTarget.tag.name}" gelöscht`);
     setDeleteTarget(null);
     invalidate();

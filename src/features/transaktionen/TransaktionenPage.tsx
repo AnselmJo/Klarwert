@@ -49,9 +49,12 @@ import {
   type TransactionWithTags,
 } from "@/db/repositories/transactions";
 import { getCurrentBalances } from "@/db/repositories/networth";
-import { listHistory } from "@/db/repositories/historyLog";
+import { listHistory, undoSoftDelete } from "@/db/repositories/historyLog";
 import { applyBulkFieldUpdate, undoBulkFieldUpdate, undoBulkJoinAdd } from "@/lib/transactionBulkActions";
+import { cn } from "@/lib/utils";
 import { formatEur } from "@/lib/money";
+import { formatDate } from "@/lib/dates";
+import { useSettingsStore } from "@/stores/settingsStore";
 import { toCsv, downloadCsv } from "@/lib/csv";
 import { TransactionDrawer } from "@/features/transaktionen/components/TransactionDrawer";
 import { CreateTransactionModal } from "@/features/transaktionen/components/CreateTransactionModal";
@@ -65,6 +68,8 @@ import { AufraeumModus } from "@/features/transaktionen/components/AufraeumModus
 import { toast } from "sonner";
 
 type SortBy = "booking_date" | "counterparty" | "category_id" | "amount_cents";
+
+const UNDOABLE_ACTION_TYPES = new Set(["bulk_field_update", "bulk_join_add", "rule_reorder", "soft_delete"]);
 
 function SortIcon({ active, dir }: { active: boolean; dir: "asc" | "desc" }) {
   if (!active) return <ChevronsUpDown className="size-3.5 opacity-40" />;
@@ -85,8 +90,9 @@ export function TransaktionenPage() {
   const queryClient = useQueryClient();
   const selectedAccountId = useGlobalFilterStore((s) => s.selectedAccountId);
   const selectedPersonId = useGlobalFilterStore((s) => s.selectedPersonId);
-  const periodType = usePeriodStore((s) => s.type);
-  const periodAnchorIso = usePeriodStore((s) => s.anchorIso);
+  const dateDisplayFormat = useSettingsStore((s) => s.dateDisplayFormat);
+  const periodType = usePeriodStore((s) => s.scopes.transaktionen.type);
+  const periodAnchorIso = usePeriodStore((s) => s.scopes.transaktionen.anchorIso);
   const { data: assets } = useAssets(false);
   const { data: categories } = useCategories();
   const { data: tags } = useTags();
@@ -301,7 +307,7 @@ export function TransaktionenPage() {
             <span>{uncategorizedCount ?? 0} unkategorisiert</span>
           </div>
         </div>
-        <PeriodSwitcher />
+        <PeriodSwitcher scope="transaktionen" />
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
@@ -421,7 +427,11 @@ export function TransaktionenPage() {
                 <ContextMenu key={t.id}>
                   <ContextMenuTrigger asChild>
                     <tr
-                      className="cursor-pointer border-b border-border last:border-0 hover:bg-accent"
+                      key={t.id}
+                      className={cn(
+                        "group border-b border-border transition-colors hover:bg-accent/50",
+                        t.is_deleted ? "opacity-50" : "",
+                      )}
                       onClick={() => setDrawerTx(t)}
                     >
                       <td className="sticky left-0 z-10 bg-card p-2" onClick={(e) => e.stopPropagation()}>
@@ -434,7 +444,7 @@ export function TransaktionenPage() {
                           }
                         />
                       </td>
-                      <td className="p-2">{t.booking_date}</td>
+                      <td className="p-2">{formatDate(t.booking_date, dateDisplayFormat)}</td>
                       <td className="p-2">
                         <div className="flex items-center gap-1.5">
                           {t.counterparty}
@@ -476,11 +486,23 @@ export function TransaktionenPage() {
                       </td>
                       <td className="p-2 text-slate">{categoryLabel(t.category_id)}</td>
                       <td className="num p-2 text-right">{formatEur(t.amount_cents)}</td>
-                      {visibleOptionalColumns.map((c) => (
-                        <td key={c.key} className="whitespace-nowrap p-2 text-slate">
-                          {c.key === "tags" ? tagNames(t) : extraField(t, c.key)}
-                        </td>
-                      ))}
+                      {visibleOptionalColumns.map((c) => {
+                        let val = "";
+                        if (c.key === "tags") val = tagNames(t);
+                        else if (c.key === "purpose") val = t.purpose ?? "";
+                        else if (c.key === "external_id") val = t.external_id ?? "";
+                        else if (c.key === "asset_name") {
+                          const asset = assets?.find(a => a.id === t.asset_id);
+                          val = asset?.name ?? "";
+                        }
+                        else val = extraField(t, c.key);
+                        
+                        return (
+                          <td key={c.key} className="whitespace-nowrap p-2 text-slate max-w-[200px] truncate" title={val}>
+                            {val}
+                          </td>
+                        );
+                      })}
                     </tr>
                   </ContextMenuTrigger>
                   <ContextMenuContent>
@@ -594,7 +616,7 @@ export function TransaktionenPage() {
               <div key={entry.id} className="rounded-klein border border-border p-2 text-xs">
                 <div className="text-charcoal">{entry.description}</div>
                 <div className="mt-0.5 text-slate">{entry.created_at}</div>
-                {entry.is_undoable === 1 && (
+                {entry.is_undoable === 1 && UNDOABLE_ACTION_TYPES.has(entry.action_type) && (
                   <button
                     type="button"
                     className="mt-1 text-petrol underline"
@@ -603,15 +625,17 @@ export function TransaktionenPage() {
                       if (entry.action_type === "bulk_field_update") {
                         await undoBulkFieldUpdate(payload);
                         invalidate();
-                        toast.success("Rückgängig gemacht");
                       } else if (entry.action_type === "bulk_join_add") {
                         await undoBulkJoinAdd(payload);
                         invalidate();
-                        toast.success("Rückgängig gemacht");
                       } else if (entry.action_type === "rule_reorder") {
                         await reorderRules(payload.previousOrder);
-                        toast.success("Rückgängig gemacht");
+                      } else if (entry.action_type === "soft_delete") {
+                        await undoSoftDelete(payload);
+                        queryClient.invalidateQueries({ queryKey: [payload.table] });
                       }
+                      queryClient.invalidateQueries({ queryKey: ["history-log"] });
+                      toast.success("Rückgängig gemacht");
                     }}
                   >
                     Rückgängig

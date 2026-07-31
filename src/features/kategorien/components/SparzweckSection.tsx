@@ -5,6 +5,7 @@ import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { Pencil, Trash2, Plus } from "lucide-react";
 import { useSparzwecke } from "@/hooks/useSparzwecke";
 import { getCumulativeSaving, deleteSparzweck } from "@/db/repositories/sparzwecke";
+import { addHistoryEntry } from "@/db/repositories/historyLog";
 import { formatEur } from "@/lib/money";
 import { SparzweckEditorModal } from "@/features/kategorien/components/SparzweckEditorModal";
 import type { Sparzweck } from "@/db/types";
@@ -36,6 +37,11 @@ export function SparzweckSection() {
   async function handleDelete() {
     if (!deleteTarget) return;
     await deleteSparzweck(deleteTarget.id);
+    await addHistoryEntry({
+      action_type: "sparzweck_delete",
+      description: `Sparzweck "${deleteTarget.name}" gelöscht`,
+      payload: { sparzweckId: deleteTarget.id },
+    });
     toast.success(`"${deleteTarget.name}" gelöscht`);
     setDeleteTarget(null);
     invalidate();
