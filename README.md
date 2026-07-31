@@ -2,7 +2,7 @@
 
 Eine private Haushalts-Finanz-App, die **zu 100 % lokal** läuft: keine Cloud, kein Login, keine Kontodaten verlassen dein Gerät.
 
-![Klarwert Logo](klarwert-logo.svg)
+![Klarwert Logo](src/assets/klarwert-logo.svg)
 
 ## Warum Klarwert?
 
@@ -29,7 +29,7 @@ Eine private Haushalts-Finanz-App, die **zu 100 % lokal** läuft: keine Cloud, k
 | macOS | [Releases](../../releases) |
 | Linux | [Releases](../../releases) |
 
-Ausführliche Installationsanleitung (inkl. Hinweis zu Windows-SmartScreen/macOS-Gatekeeper): siehe [klarwert.github.io](https://github.io) *(Platzhalter – wird durch die tatsächliche GitHub-Pages-URL ersetzt, sobald die Seite live ist)*.
+Ausführliche Installationsanleitung (inkl. Hinweis zu Windows-SmartScreen/macOS-Gatekeeper): siehe [anselmjo.github.io/Klarwert-Website](https://anselmjo.github.io/Klarwert-Website/).
 
 ## Tech-Stack
 
@@ -37,7 +37,7 @@ Tauri 2 · React · TypeScript · Tailwind CSS · shadcn/ui · Apache ECharts ·
 
 ## Für Mitwirkende
 
-Siehe [CONTRIBUTING.md](CONTRIBUTING.md) für den Einstieg, `CLAUDE.md` für die technische Projektübersicht (Stack, Konventionen, Architektur) und `klarwert-community-haendler-db.md` für die Mitwirkung an der Händler-Datenbank (keine Programmierkenntnisse nötig).
+Siehe [CONTRIBUTING.md](CONTRIBUTING.md) für den Einstieg, [`context/CLAUDE.md`](context/CLAUDE.md) für die technische Projektübersicht (Stack, Konventionen, Architektur) und [`context/klarwert-community-haendler-db.md`](context/klarwert-community-haendler-db.md) für die Mitwirkung an der Händler-Datenbank (keine Programmierkenntnisse nötig).
 
 ## Sicherheit
 
