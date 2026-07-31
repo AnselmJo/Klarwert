@@ -85,6 +85,7 @@ export interface ImportProfile {
   decimal_format: "de" | "en" | null;
   column_map_json: string;
   source_version?: string | null;
+  import_all_columns: 0 | 1;
   is_deleted: 0 | 1;
 }
 

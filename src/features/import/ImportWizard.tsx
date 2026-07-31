@@ -48,9 +48,12 @@ const CORE_ROLE_OPTIONS: { value: ColumnRole | "ignore"; label: string }[] = [
 ];
 
 const EXTRA_ROLE_LABELS: Record<ColumnRole, string> = {
-  date: "Datum",
+  date: "Buchungsdatum",
+  value_date: "Wertstellung / Valuta",
   amount: "Betrag",
-  counterparty: "Empfänger",
+  counterparty: "Gegenpartei / Empfänger",
+  counterparty_incoming: "Zahlungspflichtiger (Eingang)",
+  counterparty_outgoing: "Zahlungsempfänger (Ausgang)",
   purpose: "Verwendungszweck",
   external_id: "Buchungs-ID",
   transaction_type: "Transaktionstyp",
@@ -80,6 +83,7 @@ interface ImportWizardProps {
   assetId: number;
   onOpenChange: (open: boolean) => void;
   onCompleted: () => void;
+  forceMappingMode?: boolean;
 }
 
 export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: ImportWizardProps) {
@@ -95,7 +99,8 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
 
   const [matchedProfileId, setMatchedProfileId] = useState<number | null>(null);
   const [matchedProfileName, setMatchedProfileName] = useState<string | null>(null);
-  const [roleByColumn, setRoleByColumn] = useState<Record<number, ColumnRole | "ignore">>({});
+  const [roleByColumn, setRoleByColumn] = useState<Record<number, ColumnRole | "ignore" | "keep">>({});
+  const [dataTypeByColumn, setDataTypeByColumn] = useState<Record<number, string>>({});
   const [extractCounterpartyFromPurpose, setExtractCounterpartyFromPurpose] = useState(false);
   const [selectedAccountLabel, setSelectedAccountLabel] = useState<string | null>(null);
 
@@ -105,6 +110,11 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
   const [isFirstImport, setIsFirstImport] = useState(false);
 
   const [result, setResult] = useState<RunImportResult | null>(null);
+  
+  // Progress state
+  const [progressPhase, setProgressPhase] = useState<"reading" | "saving" | "pipeline" | "finalizing" | null>(null);
+  const [progressDone, setProgressDone] = useState(0);
+  const [progressTotal, setProgressTotal] = useState(0);
 
   const { data: assets } = useAssets(false);
   const accountAssets = useMemo(() => assets?.filter((a) => a.kind === "account") ?? [], [assets]);
@@ -122,12 +132,16 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
       setMatchedProfileId(null);
       setMatchedProfileName(null);
       setRoleByColumn({});
+      setDataTypeByColumn({});
       setExtractCounterpartyFromPurpose(false);
       setSelectedAccountLabel(null);
       setMode("upsert");
       setBalanceInput("");
       setBalanceUnknown(false);
       setResult(null);
+      setProgressPhase(null);
+      setProgressDone(0);
+      setProgressTotal(0);
     }
   }, [open, assetId]);
 
@@ -137,20 +151,37 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
   }, [open, selectedAssetId]);
 
   useEffect(() => {
-    if (balanceHint && isFirstImport && !balanceInput) {
+    if (balanceHint && !balanceInput) {
       setBalanceInput((balanceHint.cents / 100).toFixed(2).replace(".", ","));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [balanceHint, isFirstImport]);
+  }, [balanceHint]);
 
   const roleToIndex = useMemo(() => {
     const map: Partial<Record<ColumnRole, number>> = {};
     for (const [colStr, role] of Object.entries(roleByColumn)) {
-      if (role === "ignore") continue;
-      map[role] = Number(colStr);
+      if (role === "ignore" || role === "keep") continue;
+      map[role as ColumnRole] = Number(colStr);
     }
     return map;
   }, [roleByColumn]);
+
+  /** Schätzt den Datentyp einer Spalte anhand der ersten 20 Datenzeilen. */
+  function autoDetectDataType(colIdx: number, rows: string[][]): string {
+    const samples = rows.slice(0, 20).map(r => (r[colIdx] ?? "").trim()).filter(Boolean);
+    if (samples.length === 0) return "text";
+    const boolVals = new Set(["ja","nein","yes","no","true","false","1","0","wahr","falsch"]);
+    if (samples.every(s => boolVals.has(s.toLowerCase()))) return "boolean";
+    const dateRe = /^\d{2}\.\d{2}\.\d{4}$|^\d{4}-\d{2}-\d{2}$/;
+    const dtRe = /^\d{2}\.\d{2}\.\d{4}\s\d{2}:\d{2}|^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/;
+    if (samples.every(s => dtRe.test(s))) return "datetime";
+    if (samples.every(s => dateRe.test(s))) return "date";
+    const intRe = /^-?\d+$/;
+    const decRe = /^-?\d+([.,]\d+)?$/;
+    if (samples.every(s => intRe.test(s))) return "integer";
+    if (samples.every(s => decRe.test(s.replace(/\.(?=\d{3})/g, "")))) return "decimal";
+    return "text";
+  }
 
   const accountLabels = useMemo(
     () => (parsedFile ? detectBankAccountLabels(parsedFile.rows, roleToIndex) : []),
@@ -166,7 +197,11 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
     const profile = await findByFingerprint(fingerprint);
     if (profile) {
       const map: ColumnMap = JSON.parse(profile.column_map_json);
-      const byColumn: Record<number, ColumnRole | "ignore"> = {};
+      const defaultRole: "keep" | "ignore" = profile.import_all_columns ? "keep" : "ignore";
+      const byColumn: Record<number, ColumnRole | "ignore" | "keep"> = {};
+      for (let i = 0; i < parsed.headers.length; i++) {
+        byColumn[i] = defaultRole;
+      }
       for (const [role, headerName] of Object.entries(map)) {
         const idx = parsed.headers.indexOf(headerName as string);
         if (idx >= 0) byColumn[idx] = role as ColumnRole;
@@ -179,7 +214,10 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
       return true;
     }
     const guessed = guessColumnRoles(parsed.headers, parsed.rows);
-    const byColumn: Record<number, ColumnRole | "ignore"> = {};
+    const byColumn: Record<number, ColumnRole | "ignore" | "keep"> = {};
+    for (let i = 0; i < parsed.headers.length; i++) {
+      byColumn[i] = "keep";
+    }
     for (const [role, idx] of Object.entries(guessed)) {
       byColumn[idx as number] = role as ColumnRole;
     }
@@ -221,19 +259,25 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
       setStep("headerConfirm");
       return;
     }
-    setStep(matchedProfileId ? "preview" : "mapping");
+    setStep("mapping");
   }
 
   async function handleSelectHeaderRow(index: number) {
     if (!rawGrid) return;
     setHeaderRowIndex(index);
-    const matched = await applyMappingForHeaders(rawGrid, index);
-    setStep(matched ? "preview" : "mapping");
+    await applyMappingForHeaders(rawGrid, index);
+    setStep("mapping");
   }
 
   function mappingComplete(): boolean {
     const roles = Object.values(roleByColumn);
-    return roles.includes("date") && roles.includes("amount") && roles.includes("counterparty");
+    const hasDate = roles.includes("date");
+    const hasAmount = roles.includes("amount");
+    const hasCounterparty =
+      roles.includes("counterparty") ||
+      roles.includes("counterparty_incoming") ||
+      roles.includes("counterparty_outgoing");
+    return hasDate && hasAmount && hasCounterparty;
   }
 
   function mappingReason(): string | null {
@@ -251,27 +295,29 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
     if (accountLabels.length > 1 && !selectedAccountLabel) return;
     const columnMap: ColumnMap = {};
     for (const [colStr, role] of Object.entries(roleByColumn)) {
-      if (role === "ignore") continue;
-      columnMap[role] = parsedFile.headers[Number(colStr)];
+      if (role === "ignore" || role === "keep") continue;
+      columnMap[role as ColumnRole] = parsedFile.headers[Number(colStr)];
     }
     const asset = accountAssets.find((a) => a.id === selectedAssetId);
-    const profileId = await createImportProfile({
-      name: `${asset?.name ?? "Konto"} – eigenes Format`,
-      is_builtin: false,
-      header_fingerprint: computeHeaderFingerprint(parsedFile.headers),
-      delimiter: parsedFile.detected.delimiter ?? ";",
-      encoding: parsedFile.detected.encoding,
-      date_format: parsedFile.detected.dateFormat,
-      decimal_format: parsedFile.detected.decimalFormat,
-      column_map_json: JSON.stringify(columnMap),
-    });
-    setMatchedProfileId(profileId);
+    if (!matchedProfileId) {
+      const profileId = await createImportProfile({
+        name: `${asset?.name ?? "Konto"} – eigenes Format`,
+        is_builtin: false,
+        header_fingerprint: computeHeaderFingerprint(parsedFile.headers),
+        delimiter: parsedFile.detected.delimiter ?? ";",
+        encoding: parsedFile.detected.encoding,
+        date_format: parsedFile.detected.dateFormat,
+        decimal_format: parsedFile.detected.decimalFormat,
+        column_map_json: JSON.stringify(columnMap),
+      });
+      setMatchedProfileId(profileId);
+    }
     setStep("preview");
   }
 
   const previewRows = useMemo(() => {
     if (!parsedFile) return [];
-    return parsedFile.rows.slice(0, 5).map((row) => {
+    return parsedFile.rows.slice(0, 20).map((row) => {
       try {
         const date =
           roleToIndex.date !== undefined
@@ -281,8 +327,14 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
           roleToIndex.amount !== undefined
             ? formatEur(parseAmountWithFormat(row[roleToIndex.amount], parsedFile.detected.decimalFormat))
             : "–";
-        const counterparty =
-          roleToIndex.counterparty !== undefined ? row[roleToIndex.counterparty] : "–";
+        let counterparty = "–";
+        if (roleToIndex.counterparty !== undefined) {
+          counterparty = row[roleToIndex.counterparty] || "–";
+        } else {
+          const inc = roleToIndex.counterparty_incoming !== undefined ? row[roleToIndex.counterparty_incoming] : "";
+          const out = roleToIndex.counterparty_outgoing !== undefined ? row[roleToIndex.counterparty_outgoing] : "";
+          counterparty = out || inc || "–";
+        }
         const purpose = roleToIndex.purpose !== undefined ? row[roleToIndex.purpose] : "";
         return { date, amount, counterparty, purpose };
       } catch {
@@ -302,12 +354,19 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
       headers: parsedFile.headers,
       rows: parsedFile.rows,
       roleToIndex,
+      roleByColumn,
+      dataTypeByColumn,
       extractCounterpartyFromPurpose,
       dateFormat: parsedFile.detected.dateFormat,
       decimalFormat: parsedFile.detected.decimalFormat,
       mode,
       currentBalanceInput: cents,
       bankAccountLabelFilter: selectedAccountLabel,
+      onProgress: (phase, done, total) => {
+        setProgressPhase(phase);
+        setProgressDone(done);
+        setProgressTotal(total);
+      },
     });
     setResult(importResult);
     setStep("result");
@@ -432,7 +491,26 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
 
           {step === "mapping" && parsedFile && (
             <div className="space-y-3">
-              <p className="text-sm text-slate">Automatisch erkannt – bitte prüfen.</p>
+              {matchedProfileName ? (
+                <div className="flex items-center justify-between rounded-klein bg-petrol/10 p-3 text-xs text-petrol">
+                  <span>
+                    Bank-Template <strong>{matchedProfileName}</strong> wurde automatisch erkannt. Alle Spalten wurden vorausgewählt – du kannst die Zuordnungen unten anpassen oder vom Template abweichen.
+                  </span>
+                  {rawGrid && headerRowIndex !== null && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => void applyMappingForHeaders(rawGrid, headerRowIndex)}
+                    >
+                      Template zurücksetzen
+                    </Button>
+                  )}
+                </div>
+              ) : (
+                <p className="text-sm text-slate">
+                  Spaltenzuordnung: Alle Spalten werden standardmäßig importiert. Du kannst Rollen zuweisen oder einzelne Spalten anpassen/ignorieren.
+                </p>
+              )}
               <div className="relative overflow-auto rounded-klein border border-border">
                 <table className="w-full text-xs">
                   <thead>
@@ -440,18 +518,17 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
                       {parsedFile.headers.map((h, i) => (
                         <th
                           key={i}
-                          className={cn(
-                            "w-[180px] min-w-[180px] p-2 text-left font-medium",
-                            i < 2 && "sticky z-10 bg-accent",
-                          )}
-                          style={i === 0 ? { left: 0 } : i === 1 ? { left: 180 } : undefined}
+                          className="w-[180px] min-w-[180px] p-2 text-left font-medium"
                         >
                           <div className="mb-1 whitespace-nowrap">{h}</div>
                           <Select
-                            value={roleByColumn[i] ?? "ignore"}
-                            onValueChange={(v) =>
-                              setRoleByColumn((prev) => ({ ...prev, [i]: v as ColumnRole | "ignore" }))
-                            }
+                            value={roleByColumn[i] ?? "keep"}
+                            onValueChange={(v) => {
+                              setRoleByColumn((prev) => ({ ...prev, [i]: v as ColumnRole | "ignore" | "keep" }));
+                              if (v === "keep" && !dataTypeByColumn[i] && parsedFile) {
+                                setDataTypeByColumn((prev) => ({ ...prev, [i]: autoDetectDataType(i, parsedFile.rows) }));
+                              }
+                            }}
                           >
                             <SelectTrigger className="h-7 w-[170px] text-xs">
                               <SelectValue />
@@ -473,24 +550,39 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
                                   </SelectItem>
                                 ))}
                               </SelectGroup>
+                              <SelectItem value="keep">Als Extra-Feld importieren</SelectItem>
                               <SelectItem value="ignore">Ignorieren</SelectItem>
                             </SelectContent>
                           </Select>
+                          {(roleByColumn[i] ?? "keep") === "keep" && (
+                            <Select
+                              value={dataTypeByColumn[i] ?? (parsedFile ? autoDetectDataType(i, parsedFile.rows) : "text")}
+                              onValueChange={(v) => setDataTypeByColumn((prev) => ({ ...prev, [i]: v }))}
+                            >
+                              <SelectTrigger className="mt-1 h-6 w-[170px] text-xs">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="text">Text</SelectItem>
+                                <SelectItem value="integer">Ganzzahl</SelectItem>
+                                <SelectItem value="decimal">Dezimalzahl</SelectItem>
+                                <SelectItem value="boolean">Ja/Nein</SelectItem>
+                                <SelectItem value="date">Datum</SelectItem>
+                                <SelectItem value="datetime">Datum + Uhrzeit</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          )}
                         </th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
-                    {parsedFile.rows.slice(0, 5).map((row, ri) => (
+                    {parsedFile.rows.slice(0, 20).map((row, ri) => (
                       <tr key={ri} className="border-b border-border last:border-0">
                         {row.map((cell, ci) => (
                           <td
                             key={ci}
-                            className={cn(
-                              "w-[180px] min-w-[180px] p-2 text-slate",
-                              ci < 2 && "sticky z-10 bg-card",
-                            )}
-                            style={ci === 0 ? { left: 0 } : ci === 1 ? { left: 180 } : undefined}
+                            className="w-[180px] min-w-[180px] p-2 text-slate"
                           >
                             {cell}
                           </td>
@@ -526,8 +618,22 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
 
           {step === "preview" && parsedFile && (
             <div className="space-y-4">
-              {matchedProfileName && <p className="text-sm text-sage">Erkannt: {matchedProfileName}</p>}
-              <div className="max-h-[180px] overflow-auto rounded-klein border border-border">
+              <div className="flex items-center justify-between">
+                {matchedProfileName ? (
+                  <p className="text-sm text-sage">Erkanntes Template: {matchedProfileName}</p>
+                ) : (
+                  <p className="text-sm text-slate">Benutzerdefinierte Spaltenzuordnung ({Object.keys(roleByColumn).length} Spalten)</p>
+                )}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs text-petrol underline"
+                  onClick={() => setStep("mapping")}
+                >
+                  Spaltenzuordnung anpassen / Vom Template abweichen
+                </Button>
+              </div>
+              <div className="max-h-[220px] overflow-auto rounded-klein border border-border">
                 <table className="w-full text-xs">
                   <thead>
                     <tr className="border-b border-border bg-accent">
@@ -608,9 +714,18 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
           {step === "progress" && (
             <div className="flex flex-col items-center gap-3 py-8">
               <div className="h-2 w-full overflow-hidden rounded-pill bg-accent">
-                <div className="h-full w-full animate-pulse bg-petrol" />
+                <div 
+                  className="h-full bg-petrol transition-all duration-300"
+                  style={{ width: `${progressTotal > 0 ? (progressDone / progressTotal) * 100 : 0}%` }}
+                />
               </div>
-              <p className="text-sm text-slate">{parsedFile?.rows.length ?? 0} von {parsedFile?.rows.length ?? 0} Zeilen</p>
+              <p className="text-sm text-slate">
+                {progressPhase === "reading" && "Datei wird gelesen…"}
+                {progressPhase === "saving" && `${progressDone} von ${progressTotal} Zeilen werden gespeichert…`}
+                {progressPhase === "pipeline" && "Kategorisierung, Vertrags- und Transfer-Erkennung läuft…"}
+                {progressPhase === "finalizing" && "Import wird abgeschlossen…"}
+                {!progressPhase && "Lädt…"}
+              </p>
             </div>
           )}
 

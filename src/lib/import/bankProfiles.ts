@@ -1,10 +1,13 @@
 import { computeHeaderFingerprint } from "@/lib/import/fingerprint";
-import { createImportProfile, listImportProfiles } from "@/db/repositories/importProfiles";
+import { createImportProfile, updateImportProfile, listImportProfiles } from "@/db/repositories/importProfiles";
 
 export type ColumnRole =
   | "date"
+  | "value_date"
   | "amount"
   | "counterparty"
+  | "counterparty_incoming"
+  | "counterparty_outgoing"
   | "purpose"
   | "external_id"
   | "transaction_type"
@@ -19,6 +22,7 @@ export type ColumnRole =
   | "bank_account_label";
 
 export const EXTRA_FIELD_ROLES: ColumnRole[] = [
+  "value_date",
   "transaction_type",
   "card_payment_at",
   "cash_withdrawal_at",
@@ -43,6 +47,8 @@ export interface BuiltinBankProfile {
   columnMap: ColumnMap;
   /** comdirect: Empfänger steckt im Buchungstext, wird per Präfix-Parser extrahiert. */
   extractCounterpartyFromPurpose?: boolean;
+  /** DKB/C24: alle Spalten der Datei standardmäßig als Extra-Feld importieren, statt nur die Kernrollen. */
+  importAllColumns?: boolean;
 }
 
 export const BUILTIN_BANK_PROFILES: BuiltinBankProfile[] = [
@@ -83,24 +89,77 @@ export const BUILTIN_BANK_PROFILES: BuiltinBankProfile[] = [
   },
   {
     name: "DKB",
-    delimiter: ",",
+    delimiter: ";",
     encoding: "utf-8",
     dateFormat: "dd.MM.yy",
     decimalFormat: "de",
     headers: [
       "Buchungsdatum",
-      "Betrag (€)",
+      "Wertstellung",
+      "Status",
+      "Zahlungspflichtige*r",
       "Zahlungsempfänger*in",
       "Verwendungszweck",
-      "Kundenreferenz",
+      "Umsatztyp",
+      "IBAN",
+      "Betrag (€)",
+      "Gläubiger-ID",
+      "Mandatsreferenz",
+      "Kundenreferenz"
     ],
     columnMap: {
       date: "Buchungsdatum",
+      value_date: "Wertstellung",
       amount: "Betrag (€)",
-      counterparty: "Zahlungsempfänger*in",
+      counterparty_incoming: "Zahlungspflichtige*r",
+      counterparty_outgoing: "Zahlungsempfänger*in",
       purpose: "Verwendungszweck",
+      transaction_type: "Status",
+      recipient_iban: "IBAN",
+      description: "Gläubiger-ID",
       external_id: "Kundenreferenz",
     },
+    importAllColumns: true,
+  },
+  {
+    name: "C24",
+    delimiter: ",",
+    encoding: "utf-8",
+    dateFormat: "dd.MM.yyyy",
+    decimalFormat: "de",
+    headers: [
+      "Transaktionstyp",
+      "Buchungsdatum",
+      "Karteneinsatz",
+      "Betrag",
+      "Zahlungsempfänger",
+      "IBAN",
+      "BIC",
+      "Verwendungszweck",
+      "Beschreibung",
+      "Kontonummer",
+      "Kontoname",
+      "Kategorie",
+      "Unterkategorie",
+      "Bargeldabhebung"
+    ],
+    columnMap: {
+      date: "Buchungsdatum",
+      amount: "Betrag",
+      counterparty: "Zahlungsempfänger",
+      purpose: "Verwendungszweck",
+      transaction_type: "Transaktionstyp",
+      card_payment_at: "Karteneinsatz",
+      recipient_iban: "IBAN",
+      recipient_bic: "BIC",
+      description: "Beschreibung",
+      recipient_account_number: "Kontonummer",
+      bank_account_label: "Kontoname",
+      bank_category: "Kategorie",
+      bank_subcategory: "Unterkategorie",
+      cash_withdrawal_at: "Bargeldabhebung"
+    },
+    importAllColumns: true,
   },
   {
     name: "comdirect",
@@ -175,23 +234,37 @@ export const BUILTIN_BANK_PROFILES: BuiltinBankProfile[] = [
 
 let seeded = false;
 
-/** Legt die mitgelieferten Bankprofile beim ersten Start an (idempotent). */
+/** Legt die mitgelieferten Bankprofile beim ersten Start an (idempotent und synchronisiert Aktualisierungen). */
 export async function ensureBuiltinBankProfiles(): Promise<void> {
   if (seeded) return;
   const existing = await listImportProfiles();
-  const existingNames = new Set(existing.filter((p) => p.is_builtin).map((p) => p.name));
+  const existingMap = new Map(existing.filter((p) => p.is_builtin).map((p) => [p.name, p]));
   for (const profile of BUILTIN_BANK_PROFILES) {
-    if (existingNames.has(profile.name)) continue;
-    await createImportProfile({
-      name: profile.name,
-      is_builtin: true,
-      header_fingerprint: computeHeaderFingerprint(profile.headers),
-      delimiter: profile.delimiter,
-      encoding: profile.encoding,
-      date_format: profile.dateFormat,
-      decimal_format: profile.decimalFormat,
-      column_map_json: JSON.stringify(profile.columnMap),
-    });
+    const found = existingMap.get(profile.name);
+    if (!found) {
+      await createImportProfile({
+        name: profile.name,
+        is_builtin: true,
+        header_fingerprint: computeHeaderFingerprint(profile.headers),
+        delimiter: profile.delimiter,
+        encoding: profile.encoding,
+        date_format: profile.dateFormat,
+        decimal_format: profile.decimalFormat,
+        column_map_json: JSON.stringify(profile.columnMap),
+        import_all_columns: profile.importAllColumns ?? false,
+      });
+    } else {
+      await updateImportProfile(found.id, {
+        header_fingerprint: computeHeaderFingerprint(profile.headers),
+        delimiter: profile.delimiter,
+        encoding: profile.encoding,
+        date_format: profile.dateFormat,
+        decimal_format: profile.decimalFormat,
+        column_map_json: JSON.stringify(profile.columnMap),
+        import_all_columns: profile.importAllColumns ?? false,
+      });
+    }
   }
   seeded = true;
 }
+

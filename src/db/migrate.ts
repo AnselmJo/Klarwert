@@ -180,6 +180,7 @@ async function ensureEssentialColumnsExist(): Promise<void> {
 
     // import_profiles
     "alter table import_profiles add column source_version text",
+    "alter table import_profiles add column import_all_columns integer not null default 0",
 
     // rules
     "alter table rules add column created_from text not null default 'manual'",
