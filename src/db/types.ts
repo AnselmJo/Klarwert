@@ -72,6 +72,15 @@ export interface CategorizationLog {
   merchant_id: number | null;
   confidence: number;
   applied_at: string;
+  alternatives_json: string | null;
+}
+
+/** Ein knapp unterlegener Kandidat, der bei der Kategorisierung nicht gewonnen hat (Debug-Anzeige im Drawer). */
+export interface CategorizationAlternative {
+  matched_by: CategorizationMatchedBy;
+  merchant_id?: number | null;
+  category_id?: number | null;
+  confidence: number;
 }
 
 export interface ImportProfile {

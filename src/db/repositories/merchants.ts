@@ -1,5 +1,5 @@
 import { getDb } from "@/db/client";
-import type { Merchant, MerchantAlias, MerchantSuppression, CategorizationLog } from "@/db/types";
+import type { Merchant, MerchantAlias, MerchantSuppression, CategorizationLog, CategorizationAlternative } from "@/db/types";
 
 export async function listMerchants(): Promise<Merchant[]> {
   const db = await getDb();
@@ -130,17 +130,19 @@ export async function logCategorization(entry: {
   rule_id?: number | null;
   merchant_id?: number | null;
   confidence: number;
+  alternatives?: CategorizationAlternative[];
 }, dbOrNull?: any): Promise<void> {
   const db = dbOrNull ?? (await getDb());
   await db.execute(
-    `insert into categorization_log (transaction_id, matched_by, rule_id, merchant_id, confidence)
-     values ($1, $2, $3, $4, $5)`,
+    `insert into categorization_log (transaction_id, matched_by, rule_id, merchant_id, confidence, alternatives_json)
+     values ($1, $2, $3, $4, $5, $6)`,
     [
       entry.transaction_id,
       entry.matched_by,
       entry.rule_id ?? null,
       entry.merchant_id ?? null,
       entry.confidence,
+      entry.alternatives && entry.alternatives.length > 0 ? JSON.stringify(entry.alternatives) : null,
     ],
   );
 }

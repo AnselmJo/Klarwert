@@ -12,6 +12,7 @@ import fixAllForeignKeys009 from "@/db/migrations/009_fix_all_foreign_keys.sql?r
 import personKirchensteuer010 from "@/db/migrations/010_person_kirchensteuer.sql?raw";
 import communityDatenbanken011 from "@/db/migrations/011_community_datenbanken.sql?raw";
 import contractsDropCircularFk012 from "@/db/migrations/012_contracts_drop_circular_fk.sql?raw";
+import categorizationLogAlternatives013 from "@/db/migrations/013_categorization_log_alternatives.sql?raw";
 
 interface MigrationDef {
   version: number;
@@ -32,6 +33,7 @@ const MIGRATIONS: MigrationDef[] = [
   { version: 10, name: "person_kirchensteuer", sql: personKirchensteuer010 },
   { version: 11, name: "community_datenbanken", sql: communityDatenbanken011 },
   { version: 12, name: "contracts_drop_circular_fk", sql: contractsDropCircularFk012 },
+  { version: 13, name: "categorization_log_alternatives", sql: categorizationLogAlternatives013 },
 ];
 
 /**
@@ -185,6 +187,9 @@ async function ensureEssentialColumnsExist(): Promise<void> {
     // rules
     "alter table rules add column created_from text not null default 'manual'",
     "alter table rules add column source_contract_id integer",
+
+    // categorization_log
+    "alter table categorization_log add column alternatives_json text",
 
     // contracts
     "alter table contracts add column is_manual integer not null default 0",

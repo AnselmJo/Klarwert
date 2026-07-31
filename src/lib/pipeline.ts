@@ -1,6 +1,7 @@
 import { getDb } from "@/db/client";
 import { listRules, type RuleWithConditions } from "@/db/repositories/rules";
-import type { RuleField, RuleOperator } from "@/db/types";
+import Database from "@tauri-apps/plugin-sql";
+
 
 interface PipelineTx {
   id: number;
@@ -21,9 +22,8 @@ export interface PipelineResult {
 
 let kontentransferCategoryIdCache: number | null = null;
 
-async function getKontentransferCategoryId(): Promise<number | null> {
+async function getKontentransferCategoryId(db: Database): Promise<number | null> {
   if (kontentransferCategoryIdCache !== null) return kontentransferCategoryIdCache;
-  const db = await getDb();
   const rows = await db.select<{ id: number }[]>(
     `select id from categories where name = 'Kontentransfer' and parent_id in
        (select id from categories where name = 'Bank und Kredit') limit 1`,
@@ -32,40 +32,202 @@ async function getKontentransferCategoryId(): Promise<number | null> {
   return kontentransferCategoryIdCache;
 }
 
-function normalize(text: string): string {
-  return text.trim().toLowerCase();
+import { normalize, findMatchingRule } from "./pipeline/suggest-category";
+import {
+  normalizeCounterparty,
+  extractMerchantFromPaymentProvider,
+  calculateSimilarity,
+} from "./merchant-match";
+import { logCategorization } from "@/db/repositories/merchants";
+
+interface MerchantMatchResult {
+  merchant_id: number;
+  category_id: number | null;
+  matched_by: "merchant_iban" | "merchant_alias";
+  confidence: number;
 }
 
-function conditionMatches(field: RuleField, operator: RuleOperator, value: string, tx: PipelineTx): boolean {
-  if (field === "amount") {
-    const target = Math.round(Number.parseFloat(value.replace(",", ".")) * 100);
-    if (Number.isNaN(target)) return false;
-    if (operator === "approx") return Math.abs(tx.amount_cents - target) <= Math.abs(target) * 0.05;
-    return tx.amount_cents === target;
-  }
-  if (field === "asset") {
-    return tx.asset_id === Number(value);
-  }
-  const column = field === "purpose" ? tx.purpose ?? "" : tx.counterparty;
-  if (operator === "equals") return normalize(column) === normalize(value);
-  return normalize(column).includes(normalize(value));
+interface MerchantMatchWithAlternatives {
+  best: MerchantMatchResult;
+  alternatives: MerchantMatchResult[];
 }
 
-function findMatchingRule(rules: RuleWithConditions[], tx: PipelineTx): RuleWithConditions | null {
-  for (const rule of rules) {
-    if (rule.conditions.length === 0) continue;
-    const allMatch = rule.conditions.every((c) => conditionMatches(c.field, c.operator, c.value, tx));
-    if (allMatch) return rule;
+async function findMerchantMatch(tx: PipelineTx, db: Database): Promise<MerchantMatchWithAlternatives | null> {
+  let recipientIban: string | null = null;
+  if ((tx as any).extra_fields_json) {
+    try {
+      const extra = JSON.parse((tx as any).extra_fields_json);
+      if (extra?.recipient_iban) recipientIban = String(extra.recipient_iban).trim().toLowerCase();
+    } catch {}
   }
+
+  const providerExtraction = extractMerchantFromPaymentProvider({
+    counterparty: tx.counterparty,
+    purpose: tx.purpose,
+  });
+
+  const searchCounterparty = providerExtraction.merchantName
+    ? normalizeCounterparty(providerExtraction.merchantName)
+    : normalizeCounterparty(tx.counterparty);
+
+  if (!searchCounterparty && !recipientIban) return null;
+
+  // 1. IBAN Match
+  if (recipientIban) {
+    const ibanRows = await db.select<
+      { merchant_id: number; default_category_id: number | null }[]
+    >(
+      `select m.id as merchant_id, m.default_category_id
+       from merchant_aliases ma
+       join merchants m on m.id = ma.merchant_id
+       where ma.match_type = 'iban' and lower(trim(ma.match_value)) = $1
+         and m.is_active = 1
+         and m.id not in (select merchant_id from merchant_suppressions)
+       order by ma.priority asc limit 1`,
+      [recipientIban],
+    );
+    if (ibanRows.length > 0) {
+      return {
+        best: {
+          merchant_id: ibanRows[0].merchant_id,
+          category_id: ibanRows[0].default_category_id,
+          matched_by: "merchant_iban",
+          confidence: 1.0,
+        },
+        alternatives: [],
+      };
+    }
+  }
+
+  if (!searchCounterparty) return null;
+
+  // Fetch all active aliases for unsuppressed merchants
+  const aliases = await db.select<
+    {
+      merchant_id: number;
+      default_category_id: number | null;
+      match_type: string;
+      match_value: string;
+      priority: number;
+    }[]
+  >(
+    `select m.id as merchant_id, m.default_category_id, ma.match_type, ma.match_value, ma.priority
+     from merchant_aliases ma
+     join merchants m on m.id = ma.merchant_id
+     where m.is_active = 1
+       and ma.match_type != 'iban'
+       and m.id not in (select merchant_id from merchant_suppressions)
+     order by ma.priority asc`,
+  );
+
+  // 2. Exact Name Match
+  const exactMatches: MerchantMatchResult[] = [];
+  for (const a of aliases.filter((x) => x.match_type === "name_exact")) {
+    if (normalizeCounterparty(a.match_value) === searchCounterparty) {
+      exactMatches.push({
+        merchant_id: a.merchant_id,
+        category_id: a.default_category_id,
+        matched_by: "merchant_alias",
+        confidence: 0.95,
+      });
+    }
+  }
+  if (exactMatches.length > 0) {
+    const distinct = dedupeByMerchant(exactMatches);
+    return { best: distinct[0], alternatives: distinct.slice(1, 3) };
+  }
+
+  // 3. Fuzzy / Substring Match – alle Kandidaten oberhalb einer niedrigen Schwelle sammeln,
+  // damit knapp unterlegene Alternativen für die Transparenz-Anzeige verfügbar sind.
+  const fuzzyMatches: MerchantMatchResult[] = [];
+  for (const a of aliases.filter((x) => x.match_type === "name_fuzzy")) {
+    const aliasNorm = normalizeCounterparty(a.match_value);
+    const isSubstring = searchCounterparty.includes(aliasNorm) || aliasNorm.includes(searchCounterparty);
+    const score = isSubstring ? 0.9 : calculateSimilarity(searchCounterparty, aliasNorm);
+    if (score >= 0.6) {
+      fuzzyMatches.push({
+        merchant_id: a.merchant_id,
+        category_id: a.default_category_id,
+        matched_by: "merchant_alias",
+        confidence: Math.round(score * 100) / 100,
+      });
+    }
+  }
+  if (fuzzyMatches.length > 0) {
+    const distinct = dedupeByMerchant(fuzzyMatches);
+    if (distinct[0].confidence >= 0.8) {
+      return { best: distinct[0], alternatives: distinct.slice(1, 3) };
+    }
+  }
+
+  // 4. Regex Match
+  for (const a of aliases.filter((x) => x.match_type === "regex")) {
+    try {
+      const reg = new RegExp(a.match_value, "i");
+      if (reg.test(tx.counterparty) || (tx.purpose && reg.test(tx.purpose))) {
+        return {
+          best: {
+            merchant_id: a.merchant_id,
+            category_id: a.default_category_id,
+            matched_by: "merchant_alias",
+            confidence: 0.85,
+          },
+          alternatives: [],
+        };
+      }
+    } catch {}
+  }
+
   return null;
 }
 
-async function findMatchingContract(tx: PipelineTx): Promise<{ id: number; category_id: number | null } | null> {
-  const db = await getDb();
+/** Dedupliziert Kandidaten nach Händler (höchste Confidence gewinnt), absteigend sortiert. */
+function dedupeByMerchant(candidates: MerchantMatchResult[]): MerchantMatchResult[] {
+  const byMerchant = new Map<number, MerchantMatchResult>();
+  for (const c of candidates) {
+    const existing = byMerchant.get(c.merchant_id);
+    if (!existing || c.confidence > existing.confidence) byMerchant.set(c.merchant_id, c);
+  }
+  return [...byMerchant.values()].sort((a, b) => b.confidence - a.confidence);
+}
+
+async function findSimilarityMatch(
+  tx: PipelineTx,
+  db: Database,
+): Promise<{ category_id: number; confidence: number; alternatives: { category_id: number; confidence: number }[] } | null> {
+  const normTarget = normalizeCounterparty(tx.counterparty);
+  if (!normTarget) return null;
+
+  const manualTxs = await db.select<{ counterparty: string; category_id: number }[]>(
+    `select counterparty, category_id from transactions
+     where is_deleted = 0 and categorization_source = 'manual' and category_id is not null`,
+  );
+
+  // Pro Kategorie nur die höchste Confidence behalten, dann absteigend sortieren – so lassen
+  // sich neben dem Treffer auch knapp unterlegene Alternativen für die Debug-Anzeige ermitteln.
+  const byCategory = new Map<number, number>();
+  for (const m of manualTxs) {
+    const normCand = normalizeCounterparty(m.counterparty);
+    const score = calculateSimilarity(normTarget, normCand);
+    if (score < 0.6) continue;
+    const existing = byCategory.get(m.category_id);
+    if (existing === undefined || score > existing) byCategory.set(m.category_id, score);
+  }
+
+  const sorted = [...byCategory.entries()]
+    .map(([category_id, confidence]) => ({ category_id, confidence: Math.round(confidence * 100) / 100 }))
+    .sort((a, b) => b.confidence - a.confidence);
+
+  if (sorted.length === 0 || sorted[0].confidence < 0.85) return null;
+
+  return { category_id: sorted[0].category_id, confidence: sorted[0].confidence, alternatives: sorted.slice(1, 3) };
+}
+
+async function findMatchingContract(tx: PipelineTx, db: Database): Promise<{ id: number; category_id: number | null } | null> {
   const contracts = await db.select<
     { id: number; name: string; current_amount_cents: number; category_id: number | null }[]
   >(
-    "select id, name, current_amount_cents, category_id from contracts where is_deleted = 0 and status in ('confirmed', 'price_changed')",
+    "select id, name, current_amount_cents, category_id from contracts where is_deleted = 0 and current_amount_cents != 0 and status in ('confirmed', 'price_changed')",
   );
   for (const c of contracts) {
     const nameNormalized = normalize(c.name);
@@ -78,14 +240,13 @@ async function findMatchingContract(tx: PipelineTx): Promise<{ id: number; categ
   return null;
 }
 
-async function findTransferPartner(tx: PipelineTx): Promise<PipelineTx | null> {
-  const db = await getDb();
+async function findTransferPartner(tx: PipelineTx, db: Database): Promise<PipelineTx | null> {
   const dismissed = await db.select<{ asset_id_a: number; asset_id_b: number; amount_cents: number }[]>(
     "select asset_id_a, asset_id_b, amount_cents from dismissed_transfer_patterns",
   );
   const isDismissed = (otherAssetId: number, amount: number) =>
     dismissed.some(
-      (d) =>
+      (d: any) =>
         Math.abs(d.amount_cents) === Math.abs(amount) &&
         ((d.asset_id_a === tx.asset_id && d.asset_id_b === otherAssetId) ||
           (d.asset_id_b === tx.asset_id && d.asset_id_a === otherAssetId)),
@@ -99,11 +260,10 @@ async function findTransferPartner(tx: PipelineTx): Promise<PipelineTx | null> {
        and julianday(booking_date) between julianday($3) - 2 and julianday($3) + 2`,
     [tx.asset_id, -tx.amount_cents, tx.booking_date],
   );
-  return candidates.find((c) => !isDismissed(c.asset_id, c.amount_cents)) ?? null;
+  return candidates.find((c: any) => !isDismissed(c.asset_id, c.amount_cents)) ?? null;
 }
 
-async function applyTransferPair(txA: PipelineTx, txB: PipelineTx, categoryId: number | null): Promise<void> {
-  const db = await getDb();
+async function applyTransferPair(txA: PipelineTx, txB: PipelineTx, categoryId: number | null, db: Database): Promise<void> {
   await db.execute(
     "update transactions set is_transfer = 1, transfer_pair_id = $1, transfer_status = 'suggested', category_id = coalesce(category_id, $2) where id = $3",
     [txB.id, categoryId, txA.id],
@@ -128,8 +288,7 @@ async function applyTransferPair(txA: PipelineTx, txB: PipelineTx, categoryId: n
   }
 }
 
-async function applyRule(tx: PipelineTx, rule: RuleWithConditions): Promise<boolean> {
-  const db = await getDb();
+async function applyRule(tx: PipelineTx, rule: RuleWithConditions, db: Database): Promise<boolean> {
   const categoryId = rule.category_id ?? tx.category_id;
   await db.execute(
     `update transactions set
@@ -152,53 +311,150 @@ async function applyRule(tx: PipelineTx, rule: RuleWithConditions): Promise<bool
 }
 
 /**
- * Kategorisierungs-Pipeline (Product Spec Kap. 3): Manuell > Vertrag > Transfer-Erkennung > Regeln > Unkategorisiert.
+ * Kategorisierungs-Pipeline (Product Spec Kap. 3):
+ * 1. Manuell > 2. Vertrag > 3. Transfer > 4. Benutzerregeln > 5. Händler-DB > 6. Ähnlichkeit > 7. Unkategorisiert.
  * Läuft nach jedem Import sowie bei manueller Transaktionsanlage. Überschreibt nie manuelle Zuweisungen.
+ *
+ * @param transactionIds  IDs der zu bewertenden Transaktionen.
+ * @param dbOrNull        Optionale offene DB-Connection (z. B. aus Import-Transaktion).
+ *                        Wenn übergeben, wird diese verwendet – kein eigenes BEGIN/COMMIT!
  */
-export async function runPipelineForTransactions(transactionIds: number[]): Promise<PipelineResult> {
+export async function runPipelineForTransactions(
+  transactionIds: number[],
+  dbOrNull?: Database,
+): Promise<PipelineResult> {
   if (transactionIds.length === 0) return { categorized: 0, transfersFound: 0 };
-  const db = await getDb();
+  const db = dbOrNull ?? (await getDb());
   const rules = await listRules();
-  const kontentransferCategoryId = await getKontentransferCategoryId();
+  const kontentransferCategoryId = await getKontentransferCategoryId(db);
 
   let categorized = 0;
   let transfersFound = 0;
 
   for (const id of transactionIds) {
     const rows = await db.select<PipelineTx[]>(
-      `select id, asset_id, booking_date, counterparty, purpose, amount_cents, category_id, categorization_source, is_transfer
+      `select id, asset_id, booking_date, counterparty, purpose, amount_cents, category_id, categorization_source, is_transfer, extra_fields_json
        from transactions where id = $1 and is_deleted = 0`,
       [id],
     );
     const tx = rows[0];
     if (!tx || tx.categorization_source === "manual") continue;
 
-    const contractMatch = await findMatchingContract(tx);
+    // 1. Vertrag
+    const contractMatch = await findMatchingContract(tx, db);
     if (contractMatch) {
       await db.execute(
         "update transactions set contract_id = $1, category_id = coalesce(category_id, $2), categorization_source = 'contract' where id = $3",
         [contractMatch.id, contractMatch.category_id, id],
       );
+      await logCategorization({
+        transaction_id: id,
+        matched_by: "contract",
+        confidence: 1.0,
+      }, db);
       categorized += 1;
       continue;
     }
 
+    // 2. Transfer-Erkennung
     if (!tx.is_transfer) {
-      const partner = await findTransferPartner(tx);
+      const partner = await findTransferPartner(tx, db);
       if (partner) {
-        await applyTransferPair(tx, partner, kontentransferCategoryId);
+        await applyTransferPair(tx, partner, kontentransferCategoryId, db);
+        await logCategorization({
+          transaction_id: id,
+          matched_by: "transfer",
+          confidence: 1.0,
+        }, db);
         transfersFound += 1;
         continue;
       }
     }
 
+    // 3. Benutzerregeln
     const rule = findMatchingRule(rules, tx);
     if (rule) {
-      const didCategorize = await applyRule(tx, rule);
-      if (didCategorize) categorized += 1;
+      const didCategorize = await applyRule(tx, rule, db);
+      if (didCategorize) {
+        await logCategorization({
+          transaction_id: id,
+          matched_by: "user_rule",
+          rule_id: rule.id,
+          confidence: 1.0,
+        }, db);
+        categorized += 1;
+      }
+      continue;
+    }
+
+    // 4. Händler-DB (Ebene A)
+    const merchantMatch = await findMerchantMatch(tx, db);
+    if (merchantMatch) {
+      const { best, alternatives } = merchantMatch;
+      await db.execute(
+        `update transactions set
+           merchant_id = $1,
+           category_id = coalesce($2, category_id),
+           categorization_source = 'merchant',
+           categorization_confidence = $3
+         where id = $4`,
+        [best.merchant_id, best.category_id, best.confidence, id],
+      );
+      await logCategorization({
+        transaction_id: id,
+        matched_by: best.matched_by,
+        merchant_id: best.merchant_id,
+        confidence: best.confidence,
+        alternatives: alternatives.map((a) => ({
+          matched_by: a.matched_by,
+          merchant_id: a.merchant_id,
+          category_id: a.category_id,
+          confidence: a.confidence,
+        })),
+      }, db);
+      if (best.category_id !== null) categorized += 1;
+      continue;
+    }
+
+    // 5. Ähnlichkeits-Fallback (Ebene A Ähnlichkeit)
+    const similarityMatch = await findSimilarityMatch(tx, db);
+    if (similarityMatch) {
+      await db.execute(
+        `update transactions set
+           category_id = $1,
+           categorization_source = 'similarity',
+           categorization_confidence = $2,
+           is_reviewed = 0
+         where id = $3`,
+        [similarityMatch.category_id, similarityMatch.confidence, id],
+      );
+      await logCategorization({
+        transaction_id: id,
+        matched_by: "similarity",
+        confidence: similarityMatch.confidence,
+        alternatives: similarityMatch.alternatives.map((a) => ({
+          matched_by: "similarity" as const,
+          category_id: a.category_id,
+          confidence: a.confidence,
+        })),
+      }, db);
+      categorized += 1;
       continue;
     }
   }
 
   return { categorized, transfersFound };
+}
+
+/**
+ * Bewertet alle Transaktionen mit categorization_source IN ('none', 'rule') neu.
+ * Wird nach jeder Regel-Änderung (Anlegen/Bearbeiten/Löschen/Umsortieren) aufgerufen.
+ */
+export async function reevaluateAllRuleBasedTransactions(): Promise<PipelineResult> {
+  const db = await getDb();
+  const rows = await db.select<{ id: number }[]>(
+    "select id from transactions where is_deleted = 0 and categorization_source in ('none', 'rule')",
+  );
+  const ids = rows.map((r) => r.id);
+  return runPipelineForTransactions(ids);
 }

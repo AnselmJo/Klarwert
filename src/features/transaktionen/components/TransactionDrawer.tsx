@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { RuleEditorModal } from "@/features/kategorien/components/RuleEditorModal";
 import { useTags } from "@/hooks/useTags";
 import { useSparzwecke } from "@/hooks/useSparzwecke";
 import { createTag } from "@/db/repositories/tags";
@@ -31,9 +32,40 @@ import {
   type TransactionWithTags,
 } from "@/db/repositories/transactions";
 import { formatEur, parseAmountToCents } from "@/lib/money";
-import { todayIso } from "@/lib/dates";
-import { useQueryClient } from "@tanstack/react-query";
+import { todayIso, formatDate } from "@/lib/dates";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { listCollections, addTransactionsToCollection, removeTransactionFromCollection, getTransactionCollectionIds } from "@/db/repositories/collections";
+import { useSettingsStore } from "@/stores/settingsStore";
+import { useCustomFields } from "@/hooks/useCustomFields";
+import { useTransactionCustomValues } from "@/hooks/useTransactionCustomValues";
+import { setCustomValue } from "@/db/repositories/customFields";
+import { useCategories } from "@/hooks/useCategories";
+import { getCategorizationLogForTransaction, listMerchants } from "@/db/repositories/merchants";
+import { listRules } from "@/db/repositories/rules";
+import type { CategorizationAlternative, CategorizationMatchedBy } from "@/db/types";
+
+const STAGE_LABELS: Partial<Record<CategorizationMatchedBy, string>> = {
+  manual: "Manuell gesetzt",
+  contract: "Automatisch über Vertrag",
+  transfer: "Automatisch über Transfer-Erkennung",
+  similarity: "Ähnlichkeits-Fallback (eigene Historie)",
+  none: "Keine automatische Zuordnung",
+};
+
+const RULE_FIELD_LABELS: Record<string, string> = {
+  purpose: "Zweck",
+  counterparty: "Empfänger",
+  amount: "Betrag",
+  asset: "Konto",
+  custom: "Feld",
+};
+
+const RULE_OPERATOR_LABELS: Record<string, string> = {
+  contains: "enthält",
+  equals: "=",
+  approx: "≈",
+};
 
 const EXTRA_FIELD_LABELS: Record<string, string> = {
   transaction_type: "Transaktionstyp",
@@ -58,9 +90,24 @@ interface TransactionDrawerProps {
 
 export function TransactionDrawer({ transaction, onOpenChange, onSaved }: TransactionDrawerProps) {
   const queryClient = useQueryClient();
+  const dateDisplayFormat = useSettingsStore((s) => s.dateDisplayFormat);
   const { data: tags } = useTags();
   const { data: sparzwecke } = useSparzwecke();
+  const { data: allCollections } = useQuery({
+    queryKey: ["collections"],
+    queryFn: listCollections,
+  });
+  const { data: categorizationLog } = useQuery({
+    queryKey: ["categorization-log", transaction?.id],
+    queryFn: () => getCategorizationLogForTransaction(transaction!.id),
+    enabled: !!transaction,
+  });
+  const { data: allMerchants } = useQuery({ queryKey: ["merchants", "all-for-transparency"], queryFn: listMerchants });
+  const { data: allRules } = useQuery({ queryKey: ["rules"], queryFn: listRules });
+  const { data: allCategoriesFlat } = useCategories();
+  const activeCollections = (allCollections ?? []).filter((c: any) => c.is_deleted === 0 && c.status === "active");
   const [newTagName, setNewTagName] = useState("");
+  const [ruleEditorOpen, setRuleEditorOpen] = useState(false);
 
   const [bookingDate, setBookingDate] = useState("");
   const [counterparty, setCounterparty] = useState("");
@@ -74,6 +121,21 @@ export function TransactionDrawer({ transaction, onOpenChange, onSaved }: Transa
   const [isTransfer, setIsTransfer] = useState(false);
   const [excludeFromStats, setExcludeFromStats] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [collectionIds, setCollectionIds] = useState<number[]>([]);
+
+  const { data: customFields } = useCustomFields();
+  const { data: initialCustomValues } = useTransactionCustomValues(transaction?.id ?? null);
+  const [customValues, setCustomValues] = useState<Record<number, string>>({});
+
+  useEffect(() => {
+    if (initialCustomValues) {
+      const map: Record<number, string> = {};
+      for (const v of initialCustomValues) {
+        map[v.custom_field_id] = v.value;
+      }
+      setCustomValues(map);
+    }
+  }, [initialCustomValues]);
 
   useEffect(() => {
     if (transaction) {
@@ -88,6 +150,8 @@ export function TransactionDrawer({ transaction, onOpenChange, onSaved }: Transa
       setIsReviewed(!!transaction.is_reviewed);
       setIsTransfer(!!transaction.is_transfer);
       setExcludeFromStats(!!transaction.exclude_from_stats);
+      // Load collection memberships
+      getTransactionCollectionIds(transaction.id).then(setCollectionIds);
     }
   }, [transaction]);
 
@@ -103,6 +167,49 @@ export function TransactionDrawer({ transaction, onOpenChange, onSaved }: Transa
     }
   }
   const extraFieldEntries = Object.entries(extraFields).filter(([, v]) => v);
+
+  function merchantLabel(id: number | null | undefined): string {
+    if (!id) return "unbekannter Händler";
+    return allMerchants?.find((m) => m.id === id)?.display_name ?? `Händler #${id}`;
+  }
+
+  function categoryLabel(id: number | null | undefined): string {
+    if (!id) return "keine Kategorie";
+    return allCategoriesFlat?.find((c) => c.id === id)?.name ?? `Kategorie #${id}`;
+  }
+
+  function ruleLabel(id: number | null | undefined): string {
+    const rule = id ? allRules?.find((r) => r.id === id) : undefined;
+    const condition = rule?.conditions[0];
+    if (!condition) return "Automatisch über Benutzerregel";
+    const field = RULE_FIELD_LABELS[condition.field] ?? condition.field;
+    const operator = RULE_OPERATOR_LABELS[condition.operator] ?? condition.operator;
+    return `Benutzerregel: ${field} ${operator} „${condition.value}"`;
+  }
+
+  function stageLabel(matchedBy: CategorizationMatchedBy, ruleId: number | null, merchantId: number | null): string {
+    if (matchedBy === "user_rule") return ruleLabel(ruleId);
+    if (matchedBy === "merchant_iban") return `Händler-Datenbank · IBAN-Treffer: ${merchantLabel(merchantId)}`;
+    if (matchedBy === "merchant_alias") return `Händler-Datenbank · Alias-Treffer: ${merchantLabel(merchantId)}`;
+    return STAGE_LABELS[matchedBy] ?? "Keine automatische Zuordnung";
+  }
+
+  function alternativeLabel(alt: CategorizationAlternative): string {
+    const confidencePercent = Math.round(alt.confidence * 100);
+    if (alt.matched_by === "similarity") {
+      return `Ähnlichkeit → ${categoryLabel(alt.category_id)} (${confidencePercent} % Konfidenz)`;
+    }
+    return `${merchantLabel(alt.merchant_id)} → ${categoryLabel(alt.category_id)} (${confidencePercent} % Konfidenz)`;
+  }
+
+  let logAlternatives: CategorizationAlternative[] = [];
+  if (categorizationLog?.alternatives_json) {
+    try {
+      logAlternatives = JSON.parse(categorizationLog.alternatives_json);
+    } catch {
+      logAlternatives = [];
+    }
+  }
 
   async function handleCreateTag() {
     if (!newTagName.trim()) return;
@@ -136,6 +243,15 @@ export function TransactionDrawer({ transaction, onOpenChange, onSaved }: Transa
           : {}),
       });
       await setTransactionTags(transaction.id, tagIds);
+      
+      // Save custom fields
+      if (customFields) {
+        for (const field of customFields) {
+          const val = customValues[field.id];
+          await setCustomValue(transaction.id, field.id, val ?? null);
+        }
+      }
+
       toast.success("Änderungen gespeichert");
       onSaved();
       onOpenChange(false);
@@ -174,7 +290,7 @@ export function TransactionDrawer({ transaction, onOpenChange, onSaved }: Transa
               <div className="font-medium text-charcoal">{transaction.counterparty}</div>
               {transaction.purpose && <div className="text-slate">{transaction.purpose}</div>}
               <div className="flex items-center gap-2 text-xs text-slate">
-                <span>{transaction.booking_date}</span>
+                <span>{formatDate(transaction.booking_date, dateDisplayFormat)}</span>
                 <span className="num text-sm text-charcoal">{formatEur(transaction.amount_cents)}</span>
               </div>
             </div>
@@ -193,7 +309,19 @@ export function TransactionDrawer({ transaction, onOpenChange, onSaved }: Transa
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="tx-amount">Betrag</Label>
-                  <Input id="tx-amount" inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} />
+                  <div className="relative">
+                    <Input
+                      id="tx-amount"
+                      type="text"
+                      inputMode="decimal"
+                      value={amount}
+                      onChange={(e) => setAmount(e.target.value)}
+                      className="pr-6 text-right"
+                    />
+                    <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-sm text-slate">
+                      €
+                    </span>
+                  </div>
                 </div>
               </div>
               <div className="space-y-1.5">
@@ -208,11 +336,47 @@ export function TransactionDrawer({ transaction, onOpenChange, onSaved }: Transa
           )}
 
           <div className="space-y-1.5">
-            <Label>Kategorie</Label>
-            <CategorySelect value={categoryId} onChange={setCategoryId} />
-            <p className="text-xs text-slate">
-              Herkunft: {transaction.categorization_source === "manual" ? "manuell" : "keine"}
-            </p>
+            <div className="flex items-center justify-between">
+              <Label>Kategorie</Label>
+            </div>
+            <div>
+              <CategorySelect 
+                value={categoryId} 
+                onChange={setCategoryId} 
+                amountCents={transaction.amount_cents}
+              />
+            </div>
+            <div className="rounded-md border border-cream-dark/60 bg-cream/40 p-2">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-xs text-slate">
+                  {categorizationLog
+                    ? stageLabel(categorizationLog.matched_by, categorizationLog.rule_id, categorizationLog.merchant_id)
+                    : transaction.categorization_source === "manual"
+                      ? "Manuell gesetzt"
+                      : "Keine automatische Zuordnung"}
+                </p>
+                {categorizationLog && (
+                  <Badge variant="outline" className="shrink-0 text-[10px]">
+                    {Math.round(categorizationLog.confidence * 100)} % Konfidenz
+                  </Badge>
+                )}
+              </div>
+              {logAlternatives.length > 0 && (
+                <Collapsible className="mt-1.5">
+                  <CollapsibleTrigger className="flex items-center gap-1 text-xs text-slate underline underline-offset-2">
+                    <ChevronDown className="size-3" />
+                    Knapp unterlegene Alternativen ({logAlternatives.length})
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="mt-1 space-y-0.5 pl-4">
+                    {logAlternatives.map((alt, i) => (
+                      <p key={i} className="text-xs text-slate/80">
+                        {alternativeLabel(alt)}
+                      </p>
+                    ))}
+                  </CollapsibleContent>
+                </Collapsible>
+              )}
+            </div>
           </div>
 
           <div className="space-y-1.5">
@@ -306,6 +470,26 @@ export function TransactionDrawer({ transaction, onOpenChange, onSaved }: Transa
             <Badge className="bg-sage text-card hover:bg-sage">Transfer</Badge>
           )}
 
+          {customFields && customFields.length > 0 && (
+            <div className="pt-2">
+              <Label className="mb-2 block text-sm">Zusatzfelder</Label>
+              <div className="space-y-3">
+                {customFields.map((field) => (
+                  <div key={field.id} className="space-y-1.5">
+                    <Label htmlFor={`cf-${field.id}`} className="text-xs font-normal text-slate">{field.name}</Label>
+                    <Input
+                      id={`cf-${field.id}`}
+                      type={field.data_type === "integer" || field.data_type === "decimal" ? "number" : field.data_type === "date" || field.data_type === "datetime" ? "date" : "text"}
+                      className="h-8"
+                      value={customValues[field.id] ?? ""}
+                      onChange={(e) => setCustomValues((prev) => ({ ...prev, [field.id]: e.target.value }))}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {extraFieldEntries.length > 0 && (
             <Collapsible>
               <CollapsibleTrigger className="flex items-center gap-1 text-sm text-petrol">
@@ -322,7 +506,64 @@ export function TransactionDrawer({ transaction, onOpenChange, onSaved }: Transa
               </CollapsibleContent>
             </Collapsible>
           )}
+
+          <div className="pt-2">
+            <Label className="mb-2 block text-sm">Sammlungen</Label>
+            <div className="flex flex-wrap gap-1.5">
+              {activeCollections.map((col) => {
+                const isIn = collectionIds.includes(col.id);
+                return (
+                  <button
+                    key={col.id}
+                    type="button"
+                    onClick={async () => {
+                      if (isIn) {
+                        await removeTransactionFromCollection(col.id, transaction.id);
+                        setCollectionIds((prev) => prev.filter((id) => id !== col.id));
+                      } else {
+                        await addTransactionsToCollection(col.id, [transaction.id]);
+                        setCollectionIds((prev) => [...prev, col.id]);
+                      }
+                    }}
+                    className={`rounded-pill border px-2.5 py-1 text-xs transition-colors ${
+                      isIn
+                        ? "border-petrol bg-petrol text-card"
+                        : "border-border bg-accent text-charcoal hover:bg-accent/70"
+                    }`}
+                  >
+                    {col.name}
+                  </button>
+                );
+              })}
+              {activeCollections.length === 0 && (
+                <p className="text-xs text-slate">Keine aktiven Sammlungen.</p>
+              )}
+            </div>
+          </div>
+
+          <div className="pt-2">
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => setRuleEditorOpen(true)}
+            >
+              Regel aus dieser Transaktion erstellen
+            </Button>
+          </div>
         </div>
+
+        <RuleEditorModal
+          open={ruleEditorOpen}
+          rule={null}
+          defaultCategoryId={categoryId}
+          defaultConditions={[
+            { field: "counterparty", operator: "equals", value: counterparty },
+          ]}
+          onOpenChange={setRuleEditorOpen}
+          onSaved={() => {
+            // Nothing specific needed, user might save tx afterwards
+          }}
+        />
 
         <SheetFooter className="mt-6 flex-row justify-between sm:justify-between">
           {transaction.source === "manual" ? (
