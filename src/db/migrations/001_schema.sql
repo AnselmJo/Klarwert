@@ -3,6 +3,10 @@
 -- zeitstempel als iso-text (utc), booleans als integer 0/1
 
 pragma foreign_keys = on;
+pragma journal_mode = WAL;
+pragma busy_timeout = 5000;
+-- WAL + busy_timeout sind Absicherung, nicht die eigentliche Lösung für "database is locked"/
+-- "cannot rollback - no transaction active": siehe CLAUDE.md, Abschnitt "Transaktions-Disziplin".
 
 create table meta (
   key text primary key
@@ -24,28 +28,6 @@ create table persons (
 , birth_year integer check (birth_year between 1900 and 2100) -- optional, für fire-rechner
 , is_active integer not null default 1
 , created_at text not null default (datetime('now'))
-);
-
-create table sparzwecke (
-  id integer primary key
-, name text not null
-, color text not null
-, target_cents integer check (target_cents > 0) -- optionaler zielbetrag
-, sort_order integer not null default 0
-, is_deleted integer not null default 0
-);
-
-create table import_profiles (
-  id integer primary key
-, name text not null
-, is_builtin integer not null default 0 -- mitgelieferte bankprofile (seed)
-, header_fingerprint text -- normalisierte header-zeile zur auto-erkennung
-, delimiter text check (delimiter in (',', ';', '\t'))
-, encoding text default 'utf-8'
-, date_format text -- z. b. 'dd.MM.yyyy'
-, decimal_format text check (decimal_format in ('de', 'en')) -- 1.234,56 vs 1,234.56
-, column_map_json text not null -- {"date":2,"amount":8,"counterparty":3,"purpose":5,"external_id":7}
-, is_deleted integer not null default 0
 );
 
 create table assets (
@@ -91,11 +73,93 @@ create table categories (
 );
 create unique index idx_categories_name on categories(name, coalesce(parent_id, 0)) where is_deleted = 0;
 
+create table category_aliases (
+  id integer primary key
+, category_id integer not null references categories(id) on delete cascade
+, alias text not null -- zusätzlicher suchbegriff, v. a. für template-kategorien
+);
+create index idx_category_aliases on category_aliases(category_id);
+
+-- benutzerdefinierte spalten für transaktionen (text-only in v1)
+create table custom_fields (
+  id integer primary key
+, name text not null unique
+, type text not null default 'text' check (type in ('text', 'number', 'date'))
+, sort_order integer not null default 0
+, is_deleted integer not null default 0
+);
+
+create table transaction_custom_values (
+  transaction_id integer not null references transactions(id) on delete cascade
+, custom_field_id integer not null references custom_fields(id) on delete cascade
+, value text not null
+, primary key (transaction_id, custom_field_id)
+);
+
 create table tags (
   id integer primary key
 , name text not null
 , color text not null
 , is_deleted integer not null default 0
+);
+
+create table sparzwecke (
+  id integer primary key
+, name text not null
+, color text not null
+, target_cents integer check (target_cents > 0) -- optionaler zielbetrag
+, sort_order integer not null default 0
+, is_deleted integer not null default 0
+);
+
+create table transactions (
+  id integer primary key
+, asset_id integer not null references assets(id) on delete cascade
+, booking_date text not null
+, counterparty text not null
+, purpose text
+, amount_cents integer not null -- vorzeichenbehaftet
+, source text not null check (source in ('import', 'manual')) -- import: kernfelder gesperrt
+, external_id text -- buchungs-id der bank, falls vorhanden (upsert-schlüssel)
+, extra_fields_json text -- optionale bankfelder (transaction_type, card_payment_at, cash_withdrawal_at,
+                          -- recipient_name, recipient_iban, recipient_bic, recipient_account_number,
+                          -- description, bank_category, bank_subcategory, bank_account_label) – auge-icon in der ui
+, fingerprint text not null -- normalisiert: datum|betrag|empfänger (duplikat-/metadaten-matching)
+, import_id integer references imports(id) on delete set null
+, category_id integer references categories(id) on delete set null
+, categorization_source text not null default 'none' check (categorization_source in ('none', 'manual', 'rule', 'contract'))
+, applied_rule_id integer references rules(id) on delete set null
+, is_reviewed integer not null default 1 -- 0 = "ungeprüft"-marker
+, is_transfer integer not null default 0
+, transfer_pair_id integer references transactions(id) on delete set null
+, transfer_status text check (transfer_status in ('suggested', 'confirmed')) -- null wenn kein transfer
+, is_saving integer not null default 0
+, sparzweck_id integer references sparzwecke(id) on delete set null
+, exclude_from_stats integer not null default 0
+, contract_id integer references contracts(id) on delete set null
+, recurring_payment_id integer references recurring_payments(id) on delete set null
+, is_deleted integer not null default 0
+, created_at text not null default (datetime('now'))
+, check (contract_id is null or recurring_payment_id is null) -- exklusiv
+);
+create index idx_tx_asset_date on transactions(asset_id, booking_date);
+create index idx_tx_category on transactions(category_id);
+create index idx_tx_fingerprint on transactions(asset_id, fingerprint);
+create index idx_tx_external on transactions(asset_id, external_id);
+
+-- schema-hook ohne v1-ui (splits)
+create table transaction_splits (
+  id integer primary key
+, transaction_id integer not null references transactions(id) on delete cascade
+, amount_cents integer not null check (amount_cents != 0)
+, category_id integer not null references categories(id) on delete restrict
+, note text
+);
+
+create table transaction_tags (
+  transaction_id integer not null references transactions(id) on delete cascade
+, tag_id integer not null references tags(id) on delete cascade
+, primary key (transaction_id, tag_id)
 );
 
 create table rules (
@@ -140,53 +204,6 @@ create table recurring_payments (
 , detected_at text not null default (datetime('now'))
 , is_dismissed integer not null default 0
 , is_deleted integer not null default 0
-);
-
-create table transactions (
-  id integer primary key
-, asset_id integer not null references assets(id) on delete cascade
-, booking_date text not null
-, counterparty text not null
-, purpose text
-, amount_cents integer not null -- vorzeichenbehaftet
-, source text not null check (source in ('import', 'manual')) -- import: kernfelder gesperrt
-, external_id text -- buchungs-id der bank, falls vorhanden (upsert-schlüssel)
-, fingerprint text not null -- normalisiert: datum|betrag|empfänger (duplikat-/metadaten-matching)
-, import_id integer references imports(id) on delete set null
-, category_id integer references categories(id) on delete set null
-, categorization_source text not null default 'none' check (categorization_source in ('none', 'manual', 'rule', 'contract'))
-, applied_rule_id integer references rules(id) on delete set null
-, is_reviewed integer not null default 1 -- 0 = "ungeprüft"-marker
-, is_transfer integer not null default 0
-, transfer_pair_id integer references transactions(id) on delete set null
-, transfer_status text check (transfer_status in ('suggested', 'confirmed')) -- null wenn kein transfer
-, is_saving integer not null default 0
-, sparzweck_id integer references sparzwecke(id) on delete set null
-, exclude_from_stats integer not null default 0
-, contract_id integer references contracts(id) on delete set null
-, recurring_payment_id integer references recurring_payments(id) on delete set null
-, is_deleted integer not null default 0
-, created_at text not null default (datetime('now'))
-, check (contract_id is null or recurring_payment_id is null) -- exklusiv
-);
-create index idx_tx_asset_date on transactions(asset_id, booking_date);
-create index idx_tx_category on transactions(category_id);
-create index idx_tx_fingerprint on transactions(asset_id, fingerprint);
-create index idx_tx_external on transactions(asset_id, external_id);
-
--- schema-hook ohne v1-ui (splits)
-create table transaction_splits (
-  id integer primary key
-, transaction_id integer not null references transactions(id) on delete cascade
-, amount_cents integer not null check (amount_cents != 0)
-, category_id integer not null references categories(id) on delete restrict
-, note text
-);
-
-create table transaction_tags (
-  transaction_id integer not null references transactions(id) on delete cascade
-, tag_id integer not null references tags(id) on delete cascade
-, primary key (transaction_id, tag_id)
 );
 
 -- unterdrückte transfer-muster (nach "trennen" nicht erneut vorschlagen)
@@ -254,6 +271,19 @@ create table widgets (
 , is_visible integer not null default 1
 , sort_order integer not null
 , config_json text -- z. b. personen-vergleich: {"metric":"expenses"}
+);
+
+create table import_profiles (
+  id integer primary key
+, name text not null
+, is_builtin integer not null default 0 -- mitgelieferte bankprofile (seed)
+, header_fingerprint text -- normalisierte header-zeile zur auto-erkennung
+, delimiter text check (delimiter in (',', ';', '\t'))
+, encoding text default 'utf-8'
+, date_format text -- z. b. 'dd.MM.yyyy'
+, decimal_format text check (decimal_format in ('de', 'en')) -- 1.234,56 vs 1,234.56
+, column_map_json text not null -- {"date":2,"amount":8,"counterparty":3,"purpose":5,"external_id":7}
+, is_deleted integer not null default 0
 );
 
 create table imports (

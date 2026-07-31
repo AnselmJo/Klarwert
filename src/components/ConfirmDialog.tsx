@@ -17,6 +17,7 @@ interface ConfirmDialogProps {
   cancelLabel?: string;
   variant?: "destructive" | "positive";
   onConfirm: () => void;
+  children?: React.ReactNode;
 }
 
 /** 5.9 Generische Bestätigung. */
@@ -29,6 +30,7 @@ export function ConfirmDialog({
   cancelLabel = "Abbrechen",
   variant = "destructive",
   onConfirm,
+  children,
 }: ConfirmDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -37,6 +39,7 @@ export function ConfirmDialog({
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
+        {children}
         <DialogFooter>
           <Button variant="ghost" onClick={() => onOpenChange(false)}>
             {cancelLabel}

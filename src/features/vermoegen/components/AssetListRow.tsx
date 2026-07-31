@@ -1,8 +1,16 @@
-import { Pencil, Trash2, TriangleAlert } from "lucide-react";
+import { Pencil, Trash2, TriangleAlert, MoreHorizontal } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Sparkline } from "@/components/charts/Sparkline";
 import { formatEur } from "@/lib/money";
+import { formatDate } from "@/lib/dates";
+import { useSettingsStore } from "@/stores/settingsStore";
 import { cn } from "@/lib/utils";
 import type { AssetWithOwners } from "@/db/repositories/assets";
 import type { Person } from "@/db/types";
@@ -28,10 +36,12 @@ interface AssetListRowProps {
   persons: Person[];
   isStale: boolean;
   hasAnchor: boolean;
+  onRowClick?: () => void;
   onEdit: () => void;
   onDelete: () => void;
   onUpdateValue: () => void;
   onNewImport: () => void;
+  onEditImportFormat?: () => void;
 }
 
 export function AssetListRow({
@@ -41,11 +51,14 @@ export function AssetListRow({
   persons,
   isStale,
   hasAnchor,
+  onRowClick,
   onEdit,
   onDelete,
   onUpdateValue,
   onNewImport,
+  onEditImportFormat,
 }: AssetListRowProps) {
+  const dateDisplayFormat = useSettingsStore((s) => s.dateDisplayFormat);
   const typeLabel =
     asset.kind === "account"
       ? ACCOUNT_TYPE_LABELS[asset.account_type ?? ""]
@@ -57,9 +70,14 @@ export function AssetListRow({
 
   return (
     <div
+      role={onRowClick ? "button" : undefined}
+      tabIndex={onRowClick ? 0 : undefined}
+      onClick={onRowClick}
+      onKeyDown={onRowClick ? (e) => { if (e.key === "Enter" || e.key === " ") onRowClick(); } : undefined}
       className={cn(
         "flex items-center gap-4 rounded-klein border border-transparent px-3 py-3",
         isStale && "border-gold/60 bg-gold/5",
+        onRowClick && "cursor-pointer transition-colors hover:bg-accent",
       )}
     >
       <div className="min-w-0 flex-1">
@@ -80,7 +98,7 @@ export function AssetListRow({
             <>
               {" · "}
               {asset.last_import_at
-                ? `letzter Import ${asset.last_import_at.slice(0, 10)}`
+                ? `letzter Import ${formatDate(asset.last_import_at.slice(0, 10), dateDisplayFormat)}`
                 : "noch nicht importiert"}
             </>
           )}
@@ -98,7 +116,7 @@ export function AssetListRow({
           <Button
             size="sm"
             variant="ghost"
-            onClick={onNewImport}
+            onClick={(e) => { e.stopPropagation(); onNewImport(); }}
             className={isStale ? "text-gold" : undefined}
           >
             {isStale && <TriangleAlert className="mr-1 size-3.5" />}
@@ -106,16 +124,30 @@ export function AssetListRow({
           </Button>
         )}
         {asset.kind === "valuable" && (
-          <Button size="sm" variant="ghost" onClick={onUpdateValue}>
+          <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); onUpdateValue(); }}>
             Wert aktualisieren
           </Button>
         )}
-        <Button size="icon" variant="ghost" aria-label="Bearbeiten" onClick={onEdit}>
+        <Button size="icon" variant="ghost" aria-label="Bearbeiten" onClick={(e) => { e.stopPropagation(); onEdit(); }}>
           <Pencil className="size-4" />
         </Button>
-        <Button size="icon" variant="ghost" aria-label="Löschen" onClick={onDelete}>
+        <Button size="icon" variant="ghost" aria-label="Löschen" onClick={(e) => { e.stopPropagation(); onDelete(); }}>
           <Trash2 className="size-4" />
         </Button>
+        {asset.kind === "account" && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="icon" variant="ghost" aria-label="Mehr Aktionen" onClick={(e) => e.stopPropagation()}>
+                <MoreHorizontal className="size-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEditImportFormat?.(); }}>
+                Import-Format ändern
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
     </div>
   );

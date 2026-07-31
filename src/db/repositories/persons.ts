@@ -13,18 +13,26 @@ export async function createPerson(input: {
   name: string;
   role?: PersonRole;
   birth_year?: number | null;
+  kirchensteuer_aktiv?: 0 | 1;
+  bundesland?: string | null;
 }): Promise<number> {
   const db = await getDb();
   const result = await db.execute(
-    "insert into persons (name, role, birth_year) values ($1, $2, $3)",
-    [input.name, input.role ?? "adult", input.birth_year ?? null],
+    "insert into persons (name, role, birth_year, kirchensteuer_aktiv, bundesland) values ($1, $2, $3, $4, $5)",
+    [
+      input.name,
+      input.role ?? "adult",
+      input.birth_year ?? null,
+      input.kirchensteuer_aktiv ?? 0,
+      input.bundesland ?? null,
+    ],
   );
   return result.lastInsertId as number;
 }
 
 export async function updatePerson(
   id: number,
-  input: Partial<Pick<Person, "name" | "role" | "birth_year">>,
+  input: Partial<Pick<Person, "name" | "role" | "birth_year" | "kirchensteuer_aktiv" | "bundesland">>,
 ): Promise<void> {
   const db = await getDb();
   const fields: string[] = [];
@@ -48,6 +56,8 @@ export async function deactivatePerson(id: number): Promise<void> {
   const db = await getDb();
   await db.execute("update persons set is_active = 0 where id = $1", [id]);
 }
+
+export const deletePerson = deactivatePerson;
 
 export async function countActivePersons(): Promise<number> {
   const db = await getDb();

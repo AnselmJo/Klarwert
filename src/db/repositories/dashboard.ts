@@ -112,7 +112,15 @@ function periodLengthDays(from: string, to: string): number {
   return Math.max(1, Math.round((end - start) / 86_400_000) + 1);
 }
 
-export function getPreviousDashboardRange(type: PeriodType, from: string, to: string) {
+export function getPreviousDashboardRange(
+  type: PeriodType,
+  from: string,
+  to: string,
+  comparisonMode: "prev_period" | "prev_year" = "prev_period",
+) {
+  if (comparisonMode === "prev_year") {
+    return { from: shiftIsoMonths(from, -12), to: shiftIsoMonths(to, -12) };
+  }
   if (type === "month") return { from: shiftIsoMonths(from, -1), to: dayBefore(from) };
   if (type === "quarter") return { from: shiftIsoMonths(from, -3), to: dayBefore(from) };
   if (type === "year") return { from: shiftIsoMonths(from, -12), to: dayBefore(from) };
@@ -149,8 +157,9 @@ async function getKpiRange(filter: DashboardFilter): Promise<Omit<DashboardKpis,
 export async function getDashboardKpis(
   filter: DashboardFilter,
   periodType: PeriodType,
+  comparisonMode: "prev_period" | "prev_year" = "prev_period",
 ): Promise<DashboardKpis> {
-  const previous = getPreviousDashboardRange(periodType, filter.from, filter.to);
+  const previous = getPreviousDashboardRange(periodType, filter.from, filter.to, comparisonMode);
   const [current, previousValues] = await Promise.all([
     getKpiRange(filter),
     getKpiRange({ ...filter, ...previous }),
@@ -314,7 +323,7 @@ export async function getPlannedContracts(limit = 6): Promise<PlannedContractPoi
      from contracts c
      left join categories cat on cat.id = c.category_id
      left join transactions t on t.contract_id = c.id and t.is_deleted = 0
-     where c.is_deleted = 0 and c.status in ('confirmed', 'price_changed')
+     where c.is_deleted = 0 and c.current_amount_cents != 0 and c.status in ('confirmed', 'price_changed')
      group by c.id, c.name, cat.name, c.current_amount_cents
      order by lastPaymentDate asc
      limit ${limit}`,

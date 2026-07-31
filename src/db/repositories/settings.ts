@@ -1,13 +1,22 @@
 import { getDb } from "@/db/client";
 import type { SettingsMap } from "@/db/types";
 
+const DEFAULT_SETTINGS: Partial<SettingsMap> = {
+  currency: "EUR",
+  import_reminder_days: "30",
+  kirchensteuer_aktiv: "0",
+  kirchensteuer_satz: "8",
+  onboarding_done: "0",
+  date_display_format: "dd.MM.yyyy",
+};
+
 export async function getAllSettings(): Promise<SettingsMap> {
   const db = await getDb();
   const rows = await db.select<{ key: string; value: string }[]>(
     "select key, value from settings",
   );
   const map = Object.fromEntries(rows.map((r) => [r.key, r.value]));
-  return map as unknown as SettingsMap;
+  return { ...DEFAULT_SETTINGS, ...map } as unknown as SettingsMap;
 }
 
 export async function getSetting<K extends keyof SettingsMap>(

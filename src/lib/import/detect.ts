@@ -9,8 +9,8 @@ export function isParsableDate(value: string | undefined): boolean {
   return DATE_PATTERNS.some((p) => p.regex.test(v));
 }
 
-const DE_AMOUNT = /^-?\d{1,3}(\.\d{3})*,\d{2}$|^-?\d+,\d{2}$/;
-const EN_AMOUNT = /^-?\d{1,3}(,\d{3})*\.\d{2}$|^-?\d+\.\d{2}$/;
+const DE_AMOUNT = /^-?\d{1,3}(\.\d{3})*(,\d{1,2})?$|^-?\d+(,\d{1,2})?$/;
+const EN_AMOUNT = /^-?\d{1,3}(,\d{3})*(\.\d{1,2})?$|^-?\d+(\.\d{1,2})?$/;
 
 export function isNumericAmount(value: string | undefined): boolean {
   const v = (value ?? "").trim().replace(/^\+/, "").replace(/\s*€?$/, "");

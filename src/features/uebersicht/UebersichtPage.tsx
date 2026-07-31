@@ -86,10 +86,21 @@ function delta(current: number, previous: number): string {
   return `${change >= 0 ? "+" : ""}${Math.round(change * 100)} %`;
 }
 
-function periodAnchors(type: PeriodType, anchorIso: string) {
+function deltaDetailed(current: number, previous: number): string {
+  const diff = current - previous;
+  const eurStr = formatEur(Math.abs(diff));
+  const signedEur = diff >= 0 ? `+${eurStr}` : `-${eurStr}`;
+  if (previous === 0 && current === 0) return `${signedEur} (0 %)`;
+  if (previous === 0) return `${signedEur} (+100 %)`;
+  const change = (current - previous) / Math.abs(previous);
+  const pctStr = `${change >= 0 ? "+" : ""}${Math.round(change * 100)} %`;
+  return `${signedEur} (${pctStr})`;
+}
+
+function periodAnchors(type: PeriodType, anchorIso: string, count = 6) {
   const anchor = new Date(`${anchorIso}T00:00:00`);
   const anchors: { label: string; from: string; to: string }[] = [];
-  for (let offset = 5; offset >= 0; offset -= 1) {
+  for (let offset = count - 1; offset >= 0; offset -= 1) {
     let shifted = anchor;
     for (let step = 0; step < offset; step += 1) {
       shifted = shiftPeriod(type, shifted, -1);
@@ -114,12 +125,14 @@ function KpiCard({
   label,
   value,
   change,
+  comparisonLabel,
   tone,
 }: {
   icon: typeof TrendingUp;
   label: string;
   value: string;
   change: string;
+  comparisonLabel: string;
   tone: "sage" | "brick" | "gold" | "petrol";
 }) {
   const toneClass = {
@@ -138,7 +151,7 @@ function KpiCard({
         </span>
       </div>
       <div className="mt-3 font-heading text-2xl text-charcoal">{value}</div>
-      <div className="mt-1 text-xs text-slate">zum Vergleichszeitraum {change}</div>
+      <div className="mt-1 text-xs text-slate">vs. {comparisonLabel}: {change}</div>
     </div>
   );
 }
@@ -200,9 +213,11 @@ export function UebersichtPage() {
   const navigate = useNavigationStore((s) => s.navigate);
   const selectedAccountId = useGlobalFilterStore((s) => s.selectedAccountId);
   const selectedPersonId = useGlobalFilterStore((s) => s.selectedPersonId);
-  const type = usePeriodStore((s) => s.type);
-  const anchorIso = usePeriodStore((s) => s.anchorIso);
+  const type = usePeriodStore((s) => s.scopes.uebersicht.type);
+  const anchorIso = usePeriodStore((s) => s.scopes.uebersicht.anchorIso);
   const dateDisplayFormat = useSettingsStore((s) => s.dateDisplayFormat);
+  const [comparisonMode, setComparisonMode] = useState<"prev_period" | "prev_year">("prev_period");
+  const [cashflowCount, setCashflowCount] = useState<number>(6);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [visibleWidgets, setVisibleWidgets] = useState<Set<WidgetKey>>(() => new Set(WIDGETS));
 
@@ -216,11 +231,11 @@ export function UebersichtPage() {
     }),
     [selectedAccountId, selectedPersonId, period.from, period.to],
   );
-  const cashflowPeriods = useMemo(() => periodAnchors(type, anchorIso), [type, anchorIso]);
+  const cashflowPeriods = useMemo(() => periodAnchors(type, anchorIso, cashflowCount), [type, anchorIso, cashflowCount]);
 
   const { data: kpis } = useQuery({
-    queryKey: ["dashboard-kpis", filter, type],
-    queryFn: () => getDashboardKpis(filter, type),
+    queryKey: ["dashboard-kpis", filter, type, comparisonMode],
+    queryFn: () => getDashboardKpis(filter, type, comparisonMode),
   });
   const { data: progress } = useQuery({
     queryKey: ["dashboard-categorization-progress"],
@@ -290,6 +305,18 @@ export function UebersichtPage() {
     })
     : null;
 
+  const totalCashflowIncome = useMemo(
+    () => cashflow?.reduce((sum, p) => sum + p.incomeCents, 0) ?? 0,
+    [cashflow],
+  );
+  const totalCashflowExpenses = useMemo(
+    () => cashflow?.reduce((sum, p) => sum + p.expensesCents, 0) ?? 0,
+    [cashflow],
+  );
+  const totalNetCashflow = totalCashflowIncome - totalCashflowExpenses;
+
+  const compLabel = comparisonMode === "prev_year" ? "Vorjahr" : "Vorperiode";
+
   function toggleWidget(key: WidgetKey) {
     setVisibleWidgets((current) => {
       const next = new Set(current);
@@ -325,7 +352,27 @@ export function UebersichtPage() {
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <PeriodSwitcher />
+          <PeriodSwitcher scope="uebersicht" />
+          <div className="inline-flex rounded-klein border border-border bg-card">
+            <button
+              type="button"
+              onClick={() => setComparisonMode("prev_period")}
+              className={`px-3 py-1.5 text-xs transition-colors ${
+                comparisonMode === "prev_period" ? "bg-petrol text-card" : "text-charcoal hover:bg-accent"
+              }`}
+            >
+              vs. Vorperiode
+            </button>
+            <button
+              type="button"
+              onClick={() => setComparisonMode("prev_year")}
+              className={`border-l border-border px-3 py-1.5 text-xs transition-colors ${
+                comparisonMode === "prev_year" ? "bg-petrol text-card" : "text-charcoal hover:bg-accent"
+              }`}
+            >
+              vs. Vorjahr
+            </button>
+          </div>
           <Button variant="ghost" onClick={() => setSettingsOpen(true)}>
             <Eye className="size-4" />
             Elemente
@@ -339,21 +386,24 @@ export function UebersichtPage() {
             icon={ArrowUpRight}
             label="Einnahmen"
             value={formatEur(kpis?.incomeCents ?? 0)}
-            change={delta(kpis?.incomeCents ?? 0, kpis?.previousIncomeCents ?? 0)}
+            change={deltaDetailed(kpis?.incomeCents ?? 0, kpis?.previousIncomeCents ?? 0)}
+            comparisonLabel={compLabel}
             tone="sage"
           />
           <KpiCard
             icon={ArrowDownRight}
             label="Ausgaben"
             value={formatEur(kpis?.expensesCents ?? 0)}
-            change={delta(kpis?.expensesCents ?? 0, kpis?.previousExpensesCents ?? 0)}
+            change={deltaDetailed(kpis?.expensesCents ?? 0, kpis?.previousExpensesCents ?? 0)}
+            comparisonLabel={compLabel}
             tone="brick"
           />
           <KpiCard
             icon={PiggyBank}
             label="Sparbetrag"
             value={formatEur(kpis?.savingCents ?? 0)}
-            change={delta(kpis?.savingCents ?? 0, kpis?.previousSavingCents ?? 0)}
+            change={deltaDetailed(kpis?.savingCents ?? 0, kpis?.previousSavingCents ?? 0)}
+            comparisonLabel={compLabel}
             tone="petrol"
           />
           <KpiCard
@@ -361,6 +411,7 @@ export function UebersichtPage() {
             label="Sparquote"
             value={percent(kpis?.savingRate ?? 0)}
             change={delta(kpis?.savingRate ?? 0, kpis?.previousSavingRate ?? 0)}
+            comparisonLabel={compLabel}
             tone="gold"
           />
         </div>
@@ -403,9 +454,44 @@ export function UebersichtPage() {
           )}
 
           {visibleWidgets.has("cashflow") && (
-            <Widget title="Cashflow letzte 6 Perioden" icon={TrendingUp} className="min-h-[300px]">
+            <Widget
+              title={`Cashflow (letzte ${cashflowCount} Perioden)`}
+              icon={TrendingUp}
+              className="min-h-[300px]"
+              action={
+                <div className="inline-flex rounded-klein border border-border text-xs">
+                  {[3, 6, 12, 24].map((cnt, i) => (
+                    <button
+                      key={cnt}
+                      type="button"
+                      onClick={() => setCashflowCount(cnt)}
+                      className={`px-2.5 py-1 font-medium transition-colors ${i > 0 ? "border-l border-border" : ""} ${
+                        cashflowCount === cnt ? "bg-petrol text-card" : "text-charcoal hover:bg-accent"
+                      }`}
+                    >
+                      {cnt}
+                    </button>
+                  ))}
+                </div>
+              }
+            >
               {cashflowChart && (
-                <ReactECharts option={cashflowChart} style={{ height: 240, width: "100%" }} opts={{ renderer: "svg" }} />
+                <>
+                  <div className="mb-2 flex items-center justify-between text-xs text-slate">
+                    <span>
+                      Gesamt Einnahmen: <strong className="text-sage">{formatEur(totalCashflowIncome)}</strong> · Ausgaben:{" "}
+                      <strong className="text-brick">{formatEur(totalCashflowExpenses)}</strong>
+                    </span>
+                    <span>
+                      Netto-Cashflow:{" "}
+                      <strong className={totalNetCashflow >= 0 ? "text-sage" : "text-brick"}>
+                        {totalNetCashflow >= 0 ? "+" : ""}
+                        {formatEur(totalNetCashflow)}
+                      </strong>
+                    </span>
+                  </div>
+                  <ReactECharts option={cashflowChart} style={{ height: 240, width: "100%" }} opts={{ renderer: "svg" }} />
+                </>
               )}
             </Widget>
           )}

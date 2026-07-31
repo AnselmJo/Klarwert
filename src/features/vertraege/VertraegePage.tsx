@@ -1,11 +1,13 @@
 import { useMemo, useState } from "react";
+import { Plus } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useContracts, useRecurringPayments } from "@/hooks/useContracts";
+import { CategorySelect } from "@/components/CategorySelect";
 import { ContractDrawer } from "@/features/vertraege/components/ContractDrawer";
-import { dismissRecurringPayment, renameRecurringPayment, upgradeToContract } from "@/db/repositories/recurringPayments";
+import { dismissRecurringPayment, renameRecurringPayment, updateRecurringPaymentCategory, upgradeToContract } from "@/db/repositories/recurringPayments";
 import { formatEur } from "@/lib/money";
 import type { Contract, ContractStatus } from "@/db/types";
 import { toast } from "sonner";
@@ -38,9 +40,14 @@ export function VertraegePage() {
   const queryClient = useQueryClient();
   const { data: contracts } = useContracts();
   const { data: recurringPayments } = useRecurringPayments();
-  const [view, setView] = useState<"contracts" | "recurring">("contracts");
+  const [view, setView] = useState<"contracts" | "archive" | "recurring">("contracts");
   const [search, setSearch] = useState("");
-  const [drawerContract, setDrawerContract] = useState<Contract | null>(null);
+  const [drawerContract, setDrawerContract] = useState<Contract | "new" | null>(null);
+
+  const currentDrawerContract = useMemo(() => {
+    if (drawerContract === "new" || drawerContract === null) return drawerContract;
+    return contracts?.find((c) => c.id === drawerContract.id) ?? drawerContract;
+  }, [drawerContract, contracts]);
 
   function invalidate() {
     queryClient.invalidateQueries({ queryKey: ["contracts"] });
@@ -48,41 +55,64 @@ export function VertraegePage() {
   }
 
   const filteredContracts = useMemo(() => {
-    const list = (contracts ?? []).filter((c) => c.name.toLowerCase().includes(search.toLowerCase()));
+    const list = (contracts ?? [])
+      .filter((c) => c.status !== "ended" && c.current_amount_cents !== 0)
+      .filter((c) => c.name.toLowerCase().includes(search.toLowerCase()));
     return [...list].sort(
       (a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status] || b.current_amount_cents - a.current_amount_cents,
     );
   }, [contracts, search]);
 
+  const filteredArchive = useMemo(() => {
+    const list = (contracts ?? [])
+      .filter((c) => c.status === "ended" && c.current_amount_cents !== 0)
+      .filter((c) => c.name.toLowerCase().includes(search.toLowerCase()));
+    return [...list].sort((a, b) => b.current_amount_cents - a.current_amount_cents);
+  }, [contracts, search]);
+
   const filteredRecurring = useMemo(
-    () => (recurringPayments ?? []).filter((r) => r.name.toLowerCase().includes(search.toLowerCase())),
+    () =>
+      (recurringPayments ?? []).filter(
+        (r) => r.typical_amount_cents !== 0 && r.name.toLowerCase().includes(search.toLowerCase()),
+      ),
     [recurringPayments, search],
   );
 
-  const monthlyFixedCosts = (contracts ?? [])
+  const activeContracts = useMemo(
+    () => (contracts ?? []).filter((c) => c.current_amount_cents !== 0),
+    [contracts],
+  );
+
+  const monthlyFixedCosts = activeContracts
     .filter((c) => c.status === "confirmed" || c.status === "price_changed")
     .reduce((sum, c) => sum + (c.interval === "yearly" ? c.current_amount_cents / 12 : c.current_amount_cents), 0);
 
-  async function handleUpgrade(id: number) {
-    await upgradeToContract(id, null);
+  async function handleUpgrade(id: number, categoryId: number | null) {
+    await upgradeToContract(id, categoryId);
     toast.success("Zu Vertrag hochgestuft");
     invalidate();
   }
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="font-heading text-xl text-charcoal">Verträge</h1>
-        <div className="mt-1 flex items-center gap-2 text-sm text-slate">
-          <span>{contracts?.length ?? 0} Verträge</span>
-          <span aria-hidden="true">·</span>
-          <span className="num">{formatEur(Math.round(monthlyFixedCosts))} feste Kosten/Monat</span>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="font-heading text-xl text-charcoal">Verträge</h1>
+          <div className="mt-1 flex items-center gap-2 text-sm text-slate">
+            <span>{activeContracts.length} Verträge</span>
+            <span aria-hidden="true">·</span>
+            <span className="num">{formatEur(Math.round(monthlyFixedCosts))} feste Kosten/Monat</span>
+          </div>
         </div>
+        <Button onClick={() => setDrawerContract("new")}>
+          <Plus className="mr-2 size-4" />
+          Vertrag anlegen
+        </Button>
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
         <div role="radiogroup" className="inline-flex rounded-klein border border-border">
-          {(["contracts", "recurring"] as const).map((v, i) => (
+          {(["contracts", "archive", "recurring"] as const).map((v, i) => (
             <button
               key={v}
               type="button"
@@ -93,7 +123,7 @@ export function VertraegePage() {
                 view === v ? "bg-petrol text-card" : "text-charcoal hover:bg-accent"
               }`}
             >
-              {v === "contracts" ? "Verträge" : "Weitere wiederkehrende Zahlungen"}
+              {v === "contracts" ? "Aktive Verträge" : v === "archive" ? "Archiv" : "Wiederkehrende Zahlungen"}
             </button>
           ))}
         </div>
@@ -125,7 +155,29 @@ export function VertraegePage() {
             </button>
           ))}
           {filteredContracts.length === 0 && (
-            <p className="col-span-full text-sm text-slate">Noch keine Verträge erkannt.</p>
+            <p className="col-span-full text-sm text-slate">Keine aktiven Verträge gefunden.</p>
+          )}
+        </div>
+      )}
+
+      {view === "archive" && (
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredArchive.map((c) => (
+            <button
+              key={c.id}
+              type="button"
+              onClick={() => setDrawerContract(c)}
+              className="rounded-standard border border-border bg-card p-4 text-left hover:bg-accent opacity-75 grayscale transition-all hover:grayscale-0 hover:opacity-100"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-charcoal">{c.name}</span>
+                <Badge className={STATUS_COLOR[c.status]}>{STATUS_LABELS[c.status]}</Badge>
+              </div>
+              <div className="num mt-2 text-lg text-charcoal">{formatEur(c.current_amount_cents)}</div>
+            </button>
+          ))}
+          {filteredArchive.length === 0 && (
+            <p className="col-span-full text-sm text-slate">Keine archivierten Verträge gefunden.</p>
           )}
         </div>
       )}
@@ -144,6 +196,12 @@ export function VertraegePage() {
                 }}
               />
               <div className="num text-lg text-charcoal">{formatEur(r.typical_amount_cents)}</div>
+              <div className="my-2">
+                <CategorySelect
+                  value={r.category_id}
+                  onChange={(v) => void updateRecurringPaymentCategory(r.id, v).then(invalidate)}
+                />
+              </div>
               <div className="mt-2 flex gap-2">
                 <Button
                   size="sm"
@@ -152,7 +210,7 @@ export function VertraegePage() {
                 >
                   Trennen
                 </Button>
-                <Button size="sm" onClick={() => void handleUpgrade(r.id)}>
+                <Button size="sm" onClick={() => void handleUpgrade(r.id, r.category_id)}>
                   Zu Vertrag hochstufen
                 </Button>
               </div>
@@ -164,7 +222,7 @@ export function VertraegePage() {
         </div>
       )}
 
-      <ContractDrawer contract={drawerContract} onOpenChange={(o) => !o && setDrawerContract(null)} onChanged={invalidate} />
+      <ContractDrawer contract={currentDrawerContract} onOpenChange={(o) => !o && setDrawerContract(null)} onChanged={invalidate} />
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import { Sidebar } from "@/components/Sidebar";
 import { Globalbar } from "@/components/Globalbar";
-import { ComingSoonPage } from "@/components/ComingSoonPage";
 import { useNavigationStore } from "@/stores/navigationStore";
 import { VermoegenPage } from "@/features/vermoegen/VermoegenPage";
 import { TransaktionenPage } from "@/features/transaktionen/TransaktionenPage";
@@ -9,6 +8,9 @@ import { VertraegePage } from "@/features/vertraege/VertraegePage";
 import { SammlungenPage } from "@/features/sammlungen/SammlungenPage";
 import { UebersichtPage } from "@/features/uebersicht/UebersichtPage";
 import { BudgetsPage } from "@/features/budgets/BudgetsPage";
+import { SteuerPage } from "@/features/steuer/SteuerPage";
+import { RechnerPage } from "@/features/rechner/RechnerPage";
+import { ProfilPage } from "@/features/profil/ProfilPage";
 
 export function AppShell() {
   const currentPage = useNavigationStore((s) => s.currentPage);
@@ -26,9 +28,9 @@ export function AppShell() {
           {currentPage === "vertraege" && <VertraegePage />}
           {currentPage === "sammlungen" && <SammlungenPage />}
           {currentPage === "budgets" && <BudgetsPage />}
-          {currentPage === "steuer" && <ComingSoonPage title="Steuer" />}
-          {currentPage === "rechner" && <ComingSoonPage title="Rechner" />}
-          {currentPage === "profil" && <ComingSoonPage title="Profil & Einstellungen" />}
+          {currentPage === "steuer" && <SteuerPage />}
+          {currentPage === "rechner" && <RechnerPage />}
+          {currentPage === "profil" && <ProfilPage />}
         </main>
       </div>
     </div>

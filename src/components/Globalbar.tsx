@@ -1,4 +1,4 @@
-import { Bell, Info, Search } from "lucide-react";
+import { Info, Search } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -7,11 +7,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useGlobalFilterStore } from "@/stores/globalFilterStore";
 import { usePersons } from "@/hooks/usePersons";
 import { useAssets } from "@/hooks/useAssets";
+import { NotificationBellPopover } from "@/features/benachrichtigungen/NotificationBellPopover";
 
 const ALL = "all";
 
@@ -81,16 +81,7 @@ export function Globalbar() {
       </div>
 
       <div className="ml-auto flex items-center gap-1">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <span className="inline-flex">
-              <Button variant="ghost" size="icon" disabled aria-label="Benachrichtigungen">
-                <Bell className="size-4" />
-              </Button>
-            </span>
-          </TooltipTrigger>
-          <TooltipContent>Benachrichtigungen folgen in einer späteren Phase.</TooltipContent>
-        </Tooltip>
+        <NotificationBellPopover />
       </div>
     </div>
   );

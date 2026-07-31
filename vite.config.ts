@@ -14,6 +14,31 @@ export default defineConfig(async () => ({
     },
   },
 
+  build: {
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (id.includes("echarts")) {
+              return "vendor-echarts";
+            }
+            if (id.includes("xlsx")) {
+              return "vendor-xlsx";
+            }
+            if (id.includes("lucide-react")) {
+              return "vendor-icons";
+            }
+            if (id.includes("@radix-ui") || id.includes("@dnd-kit") || id.includes("cmdk")) {
+              return "vendor-ui";
+            }
+            return "vendor";
+          }
+        },
+      },
+    },
+  },
+
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //
   // 1. prevent Vite from obscuring rust errors
@@ -36,3 +61,4 @@ export default defineConfig(async () => ({
     },
   },
 }));
+

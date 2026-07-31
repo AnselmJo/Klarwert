@@ -1,0 +1,963 @@
+﻿Transaktionstyp;Buchungsdatum;Karteneinsatz;Betrag;Zahlungsempfänger;IBAN;BIC;Verwendungszweck;Beschreibung;Kontonummer;Kontoname;Kategorie;Unterkategorie;Bargeldabhebung
+Abbuchung;23.07.2026;;-1,50 €;dm;DE43300500000001052042;WELADEDDXXX;N5JYZK Einkauf bei dm-drogerie markt vom 21.07.2026;Verifone Payments GmbH;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;21.07.2026;;-35,20 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372001263260199261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;21.07.2026;;-23,45 €;dm;DE43300500000001052042;WELADEDDXXX;BN8Z5P Einkauf bei dm-drogerie markt vom 18.07.2026;Verifone Payments GmbH;32090596;Girokonto;Shopping;Drogerie
+Echtzeit-Überweisung;20.07.2026;;-22,02 €;Bundesanzeiger Verlag GmbH;DE57370100500000399509;PBNKDEFFXXX;Kundennummer 106606465, Rechnungsdatum 20.07.2026, Rechnungsnummer 98706128;;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Verlag & Zeitung
+Abbuchung;20.07.2026;;-48,00 €;Cookidoo.Vorwerk.Home/Wollerau;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Wohnen & Haushalt;Einrichtung & Haushaltswaren
+Gutschrift;17.07.2026;;341,31 €;PAYPAL;LU947510261215211218;;INSTANT TRANSFER;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;17.07.2026;;-5,47 €;HAMMA.GMBH...CO..KG/KEMPTEN;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 16.07.2026;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;16.07.2026;;-4,14 €;Verifone Payments GmbH;DE43300500000001052042;WELADEDDXXX;DLV3Q2 Einkauf bei Netto vom 14.07.2026;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;16.07.2026;;-0,69 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE144783063221195261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;16.07.2026;;-16,46 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE658404381399195261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;16.07.2026;;-4,28 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 15.07.2026;REWE.Samuel.Schoenle.oH/Isny.im.Allga;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;16.07.2026;;-50,00 €;SP.VEGANE.FLEISCHEREI/MUNCHEN;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 15.07.2026;;32090596;Girokonto;Shopping;Sonstiges Shopping
+Abbuchung;14.07.2026;;-10,20 €;dm;DE43300500000001052042;WELADEDDXXX;NL59UA Einkauf bei dm-drogerie markt vom 10.07.2026;Verifone Payments GmbH;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;14.07.2026;;-22,68 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372001258108191261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+SEPA-Überweisung;13.07.2026;;56,11 €;CSFLOAT INC;IE91CITI99005123687003;CITIIE2X;CSFLOAT;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;13.07.2026;;-12,29 €;MUeLLER.RAVENSBURG.2.5/Ravensburg;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 10.07.2026;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;13.07.2026;;-9,62 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 10.07.2026;REWE.Samuel.Schoenle.oH/Isny.im.Allga;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;13.07.2026;;-13,51 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 11.07.2026;REWE.Samuel.Schoenle.oH/Isny.im.Allga;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;10.07.2026;;-24,45 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372002411825189261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;10.07.2026;;-5,50 €;TGTG.1ttyxt3cqtsm0/toogoodtogo.d;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 09.07.2026;;32090596;Girokonto;Lebensmittel;Sonstiges Lebensmittel
+Rückerstattung;08.07.2026;07.07.2026 16:17;4,45 €;Dirk Rossmann;;;;Rossmann 1647;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;08.07.2026;;-19,83 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372002409139184261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;06.07.2026;;-11,10 €;SPARGELBAUER.LANDERER/MECKENBEUREN;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 04.07.2026;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Lastschrift;02.07.2026;;-2000,00 €;Scalable Capital;DE16120700700752814076;DEUTDEMMXXX;Scalable Capital Broker 2x savings plan;Scalable Capital GmbH;4858835001;C24 Smartkonto;Geldanlage;Kapitalanlage
+Abbuchung;02.07.2026;;-11,02 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE144783060455181261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Echtzeit-Überweisung;01.07.2026;;-900,00 €;Girokonto;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Abbuchung;01.07.2026;;0,00 €;DKB AG;;;Abrechnung 30.06.2026 siehe Anlage Abrechnung 30.06.2026 Information zur Abrechnung Kontostand am 30.06.2026 738,40 + Abrechnungszeitraum vom 01.04.2026 bis 30.06.2026 Abrechnung 30.06.2026 0, 00+ Sollzinssätze am 30.06.2026 7,9100 v.H. für eingeräumte Kontoüberziehung (aktuell eingeräumte Kontoüberziehung 100,00) 7,9100 v.H. für geduldete Kontoüberziehung über die eingeräumte Kontoüberziehung hinaus Kontostand/Rechnungsabschluss am 30.06.2026 738,40 + Rechnungsnummer: 20260630-BY111-00278996044;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;01.07.2026;;-42,00 €;LichtBlick;DE44200800000913239903;DRESDEFF200;Abschlag (Strom) Juli / 2026 Kunden-Nr. 21261067 / 31555752;LichtBlick SE;32090596;Girokonto;Energie;Sonstiges Energie
+Abbuchung;01.07.2026;;-9,98 €;Vodafone;DE02590100660125799660;PBNKDEFFXXX;VODAFONE WEST GMBH KDNR.2074386041 RGN 00234387055 1 1 02JUNI 2026;Vodafone West GmbH;32090596;Girokonto;Internet & Mobilfunk;Festnetz, Internet und TV
+Abbuchung;01.07.2026;;-2,99 €;Lebara Germany Limited;DE52100190001000027873;;Lebara Germany Limited DE-038201306-641;;32090596;Girokonto;Freizeit & Unterhaltung;Sonstiges Freizeit & Unterhaltung
+Gutschrift;01.07.2026;;900,00 €;Anselm Josek;DE83500240244858835001;DEFFDEFFXXX;;;32090596;Girokonto;Umbuchung;Umbuchung
+Abbuchung;01.07.2026;;0,00 €;DKB AG;;;Abrechnung 30.06.2026 siehe Anlage Abrechnung 30.06.2026 Information zur Abrechnung Kontostand am 30.06.2026 0,00 + Abrechnungszeitraum vom 01.04.2026 bis 30.06.2026 Abrechnung 30.06.2026 0, 00+ Kontostand/Rechnungsabschluss am 30.06.2026 0,00 + Rechnungsnummer: 20260630-BY111-00278193806;;32090594;Tagesgeld;Bankkarten/ -konten;Kreditkartenabrechnung
+Echtzeit-Überweisung;30.06.2026;;3416,47 €;Cinify GmbH;DE53100180000697660634;FNOMDEB2XXX;Lohn - Gehalt Abrechnung 06/2026;;4858835001;C24 Smartkonto;Einkommen;Lohn/ Gehalt
+Zinszahlung;30.06.2026;;1,30 €;C24 Bank;;;;;4858835001;C24 Smartkonto;Einkommen;Kapitalerträge
+Abbuchung;30.06.2026;;-1040,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Miete Fam. Josek Isny 1. OG;;32090596;Girokonto;Wohnen & Haushalt;Miete
+Abbuchung;30.06.2026;;-12,52 €;dm;DE43300500000001052042;WELADEDDXXX;8PVZQV Einkauf bei dm-drogerie markt vom 26.06.2026;Verifone Payments GmbH;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;30.06.2026;;-11,03 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372001248096177261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Gutschrift;30.06.2026;;50,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Treppenhaus;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;29.06.2026;;-3,98 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 26.06.2026;ALDI.SUED/Ravensburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;25.06.2026;;-170,49 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;;1051187440122/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;24.06.2026;;-5,07 €;Penny;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 23.06.2026;Penny.Gruener.Turm/Ravensburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;24.06.2026;;-48,34 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372001244392173261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;24.06.2026;;-11,55 €;dm;DE43300500000001052042;WELADEDDXXX;HSJ1JX Einkauf bei dm-drogerie markt vom 22.06.2026;Verifone Payments GmbH;32090596;Girokonto;Shopping;Drogerie
+Bargeldabhebung;24.06.2026;23.06.2026 14:43;-190,00 €;KREISSPARKASSE RAVENSB;;;;;4858835001;C24 Smartkonto;Bargeld;Bargeld
+Abbuchung;19.06.2026;;-12,57 €;MUeLLER.RAVENSBURG.2.4/Ravensburg;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 17.06.2026;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Lastschrift;18.06.2026;;-4,99 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1051044721511/PP.2114.PP/. Lebara Germany Limited, Ihr Einkauf bei Lebara Germany Limited;;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Streaming & Pay TV
+Gutschrift;18.06.2026;;41,21 €;LichtBlick;DE44200800000913239903;DRESDEFF200;Auszahlung Sofortbonus Kunden-Nr. 21261067 / Vertrag 31555752;LichtBlick SE;32090596;Girokonto;Energie;Strom
+Abbuchung;18.06.2026;;-1,32 €;dm;DE43300500000001052042;WELADEDDXXX;H4NDLQ Einkauf bei dm-drogerie markt vom 16.06.2026;Verifone Payments GmbH;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;17.06.2026;;-4,00 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;;1051014250762/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;16.06.2026;;-27,45 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372004141888163261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Bargeldabhebung;15.06.2026;13.06.2026 11:26;-200,00 €;Deutsche Bank Privat- und Geschaftskunden;;;;*Deutsche Bank AG;4858835001;C24 Smartkonto;Bargeld;Bargeld
+Abbuchung;12.06.2026;;-23,18 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372001235811161261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Echtzeit-Überweisung;10.06.2026;;147,00 €;kleinanzeigen.de GmbH;NL31ADYB2100000409;ADYBNL2A;Kleinanzeigen - Anzeigennr.: 3392337257;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;10.06.2026;;-5,45 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 08.06.2026;DM.DROGERIE.SAGT.DANKE/Ravensburg;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;10.06.2026;;-16,19 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372001233838159261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;10.06.2026;;-2,85 €;dm;DE43300500000001052042;WELADEDDXXX;B9B9ZU Einkauf bei dm-drogerie markt vom 08.06.2026;Verifone Payments GmbH;32090596;Girokonto;Shopping;Drogerie
+Echtzeit-Überweisung;07.06.2026;;-1600,00 €;Anselm Josek;DE62120700700750518034;DEUTDEFFVAC;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;06.06.2026;;-210,00 €;DR. KONSTANTIN JOSEK;DE98100777770499044600;NORSDE51XXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;05.06.2026;;1683,92 €;Anselm Josek;DE67202208000029682031;SXPYDEHHXXX;Kraken Tx//FTgqhK9-tw0qUVfCA6hVt1sJoU2b1P//AA70 N84G ZIIA N4XY;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;04.06.2026;;-10,78 €;dm;DE43300500000001052042;WELADEDDXXX;74HW9S Einkauf bei dm-drogerie markt vom 02.06.2026;Verifone Payments GmbH;32090596;Girokonto;Shopping;Drogerie
+Gebühr;03.06.2026;;-3,00 €;C24 Bank;;;Gebühr - Ablehnung Lastschrift mangels Kontodeckung;;4858835001;C24 Smartkonto;Bankkarten/ -konten;Entgelte
+Abbuchung;03.06.2026;;-9,98 €;Vodafone;DE02590100660125799660;PBNKDEFFXXX;VODAFONE WEST GMBH KDNR.2074386041 RGN 00232638651 1 1 02MAI 2026;Vodafone West GmbH;32090596;Girokonto;Internet & Mobilfunk;Festnetz, Internet und TV
+Abbuchung;02.06.2026;;-22,30 €;dm;DE43300500000001052042;WELADEDDXXX;3RUZVV Einkauf bei dm-drogerie markt vom 30.05.2026;Verifone Payments GmbH;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;02.06.2026;;-2,99 €;Lebara Germany Limited ..;DE52100190001000027873;;Lebara Germany Limited DE-037233018-283;;32090596;Girokonto;Freizeit & Unterhaltung;Sonstiges Freizeit & Unterhaltung
+Gutschrift;01.06.2026;;50,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Treppenhaus;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;01.06.2026;;-1040,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Miete Fam. Josek Isny 1. OG;;32090596;Girokonto;Wohnen & Haushalt;Miete
+Abbuchung;01.06.2026;;-28,97 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372001226804148261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;01.06.2026;;-42,00 €;LichtBlick;DE44200800000913239903;DRESDEFF200;Abschlag (Strom) Juni / 2026 Kunden-Nr. 21261067 / 31555752;LichtBlick SE;32090596;Girokonto;Energie;Strom
+Echtzeit-Überweisung;30.05.2026;;-2400,00 €;Anselm Josek;DE62120700700750518034;DEUTDEFFVAC;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;30.05.2026;;3427,87 €;Cinify GmbH;DE53100180000697660634;FNOMDEB2XXX;Lohn - Gehalt Abrechnung 05/2026;;4858835001;C24 Smartkonto;Einkommen;Lohn/ Gehalt
+Abbuchung;29.05.2026;;-23,99 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1050590847112/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;28.05.2026;;-1400,00 €;Anselm Elias Josek;DE16120700700752814076;DEUTDEFFVAC;Scalable Capital;;4858835001;C24 Smartkonto;Geldanlage;Kapitalanlage
+Echtzeit-Überweisung;28.05.2026;;-2000,00 €;MINTOS;EE047700771002863435;LHVBEE22XXX;75320993 - Investor;MINTOS MARKETPLACE AS;4858835001;C24 Smartkonto;Geldanlage;Kapitalanlage
+Echtzeit-Überweisung;28.05.2026;;3000,00 €;Anselm Elias Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Überweisung;27.05.2026;;-850,00 €;Girokonto;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Abbuchung;27.05.2026;;-7,77 €;Dirk Rossmann;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 26.05.2026;Rossmann.1647/Ravensburg;32090596;Girokonto;Shopping;Drogerie
+Gutschrift;27.05.2026;;850,00 €;Anselm Josek;DE83500240244858835001;DEFFDEFFXXX;;;32090596;Girokonto;Umbuchung;Umbuchung
+Abbuchung;26.05.2026;;-53,02 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372001221345140261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Kartenzahlung;24.05.2026;23.05.2026 11:25;-8,20 €;dm;;;;DM DROGERIE SAGT DANKE;4858835001;C24 Smartkonto;Shopping;Drogerie
+SEPA-Lastschrift;21.05.2026;;-4,99 €;PayPal (Europe) S.a r.l. et Cie, S.C.A.;DE88500700100175526303;DEUTDEFFXXX;1050408971311 PP.2114.PP . Lebara Germany Limited, Ihr Einkauf bei Lebara Germany Limited;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;20.05.2026;;-27,08 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE144783053459138261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;19.05.2026;;-9,69 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1050358373986/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;19.05.2026;;-35,49 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1050315224594/PP.3579.PP/. OrderYOYO A/S, Ihr Einkauf bei OrderYOYO A/S;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;19.05.2026;;-14,15 €;dm;DE43300500000001052042;WELADEDDXXX;TX3D7D Einkauf bei dm-drogerie markt vom 15.05.2026;Verifone Payments GmbH;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;19.05.2026;;-19,81 €;dm;DE43300500000001052042;WELADEDDXXX;M9CQ95 Einkauf bei dm-drogerie markt vom 15.05.2026;Verifone Payments GmbH;32090596;Girokonto;Shopping;Drogerie
+SEPA-Überweisung;18.05.2026;;304,00 €;eBay;LU260670006550209620;CHASLULXXXX;P.7510653572;eBay S.a.r.l.;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;18.05.2026;;-5,74 €;BAECKEREI.MAYER.GMBH../ISNY;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 16.05.2026;;32090596;Girokonto;Lebensmittel;Bäckerei
+Abbuchung;18.05.2026;;-8,00 €;PAT.MURPHYS.IRISH.PUB/ISNY;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 17.05.2026;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;15.05.2026;;-5,00 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 12.05.2026;DM.DROGERIE.SAGT.DANKE/Isny.im.Allga;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;15.05.2026;;-5,89 €;ALLGAEUEREIN/ISNY;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 13.05.2026;;32090596;Girokonto;Mobilität;Tanken
+Abbuchung;15.05.2026;;-15,78 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372003416947132261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;15.05.2026;;-13,64 €;dm;DE43300500000001052042;WELADEDDXXX;TKRFYB Einkauf bei dm-drogerie markt vom 12.05.2026;Verifone Payments GmbH;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;13.05.2026;;-2,58 €;ALLGAEUEREIN/ISNY;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 12.05.2026;;32090596;Girokonto;Mobilität;Tanken
+Abbuchung;13.05.2026;;-19,59 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372002382693129261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;11.05.2026;;-12,35 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE588207406881127261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;11.05.2026;;-2,95 €;dm;DE43300500000001052042;WELADEDDXXX;PLSVSZ Einkauf bei dm-drogerie markt vom 07.05.2026;Verifone Payments GmbH;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;11.05.2026;;-23,97 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 09.05.2026;ALDI.SUED/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;11.05.2026;;-1,66 €;Kaufland;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 08.05.2026;KAUFLAND.REGENSBURG.INN/REGENSBURG;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;11.05.2026;;-400,00 €;VB.AllgaeuOberschwaben/Isny.Bahnh;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 10.05.2026;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;11.05.2026;;-14,79 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 09.05.2026;REWE.Samuel.Schoenle.oH/Isny.im.Allga;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;11.05.2026;;-22,98 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 08.05.2026;ALDI.SUED/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Echtzeit-Überweisung;10.05.2026;;-600,00 €;Anselm Elias Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;10.05.2026;;290,76 €;PAYPAL;LU947510261215211218;PPLXLUL2XXX;INSTANT TRANSFER;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;08.05.2026;;-2,50 €;Nanu-Nana;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 07.05.2026;NANU.NANA/Regensburg;32090596;Girokonto;Wohnen & Haushalt;Einrichtung & Haushaltswaren
+Abbuchung;08.05.2026;;-14,00 €;Julian.Meindl.u..Maximi/Regensburg;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 07.05.2026;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;07.05.2026;;-4,66 €;Schlumpp.Hardle.GbR/Hockenheim;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 06.05.2026;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;06.05.2026;;-7,26 €;Penny;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 05.05.2026;Penny.Hockenheim/Hockenheim;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;06.05.2026;;-2,90 €;Deutsche Post;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 05.05.2026;Deutsche.Post.AG/Hockenheim;32090596;Girokonto;Wohnen & Haushalt;Sonstiges Wohnen & Haushalt
+Abbuchung;06.05.2026;;-39,44 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372001206464119261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;06.05.2026;;-31,37 €;Octopus Energy;FR7617118820080000002438012;;REF-F84CC9F3B8C0C0043D;GC RE OCTOPUS ENERGY GERMANY GMBH ..;32090596;Girokonto;Energie;Sonstiges Energie
+Echtzeit-Überweisung;04.05.2026;;-4200,00 €;Anselm Elias Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Überweisung;04.05.2026;;3800,00 €;Anselm Elias Josek;DE27700331005325107000;BDWBDEMMXXX;Auszahlung;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Überweisung;04.05.2026;;114,09 €;Michael Kühn;DE67720621520006561454;GENODEF1MTG;Anteil JGA;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;04.05.2026;;-42,00 €;LichtBlick;DE44200800000913239903;DRESDEFF200;Abschlag (Strom) Mai / 2026 Kunden-Nr. 21261067 / 31555752;LichtBlick SE;32090596;Girokonto;Energie;Strom
+Abbuchung;04.05.2026;;-10,90 €;dm;DE43300500000001052042;WELADEDDXXX;W15F1S Einkauf bei dm-drogerie markt vom 29.04.2026;Verifone Payments GmbH;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;04.05.2026;;-2,99 €;Lebara Germany Limited ..;DE52100190001000027873;;Lebara Germany Limited DE-036289772-215;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;04.05.2026;;-9,98 €;Vodafone;DE02590100660125799660;PBNKDEFFXXX;VODAFONE WEST GMBH KDNR.2074386041 RGN 00230871420 1 1 02APRIL 2026;Vodafone West GmbH;32090596;Girokonto;Internet & Mobilfunk;Festnetz, Internet und TV
+Echtzeit-Überweisung;30.04.2026;;-2200,00 €;Anselm Elias Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;30.04.2026;;3550,88 €;Cinify GmbH;DE53100180000697660634;FNOMDEB2XXX;Lohn - Gehalt Abrechnung 04/2026;;4858835001;C24 Smartkonto;Einkommen;Lohn/ Gehalt
+Abbuchung;30.04.2026;;-9,76 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 29.04.2026;REWE.Samuel.Schoenle.oH/Isny.im.Allga;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;30.04.2026;;-8,78 €;Parfuemerie.de;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 29.04.2026;Parfuemerie.Bingger/Isny.im.Allga;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;30.04.2026;;-12,55 €;TEDi/Isny;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 29.04.2026;;32090596;Girokonto;Shopping;Kaufhaus
+Gutschrift;30.04.2026;;50,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Treppenhaus;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;30.04.2026;;-1040,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Miete Fam. Josek Isny 1. OG;;32090596;Girokonto;Wohnen & Haushalt;Miete
+Echtzeit-Überweisung;29.04.2026;;122,84 €;MARTIN KARL STIMPFLE;DE65720500000251008439;AUGSDE77XXX;JGA Hirnabriss;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;29.04.2026;;-20,90 €;dm;DE43300500000001052042;WELADEDDXXX;DS7KT3 Einkauf bei dm-drogerie markt vom 27.04.2026;Verifone Payments GmbH;32090596;Girokonto;Shopping;Drogerie
+Gutschrift;28.04.2026;;100,00 €;Dr. Anton Josef Bopp Hannelore Friederike Bopp-Liebig;DE40510800604486848100;DRESDEFF510;Ostern;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Gutschrift;28.04.2026;;850,00 €;Katerina Josek;DE36500240241918347001;DEFFDEFFXXX;;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;28.04.2026;;-23,47 €;dm;DE43300500000001052042;WELADEDDXXX;96VK75 Einkauf bei dm-drogerie markt vom 24.04.2026;Verifone Payments GmbH;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Überweisung;27.04.2026;;-850,00 €;Girokonto;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Abbuchung;27.04.2026;;-13,24 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 25.04.2026;REWE.Samuel.Schoenle.oH/Isny.im.Allga;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Gutschrift;27.04.2026;;850,00 €;Anselm Josek;DE83500240244858835001;DEFFDEFFXXX;;;32090596;Girokonto;Umbuchung;Umbuchung
+Abbuchung;27.04.2026;;-50,00 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1049809216968/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;24.04.2026;;-37,36 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372002372699111261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+SEPA-Überweisung;23.04.2026;;25,90 €;Deutsche Bahn;DE08500800000091331501;COBADEFF;26V89716950 Ihr Fahrgastrechtsfall / Bahnreise am 17.04.2026/ Reisender: Josek, Anselm;DB Vertrieb GmbH;4858835001;C24 Smartkonto;Weitere Einnahmen;Erstattung
+SEPA-Lastschrift;23.04.2026;;-4,99 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1049770442852/PP.2114.PP/. Lebara Germany Limited, Ihr Einkauf bei Lebara Germany Limited;;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Sonstiges Freizeit & Unterhaltung
+Abbuchung;23.04.2026;;-4,44 €;FRUECHTE.JORK.GMBH/ISNY.IM.ALLGA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 22.04.2026;;32090596;Girokonto;Mobilität;Tanken
+SEPA-Lastschrift;21.04.2026;;-3,43 €;Takeaway.com;LU89751000135104200E;PPLXLUL2;1049700910612/PP.2114.PP/. Takeaway.com Payments B.V., Ihr Einkauf bei Takeaway.com Payments B.V.;PayPal Europe S.a.r.l. et Cie S.C.A;4858835001;C24 Smartkonto;Restaurant/ Café/ Bar;Lieferservice
+Abbuchung;21.04.2026;;-13,20 €;ALLGAEUEREIN/ISNY;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 20.04.2026;;32090596;Girokonto;Mobilität;Tanken
+Abbuchung;21.04.2026;;-11,72 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 20.04.2026;REWE.Samuel.Schoenle.oH/Isny.im.Allga;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;20.04.2026;;-25,59 €;Bundesanzeiger Verlag GmbH;DE57370100500000399509;PBNKDEFFXXX;Rechnungsnummer 98232972, Kundennummer 106606465, Rechnungsdatum 13.04.2026;;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Verlag & Zeitung
+Abbuchung;20.04.2026;;-2,95 €;KAMPS.BOCHUM.302465.1/Bochum;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 17.04.2026;;32090596;Girokonto;Lebensmittel;Bäckerei
+Abbuchung;20.04.2026;;-33,50 €;SCHOKOMUS/FELDKIRCH;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 18.04.2026;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;16.04.2026;;-21,22 €;TINGTING.Asia/Feldkirch;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 15.04.2026;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;16.04.2026;;-11,05 €;NATUR...KOST/FELDKIRCH;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 15.04.2026;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;14.04.2026;;-24,00 €;Octopus Energy;FR7617118820080000002438012;;REF-096CF176A2B45189CC;GC RE OCTOPUS ENERGY GERMANY GMBH ..;32090596;Girokonto;Energie;Sonstiges Energie
+Gutschrift;10.04.2026;;98,47 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Nk-Abrechnung 2025;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Überweisung;09.04.2026;;92,21 €;MARTIN KARL STIMPFLE;DE65720500000251008439;AUGSDE77XXX;LAN Jesse wang swag (sry late);;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Überweisung;08.04.2026;;-25,59 €;Bundesanzeiger Verlag GmbH;DE57370100500000399509;PBNKDEFFXXX;Rechnungsnummer 98177808, Kundennummer 106606465, Rechnungsdatum 31.03.2026;;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Verlag & Zeitung
+Echtzeit-Überweisung;08.04.2026;;-96,27 €;Bundesanzeiger Verlag GmbH;DE57370100500000399509;PBNKDEFFXXX;Kundennummer 106606465, Rechnungsdatum 31.03.2026, Rechnungsnummer 98177807;;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Verlag & Zeitung
+Abbuchung;07.04.2026;;-5,40 €;Le Crobag;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 04.04.2026;AVNI.TERHANI.LE.CROBAG/MUENCHEN;32090596;Girokonto;Lebensmittel;Bäckerei
+Abbuchung;02.04.2026;;-5,60 €;BAECKEREI.MAYER.GMBH../ISNY;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 01.04.2026;;32090596;Girokonto;Lebensmittel;Bäckerei
+Abbuchung;01.04.2026;;0,00 €;DKB AG;;;Abrechnung 31.03.2026 siehe Anlage Abrechnung 31.03.2026 Information zur Abrechnung Kontostand am 31.03.2026 2.673,67 + Abrechnungszeitraum vom 01.01.2026 bis 31.03.2026 Abrechnung 31.03.2026 0, 00+ Sollzinssätze am 30.03.2026 7,9100 v.H. für eingeräumte Kontoüberziehung (aktuell eingeräumte Kontoüberziehung 100,00) 7,9100 v.H. für geduldete Kontoüberziehung über die eingeräumte Kontoüberziehung hinaus Kontostand/Rechnungsabschluss am 31.03.2026 2.673,67 + Rechnungsnummer: 20260331-BY111-00268837249;;32090596;Girokonto;Bankkarten/ -konten;Sonstiges Bankkarten/ -konten
+Abbuchung;01.04.2026;;-4,91 €;Lebara Germany Limited ..;DE52100190001000027873;;Lebara Germany Limited DE-035373927-582;;32090596;Girokonto;Freizeit & Unterhaltung;Sonstiges Freizeit & Unterhaltung
+Abbuchung;01.04.2026;;-27,47 €;FRUECHTE.JORK.GMBH/ISNY.IM.ALLGA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 31.03.2026;;32090596;Girokonto;Mobilität;Tanken
+Abbuchung;01.04.2026;;-10,57 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 31.03.2026;REWE.Samuel.Schoenle.oH/Isny.im.Allga;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;01.04.2026;;-15,93 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 31.03.2026;REWE.Samuel.Schoenle.oH/Isny.im.Allga;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;01.04.2026;;0,00 €;DKB AG;;;Abrechnung 31.03.2026 siehe Anlage Abrechnung 31.03.2026 Information zur Abrechnung Kontostand am 31.03.2026 0,00 + Abrechnungszeitraum vom 01.01.2026 bis 31.03.2026 Abrechnung 31.03.2026 0, 00+ Kontostand/Rechnungsabschluss am 31.03.2026 0,00 + Rechnungsnummer: 20260331-BY111-00268097411;;32090594;Tagesgeld;Bankkarten/ -konten;Sonstiges Bankkarten/ -konten
+Echtzeit-Überweisung;31.03.2026;;-2000,00 €;Anselm Elias Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;31.03.2026;;-900,00 €;Girokonto;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Echtzeit-Überweisung;31.03.2026;;3434,46 €;Cinify GmbH;DE53100180000697660634;FNOMDEB2XXX;Lohn - Gehalt Abrechnung 03/2026;;4858835001;C24 Smartkonto;Einkommen;Lohn/ Gehalt
+Zinszahlung;31.03.2026;;1,28 €;C24 Bank;;;;;4858835001;C24 Smartkonto;Einkommen;Kapitalerträge
+Gutschrift;31.03.2026;;900,00 €;Anselm Josek;DE83500240244858835001;DEFFDEFFXXX;;;32090596;Girokonto;Umbuchung;Umbuchung
+Abbuchung;31.03.2026;;-9,98 €;Vodafone;DE02590100660125799660;PBNKDEFFXXX;VODAFONE WEST GMBH KDNR.2074386041 RGN 00229094071 1 1 02MAERZ 2026;Vodafone West GmbH;32090596;Girokonto;Internet & Mobilfunk;Festnetz, Internet und TV
+Gutschrift;30.03.2026;;850,00 €;Katerina Josek;DE36500240241918347001;DEFFDEFFXXX;;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Gutschrift;30.03.2026;;50,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Treppenhaus;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;30.03.2026;;-1040,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Miete Fam. Josek Isny 1. OG;;32090596;Girokonto;Wohnen & Haushalt;Miete
+Abbuchung;27.03.2026;;-9,45 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 25.03.2026;DM.DROGERIE.SAGT.DANKE/Isny.im.Allga;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;24.03.2026;;-18,49 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372001180356080261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;24.03.2026;;-10,65 €;dm;DE43300500000001052042;WELADEDDXXX;K6H21F Einkauf bei dm-drogerie markt vom 21.03.2026;Verifone Payments GmbH;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;23.03.2026;;-15,34 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 21.03.2026;REWE.Samuel.Schoenle.oH/Isny.im.Allga;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;23.03.2026;;-11,00 €;BENE.KAFFEE...LADEN/SONTHOFEN;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 22.03.2026;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;23.03.2026;;-16,05 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 21.03.2026;DM.DROGERIE.SAGT.DANKE/Isny.im.Allga;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;20.03.2026;;-16,96 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372001178000077261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;20.03.2026;;-4,45 €;dm;DE43300500000001052042;WELADEDDXXX;VQQJXV Einkauf bei dm-drogerie markt vom 18.03.2026;Verifone Payments GmbH;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;20.03.2026;;-5,15 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 18.03.2026;DM.DROGERIE.SAGT.DANKE/Isny.im.Allga;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;19.03.2026;;-50,00 €;KREISSPARKASSE.RAVENSBU/ISNY;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 19.03.2026;;32090596;Girokonto;Bargeld;Bargeld
+Abbuchung;19.03.2026;;-29,72 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372001176252075261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;19.03.2026;;-6,29 €;ALLGAEUEREIN/ISNY;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 18.03.2026;;32090596;Girokonto;Mobilität;Tanken
+Abbuchung;18.03.2026;;-20,05 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 17.03.2026;ALDI.SUED/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Echtzeit-Überweisung;17.03.2026;;-3,00 €;Julia Drescher;DE32500105175437093477;INGDDEFFXXX;stilleinlagen;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;17.03.2026;;-7,85 €;dm;DE43300500000001052042;WELADEDDXXX;DQ5YCL Einkauf bei dm-drogerie markt vom 14.03.2026;Verifone Payments GmbH;32090596;Girokonto;Shopping;Drogerie
+Gutschrift;16.03.2026;;130,00 €;Katerina Antimisaris;DE48120300001080994526;BYLADEM1001;Ausgleich;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;16.03.2026;;-32,64 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372002352959071261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;16.03.2026;;-24,00 €;Octopus Energy;FR7617118820080000002438012;;REF-ACA92C637848E16150;GC RE OCTOPUS ENERGY GERMANY GMBH;32090596;Girokonto;Energie;Sonstiges Energie
+Abbuchung;12.03.2026;;-10,65 €;ALLGAEUEREIN/ISNY;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 11.03.2026;;32090596;Girokonto;Mobilität;Tanken
+Abbuchung;10.03.2026;;-21,59 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372001168548064261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;10.03.2026;;-35,32 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372002350612065261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;10.03.2026;;-15,90 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1048793635473/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;09.03.2026;;-33,55 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 05.03.2026;DM.DROGERIE.SAGT.DANKE/Isny.im.Allga;32090596;Girokonto;Shopping;Drogerie
+Bargeldabhebung;09.03.2026;08.03.2026 14:43;-200,00 €;VB ALLGAEUOBERSCHWABEN;;;;;4858835001;C24 Smartkonto;Bargeld;Bargeld
+Abbuchung;06.03.2026;;-10,62 €;ALLGAEUEREIN/ISNY;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 05.03.2026;;32090596;Girokonto;Mobilität;Tanken
+Gutschrift;06.03.2026;;76,50 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;. , Ihr Einkauf bei /ABBUCHUNG VOM PAYPAL-KONTO AWV-MELDEPFLICHT BEACHTEN HOTLINE BUNDESBANK (0800) 1234-111;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Lastschrift;03.03.2026;;-32,85 €;Deutsche Bahn;LU89751000135104200E;PPLXLUL2;1048624368111/PP.2114.PP/. DB Vertrieb GmbH, Ihr Einkauf bei DB Vertrieb GmbH;PayPal Europe S.a.r.l. et Cie S.C.A;4858835001;C24 Smartkonto;Mobilität;Bahntickets
+Abbuchung;03.03.2026;;-76,50 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1048565053745/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;03.03.2026;;-9,98 €;Vodafone;DE02590100660125799660;PBNKDEFFXXX;VODAFONE WEST GMBH KDNR.2074386041 RGN 00227307874 1 1 02FEBRUAR 2026;Vodafone West GmbH;32090596;Girokonto;Internet & Mobilfunk;Festnetz, Internet und TV
+SEPA-Überweisung;02.03.2026;;100,00 €;Landratsamt Ravensburg;DE87650501100048000323;SOLADES1RVB;WINDELZUSCHUSS/Mehrwegwindelzuschuss fuer Asterios Josek;;4858835001;C24 Smartkonto;Finanzen & Steuern;Unterhalt
+SEPA-Lastschrift;02.03.2026;;-41,55 €;Deutsche Bahn;LU89751000135104200E;PPLXLUL2;1048560543467/PP.2114.PP/. DB Vertrieb GmbH, Ihr Einkauf bei DB Vertrieb GmbH;PayPal Europe S.a.r.l. et Cie S.C.A;4858835001;C24 Smartkonto;Mobilität;Bahntickets
+SEPA-Überweisung;02.03.2026;;-850,00 €;Girokonto;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Gutschrift;02.03.2026;;50,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Treppenhaus;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Gutschrift;02.03.2026;;850,00 €;Katerina Josek;DE36500240241918347001;DEFFDEFFXXX;;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Gutschrift;02.03.2026;;850,00 €;Anselm Josek;DE83500240244858835001;DEFFDEFFXXX;;;32090596;Girokonto;Umbuchung;Umbuchung
+Abbuchung;02.03.2026;;-1040,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Miete Fam. Josek Isny 1. OG;;32090596;Girokonto;Wohnen & Haushalt;Miete
+Echtzeit-Überweisung;27.02.2026;;-3500,00 €;Anselm Elias Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;27.02.2026;;3352,91 €;Cinify UG;DE53100180000697660634;FNOMDEB2XXX;Lohn - Gehalt Abrechnung 02/2026;;4858835001;C24 Smartkonto;Einkommen;Lohn/ Gehalt
+Abbuchung;27.02.2026;;-15,00 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1048524513262/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;27.02.2026;;-19,80 €;dm;DE43300500000001052042;WELADEDDXXX;YYV5V9 Einkauf bei dm-drogerie markt vom 25.02.2026;Verifone Payments GmbH;32090596;Girokonto;Shopping;Drogerie
+SEPA-Lastschrift;26.02.2026;;-4,99 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1048509393100/PP.2114.PP/. Lebara Germany Limited, Ihr Einkauf bei Lebara Germany Limited;;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Sonstiges Freizeit & Unterhaltung
+Abbuchung;25.02.2026;;-6,82 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372001161047054261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;24.02.2026;;-38,83 €;S. Payment Solutions GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372003405533052261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;23.02.2026;;-39,00 €;AB.Restaurant.Kempten/Kempten;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 20.02.2026;;32090596;Girokonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+Abbuchung;20.02.2026;;-4,20 €;ALLGAEUEREIN/ISNY;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 19.02.2026;;32090596;Girokonto;Mobilität;Tanken
+Abbuchung;19.02.2026;;-14,93 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 18.02.2026;REWE.Samuel.Schoenle.oH/Isny.im.Allga;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;17.02.2026;;-105,00 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1048313190961/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;17.02.2026;;-59,33 €;S. Digits Payment GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372002341497044261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+SEPA-Überweisung;16.02.2026;;150,00 €;Fideus GmbH;DE04100701000310724000;DEUTDEBB101;LinkedIn Collab Fideus;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;16.02.2026;;-6,08 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 13.02.2026;REWE.Samuel.Schoenle.oH/Isny.im.Allga;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;16.02.2026;;-50,00 €;Octopus Energy;FR7617118820080000002438012;;REF-8F14D29ABA09DDEE61;GC RE OCTOPUS ENERGY GERMANY GMBH;32090596;Girokonto;Energie;Sonstiges Energie
+Abbuchung;13.02.2026;;-14,74 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 12.02.2026;REWE.Samuel.Schoenle.oH/Isny.im.Allga;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;13.02.2026;;-3,29 €;ALLGAEUEREIN/ISNY;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 12.02.2026;;32090596;Girokonto;Mobilität;Tanken
+SEPA-Überweisung;12.02.2026;;1,75 €;Anselm Josek;DE85200411110742731300;COBADEHD;Uebertrag comdirect;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;11.02.2026;;-5,00 €;Lebara Germany Limited ..;DE52100190001000027873;;Lebara Germany Limited DE-12424415;;32090596;Girokonto;Internet & Mobilfunk;Mobilfunk
+Abbuchung;10.02.2026;;-32,03 €;S. Digits Payment GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372004116994038261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;10.02.2026;;-11,20 €;dm;DE43300500000001052042;WELADEDDXXX;582AWD Einkauf bei dm-drogerie markt vom 07.02.2026;dm-drogerie markt;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;03.02.2026;;-65,13 €;dm;DE43300500000001052042;WELADEDDXXX;LHRJQL Einkauf bei dm-drogerie markt vom 30.01.2026;dm-drogerie markt;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;02.02.2026;;-279,00 €;Marion Ausserer, Bernd Ausserer;AT275800000682002115;HYPVAT2BXXX;Solarmodule Kißlegg;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;02.02.2026;;-9,98 €;Vodafone;DE02590100660125799660;PBNKDEFFXXX;VODAFONE WEST GMBH KDNR.2074386041 RGN 00225511908 1 1 02JANUAR 2026;Vodafone West GmbH;32090596;Girokonto;Internet & Mobilfunk;Festnetz, Internet und TV
+Abbuchung;02.02.2026;;-92,57 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 30.01.2026;ALDI.SUeD/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Kartenzahlung;01.02.2026;31.01.2026 14:52;-23,18 €;Rewe;;;;REWE Samuel Schoenle o;4858835001;C24 Smartkonto;Lebensmittel;Supermarkt
+Echtzeit-Überweisung;30.01.2026;;-2500,00 €;Anselm Elias Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;30.01.2026;;3784,76 €;Cinify UG;DE53100180000697660634;FNOMDEB2XXX;Lohn - Gehalt Abrechnung 01/2026;;4858835001;C24 Smartkonto;Einkommen;Lohn/ Gehalt
+Gutschrift;30.01.2026;;50,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Treppenhaus;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;30.01.2026;;-1040,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Miete Fam. Josek Isny 1. OG;;32090596;Girokonto;Wohnen & Haushalt;Miete
+SEPA-Lastschrift;29.01.2026;;-4,99 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1047892743121/PP.2114.PP/. Lebara Germany Limited, Ihr Einkauf bei Lebara Germany Limited;;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Sonstiges Freizeit & Unterhaltung
+SEPA-Lastschrift;29.01.2026;;-2,93 €;Takeaway.com;LU89751000135104200E;PPLXLUL2;1047886675898/PP.2114.PP/. Takeaway.com Payments B.V., Ihr Einkauf bei Takeaway.com Payments B.V.;PayPal Europe S.a.r.l. et Cie S.C.A;4858835001;C24 Smartkonto;Restaurant/ Café/ Bar;Lieferservice
+SEPA-Überweisung;28.01.2026;;-850,00 €;Girokonto;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Gutschrift;28.01.2026;;850,00 €;Katerina Josek;DE36500240241918347001;DEFFDEFFXXX;;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Gutschrift;28.01.2026;;850,00 €;Anselm Josek;DE83500240244858835001;DEFFDEFFXXX;;;32090596;Girokonto;Umbuchung;Umbuchung
+Abbuchung;26.01.2026;;-5,49 €;Obi;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 24.01.2026;OBI.SAGT.DANKE/Isny;32090596;Girokonto;Wohnen & Haushalt;Heimwerken & Garten
+Abbuchung;26.01.2026;;-19,61 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 24.01.2026;ALDI.SUeD/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;21.01.2026;;-16,92 €;S. Digits Payment GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372002329657019261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;14.01.2026;;-34,13 €;Octopus Energy;FR7617118820080000002438012;;REF-AEAD4AD3B997B1FF90;GC RE OCTOPUS ENERGY GERMANY GMBH;32090596;Girokonto;Energie;Sonstiges Energie
+Abbuchung;13.01.2026;;-19,85 €;Edeka;DE43300500000001052042;WELADEDDXXX;ZTXBJV Einkauf bei EDEKA vom 09.01.2026;EDEKA PAYBACK;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;12.01.2026;;-18,99 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 09.01.2026;ALDI.SUeD/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;09.01.2026;;-56,96 €;S. Digits Payment GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372001127497007261 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Echtzeit-Überweisung;08.01.2026;;300,00 €;Anselm Elias Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;08.01.2026;;-5,76 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 07.01.2026;REWE.Samuel.Schoenle.oH/Isny.im.Allga;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;08.01.2026;;-14,80 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 07.01.2026;ALDI.SUeD/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;05.01.2026;;-9,98 €;Vodafone;DE02590100660125799660;PBNKDEFFXXX;VODAFONE WEST GMBH KDNR.2074386041 RGN 00223703074 1 1 02DEZEMBER 2025;Vodafone West GmbH;32090596;Girokonto;Internet & Mobilfunk;Festnetz, Internet und TV
+Abbuchung;05.01.2026;;-12,35 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 03.01.2026;REWE.Samuel.Schoenle.oH/Isny.im.Allga;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Lastschrift;02.01.2026;;-4,99 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1047285466377/PP.2114.PP/. Lebara Germany Limited, Ihr Einkauf bei Lebara Germany Limited;;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Sonstiges Freizeit & Unterhaltung
+Abbuchung;02.01.2026;;-110,00 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1047257312043/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;02.01.2026;;-24,27 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 30.12.2025;REWE.Samuel.Schoenle.oH/Isny.im.Allga;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;02.01.2026;;-60,82 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 30.12.2025;ALDI.SUeD/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Zinszahlung;31.12.2025;;1,65 €;C24 Bank;;;;;4858835001;C24 Smartkonto;Einkommen;Kapitalerträge
+Abbuchung;30.12.2025;;0,00 €;DKB AG;;;Abrechnung 30.12.2025 siehe Anlage Abrechnung 30.12.2025 Information zur Abrechnung Kontostand am 30.12.2025 2.071,21 + Abrechnungszeitraum vom 01.10.2025 bis 31.12.2025 Abrechnung 31.12.2025 0, 00+ Sollzinssätze am 30.12.2025 7,9100 v.H. für eingeräumte Kontoüberziehung (aktuell eingeräumte Kontoüberziehung 100,00) 7,9100 v.H. für geduldete Kontoüberziehung über die eingeräumte Kontoüberziehung hinaus Kontostand/Rechnungsabschluss am 30.12.2025 2.071,21 + Rechnungsnummer: 20251230-BY111-00257067395;;32090596;Girokonto;Bankkarten/ -konten;Sonstiges Bankkarten/ -konten
+Gutschrift;30.12.2025;;50,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Treppenhaus;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;30.12.2025;;-1040,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Miete Fam. Josek Isny 1. OG;;32090596;Girokonto;Wohnen & Haushalt;Miete
+Abbuchung;30.12.2025;;0,00 €;DKB AG;;;Abrechnung 30.12.2025 siehe Anlage Abrechnung 30.12.2025 Information zur Abrechnung Kontostand am 30.12.2025 0,00 + Abrechnungszeitraum vom 01.10.2025 bis 31.12.2025 Abrechnung 31.12.2025 0, 00+ Kontostand/Rechnungsabschluss am 30.12.2025 0,00 + Rechnungsnummer: 20251230-BY111-00256417582;;32090594;Tagesgeld;Bankkarten/ -konten;Sonstiges Bankkarten/ -konten
+SEPA-Überweisung;29.12.2025;;-850,00 €;Girokonto;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Gutschrift;29.12.2025;;850,00 €;Katerina Josek;DE36500240241918347001;DEFFDEFFXXX;;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Gutschrift;29.12.2025;;850,00 €;Anselm Josek;DE83500240244858835001;DEFFDEFFXXX;;;32090596;Girokonto;Umbuchung;Umbuchung
+Abbuchung;29.12.2025;;-41,75 €;ALLGAEUEREIN/ISNY;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz vom 23.12.2025;;32090596;Girokonto;Mobilität;Tanken
+Echtzeit-Überweisung;27.12.2025;;-3000,00 €;Anselm Elias Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;27.12.2025;;3456,42 €;Cinify UG;DE53100180000697660634;FNOMDEB2XXX;Lohn - Gehalt Abrechnung 12/2025;;4858835001;C24 Smartkonto;Einkommen;Lohn/ Gehalt
+Abbuchung;23.12.2025;;-9,17 €;S. Digits Payment GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372004108721353251 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;17.12.2025;;-15,29 €;S. Digits Payment GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372001115563349251 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;16.12.2025;;-6,75 €;dm;DE43300500000001052042;WELADEDDXXX;C3PKC8 Einkauf bei dm-drogerie markt vom 13.12.2025;dm-drogerie markt;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;15.12.2025;;-34,13 €;Octopus Energy;FR7617118820080000002438012;;REF-F343C4B4B97781094D;GC RE OCTOPUS ENERGY GERMANY GMBH;32090596;Girokonto;Energie;Sonstiges Energie
+Abbuchung;15.12.2025;;-75,18 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;12.12.2025;;-32,30 €;dm;DE43300500000001052042;WELADEDDXXX;DXVKD5 Einkauf bei dm-drogerie markt vom 10.12.2025;dm-drogerie markt;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;10.12.2025;;-50,61 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1046772332169/PP.3579.PP/. OrderYOYO A/S, Ihr Einkauf bei OrderYOYO A/S;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;09.12.2025;;-23,61 €;S. Digits Payment GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372002312415340251 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;08.12.2025;;-470,00 €;Alessandra Bauer;DE81200411770692777600;COBADEHD077;Judes Windeln Größe 2;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;08.12.2025;;-1,38 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;REWE.Samuel.Schoenle.oH/Isny.im.Allga;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Lastschrift;04.12.2025;;-4,99 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1046639229006/PP.2114.PP/. Lebara Germany Limited, Ihr Einkauf bei Lebara Germany Limited;;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Sonstiges Freizeit & Unterhaltung
+Abbuchung;04.12.2025;;-8,25 €;dm;DE43300500000001052042;WELADEDDXXX;THSA28 Einkauf bei dm-drogerie markt vom 02.12.2025;dm-drogerie markt;32090596;Girokonto;Shopping;Drogerie
+Echtzeit-Überweisung;02.12.2025;;-2000,00 €;Anselm Elias Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Überweisung;02.12.2025;;2000,00 €;SCHNELL PETER;DE51700202700038900200;HYVEDEMMXXX;zum kleinen lieben Asto;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;02.12.2025;;-9,98 €;Vodafone;DE02590100660125799660;PBNKDEFFXXX;VODAFONE WEST GMBH KDNR.2074386041 RGN 00221897436 1 1 02NOVEMBER 2025;Vodafone West GmbH;32090596;Girokonto;Internet & Mobilfunk;Festnetz, Internet und TV
+Gutschrift;01.12.2025;;50,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Treppenhaus;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Gutschrift;01.12.2025;;25,01 €;Vodafone;DE11590100660166262660;PBNKDEFFXXX;VODAFONE WEST GMBH KDNR.2074386041 ERSTATTUNG 1 1 02GUTHABEN GEM.LETZTER RECHN.;Vodafone West GmbH;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;01.12.2025;;-1040,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Miete Fam. Josek Isny 1. OG;;32090596;Girokonto;Wohnen & Haushalt;Miete
+Abbuchung;01.12.2025;;-56,25 €;dm;DE43300500000001052042;WELADEDDXXX;TJ2QUP Einkauf bei dm-drogerie markt vom 27.11.2025;dm-drogerie markt;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;01.12.2025;;-50,94 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Echtzeit-Überweisung;28.11.2025;;-2000,00 €;Anselm Elias Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Überweisung;28.11.2025;;-850,00 €;Girokonto;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Gutschrift;28.11.2025;;850,00 €;Katerina Josek;DE36500240241918347001;DEFFDEFFXXX;;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Gutschrift;28.11.2025;;850,00 €;Anselm Josek;DE83500240244858835001;DEFFDEFFXXX;;;32090596;Girokonto;Umbuchung;Umbuchung
+Echtzeit-Überweisung;27.11.2025;;2900,65 €;Cinify UG;DE53100180000697660634;FNOMDEB2XXX;Lohn - Gehalt Abrechnung 11/2025;;4858835001;C24 Smartkonto;Einkommen;Lohn/ Gehalt
+SEPA-Lastschrift;25.11.2025;;-90,79 €;Takeaway.com;LU89751000135104200E;PPLXLUL2;1046394657161/PP.2114.PP/. Takeaway.com Payments B.V., Ihr Einkauf bei Takeaway.com Payments B.V.;PayPal Europe S.a.r.l. et Cie S.C.A;4858835001;C24 Smartkonto;Restaurant/ Café/ Bar;Lieferservice
+SEPA-Lastschrift;25.11.2025;;-91,00 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1046401137951/PP.2114.PP/. , Ihr Einkauf bei ;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;25.11.2025;;-3,24 €;S. Digits Payment GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372002305742326251 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;25.11.2025;;-5,90 €;dm;DE43300500000001052042;WELADEDDXXX;SZY8FX Einkauf bei dm-drogerie markt vom 21.11.2025;dm-drogerie markt;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;25.11.2025;;-28,00 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1046403673658/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;24.11.2025;;-72,75 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;21.11.2025;;-20,00 €;WWW.ACTIVK..ACTIV.KEBA/ROTTENACKER;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;19.11.2025;;-5,78 €;Norma/Kempten;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;18.11.2025;;-16,20 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;REWE.Regiemarkt.GmbH.Su/Kempten;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;18.11.2025;;-12,99 €;C.A.Haus.0853/Kempten;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Lastschrift;17.11.2025;;-24,99 €;Takeaway.com;LU89751000135104200E;PPLXLUL2;1046178220110/PP.2114.PP/. Takeaway.com Payments B.V., Ihr Einkauf bei Takeaway.com Payments B.V.;PayPal Europe S.a.r.l. et Cie S.C.A;4858835001;C24 Smartkonto;Restaurant/ Café/ Bar;Lieferservice
+Abbuchung;17.11.2025;;-31,44 €;Norma/Kempten;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;14.11.2025;;-34,13 €;Octopus Energy;FR7617118820080000002438012;;REF-2208A6E189653BABF9;GC RE OCTOPUS ENERGY GERMANY GMBH;32090596;Girokonto;Energie;Sonstiges Energie
+Abbuchung;12.11.2025;;-13,00 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1046111791474/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;11.11.2025;;-10,70 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1046039999965/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;10.11.2025;;-119,22 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;10.11.2025;;-218,14 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;DM.Drogerie.Markt/Isny.im.Allga;32090596;Girokonto;Shopping;Drogerie
+SEPA-Lastschrift;06.11.2025;;-4,99 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1045979955922/PP.2114.PP/. Lebara Germany Limited, Ihr Einkauf bei Lebara Germany Limited;;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Sonstiges Freizeit & Unterhaltung
+SEPA-Lastschrift;03.11.2025;;-50,30 €;Takeaway.com;LU89751000135104200E;PPLXLUL2;1045855931027/PP.2114.PP/. Takeaway.com Payments B.V., Ihr Einkauf bei Takeaway.com Payments B.V.;PayPal Europe S.a.r.l. et Cie S.C.A;4858835001;C24 Smartkonto;Restaurant/ Café/ Bar;Lieferservice
+SEPA-Überweisung;03.11.2025;;-1000,00 €;Anselm Josek;DE27700331005325107000;BDWBDEMMXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Gutschrift;03.11.2025;;50,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Treppenhaus Oktober;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Echtzeit-Überweisung;30.10.2025;;-1000,00 €;Anselm Elias Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;30.10.2025;;3131,00 €;Cinify UG;DE53100180000697660634;FNOMDEB2XXX;Lohn - Gehalt Abrechnung 10/2025;;4858835001;C24 Smartkonto;Einkommen;Lohn/ Gehalt
+SEPA-Lastschrift;30.10.2025;;-3,90 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1045812662234/PP.2114.PP/. Lillydoo GmbH, Ihr Einkauf bei Lillydoo GmbH;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;30.10.2025;;-1040,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Miete Fam. Josek Isny 1. OG;;32090596;Girokonto;Wohnen & Haushalt;Miete
+Abbuchung;30.10.2025;;-4,50 €;TGTG.76twvnzjqtfk0/toogoodtogo.d;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Lebensmittel;Sonstiges Lebensmittel
+Abbuchung;29.10.2025;;-89,00 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;29.10.2025;;-6,93 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;DM.Drogerie.Markt/Isny.im.Allga;32090596;Girokonto;Shopping;Drogerie
+SEPA-Überweisung;28.10.2025;;-850,00 €;Girokonto;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Gutschrift;28.10.2025;;850,00 €;Anselm Josek;DE83500240244858835001;DEFFDEFFXXX;;;32090596;Girokonto;Umbuchung;Umbuchung
+Gutschrift;28.10.2025;;850,00 €;Katerina Antimisaris;DE36500240241918347001;DEFFDEFFXXX;;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;28.10.2025;;-13,98 €;eBay;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;eBay.O.13.13750.53722/INTERNET;32090596;Girokonto;Shopping;Online-Shopping
+Abbuchung;27.10.2025;;-31,40 €;dm;DE43300500000001052042;WELADEDDXXX;LQF9DZ Einkauf bei dm-drogerie markt vom 23.10.2025;dm-drogerie markt;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;27.10.2025;;-7,31 €;Edeka;DE43300500000001052042;WELADEDDXXX;71W1XW Einkauf bei EDEKA vom 23.10.2025;EDEKA PAYBACK;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;27.10.2025;;-26,02 €;FRISTO.1298.Isny.im.All/Isny.im.Allga;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Lebensmittel;Getränkehandel
+Abbuchung;24.10.2025;;-78,92 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;23.10.2025;;-15,05 €;S. Digits Payment GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE466583050887294251 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;22.10.2025;;-9,95 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1045641312237/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;20.10.2025;;-7,61 €;Dirk Rossmann;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;Rossmann.3795/Kempten;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;20.10.2025;;-3,88 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;REWE.Samuel.Schoenle.oH/Isny.im.Allga;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;20.10.2025;;-7,50 €;Bio.Lifestyle.GmbH/Betzigau;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;17.10.2025;;-37,40 €;dm;DE43300500000001052042;WELADEDDXXX;DXKWDW Einkauf bei dm-drogerie markt vom 15.10.2025;dm-drogerie markt;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;17.10.2025;;-79,93 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;16.10.2025;;-50,00 €;VB.AllgaeuOberschwaben/Isny.Bahnh;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;16.10.2025;;-6,80 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1045508459348/PP.3579.PP/. Viktoschi, Ihr Einkauf bei Viktoschi;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;16.10.2025;;-7,70 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1045508217599/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;14.10.2025;;-34,13 €;Octopus Energy;FR7617118820080000002438012;;REF-D01D515C8255C9162A;GC RE OCTOPUS ENERGY GERMANY GMBH;32090596;Girokonto;Energie;Sonstiges Energie
+Abbuchung;14.10.2025;;-10,57 €;Lidl;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;Lidl.sagt.Danke/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+SEPA-Überweisung;14.10.2025;;-1000,00 €;Anselm Elias Josek;DE27700331005325107000;BDWBDEMMXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;13.10.2025;;1075,00 €;Anselm Josek;DE85200411110742731300;COBADEHDXXX;;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;13.10.2025;;-1500,00 €;Anselm josek;DE83500240244858835001;DEFFDEFFXXX;bubu anlage;;32090596;Girokonto;Umbuchung;Umbuchung
+Abbuchung;13.10.2025;;-16,28 €;S. Digits Payment GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372001068018282251 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;13.10.2025;;-1,90 €;MUeLLER.ISNY.1.1.ECC/Isny;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Überweisung;13.10.2025;;-1600,00 €;Anselm Elias Josek;DE27700331005325107000;BDWBDEMMXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;12.10.2025;;1500,00 €;Katerina Antimisaris und Anselm Josek;DE48120300001082275023;BYLADEM1001;bubu anlage;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Echtzeit-Überweisung;11.10.2025;;272,82 €;PAYPAL;LU947510261215211218;PPLXLUL2XXX;INSTANT TRANSFER;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Gutschrift;10.10.2025;;1200,00 €;Katerina Antimisaris und Anselm Josek;DE27700331005325107000;BDWBDEMMXXX;RUECKUEBERWEISUNG Zahlungsart für diesen Kontotyp nicht zugelassen bubu depot anlage;;32090596;Girokonto;Einkommen;Kapitalerträge
+Abbuchung;09.10.2025;;-116,32 €;elektro Metzger hirsch;DE54650501100101207551;SOLADES1RVB;re 146 - 25 Josek;;32090596;Girokonto;Wohnen & Haushalt;Handwerksleistungen
+Abbuchung;09.10.2025;;-21,03 €;S. Digits Payment GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372001066081280251 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;09.10.2025;;-22,63 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;REWE.Samuel.Schoenle.oH/Isny.im.Allga;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;09.10.2025;;-1200,00 €;Anselm Elias Josek;DE27700331005325107000;BDWBDEMMXXX;bubu depot anlage;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;07.10.2025;;-8,45 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;REWE.Fabio.Motta.oHG/Leutkirch.im;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;06.10.2025;;-33,03 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;06.10.2025;;-1,69 €;Google Play;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;Google.Play.Apps/Dublin;32090596;Girokonto;Freizeit & Unterhaltung;Entertainment
+Abbuchung;06.10.2025;;-2,34 €;Feneberg;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;FENEBERG.XL.ISNY.9100/ISNY;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;06.10.2025;;-7,20 €;SumUp...Birgit.Dietenb/Meckenbeuren;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Überweisung;06.10.2025;;-300,00 €;Anselm Josek;DE27700331005325107000;BDWBDEMMXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;01.10.2025;;-3000,00 €;Girokonto;DE85200411110742731300;COBADEHDXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Überweisung;01.10.2025;;3131,00 €;Cinify UG;DE53100180000697660634;FNOMDEB2;Lohn - Gehalt Abrechnung 09/2025;;4858835001;C24 Smartkonto;Einkommen;Lohn/ Gehalt
+Abbuchung;01.10.2025;;0,00 €;DKB AG;;;Abrechnung 30.09.2025 siehe Anlage Abrechnung 30.09.2025 Information zur Abrechnung Kontostand am 30.09.2025 3.674,90 + Abrechnungszeitraum vom 01.07.2025 bis 30.09.2025 Abrechnung 30.09.2025 0, 00+ Sollzinssätze am 30.09.2025 8,6800 v.H. für eingeräumte Kontoüberziehung (aktuell eingeräumte Kontoüberziehung 100,00) 8,6800 v.H. für geduldete Kontoüberziehung über die eingeräumte Kontoüberziehung hinaus Kontostand/Rechnungsabschluss am 30.09.2025 3.674,90 + Rechnungsnummer: 20250930-BY111-00246917715;;32090596;Girokonto;Bankkarten/ -konten;Sonstiges Bankkarten/ -konten
+Abbuchung;01.10.2025;;-22,17 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;01.10.2025;;0,00 €;DKB AG;;;Abrechnung 30.09.2025 siehe Anlage Abrechnung 30.09.2025 Information zur Abrechnung Kontostand am 30.09.2025 0,00 + Abrechnungszeitraum vom 01.07.2025 bis 30.09.2025 Abrechnung 30.09.2025 0, 00+ Kontostand/Rechnungsabschluss am 30.09.2025 0,00 + Rechnungsnummer: 20250930-BY111-00246127559;;32090594;Tagesgeld;Bankkarten/ -konten;Sonstiges Bankkarten/ -konten
+Zinszahlung;30.09.2025;;1,49 €;C24 Bank;;;;;4858835001;C24 Smartkonto;Einkommen;Kapitalerträge
+Abbuchung;30.09.2025;;-1040,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Miete Fam. Josek Isny 1. OG;;32090596;Girokonto;Wohnen & Haushalt;Miete
+Abbuchung;30.09.2025;;-44,98 €;Vodafone;DE02590100660125799660;PBNKDEFFXXX;VODAFONE WEST GMBH KDNR.2074386041 RGN 00218267894 1 1 02SEPTEMBER 2025;Vodafone West GmbH;32090596;Girokonto;Internet & Mobilfunk;Festnetz, Internet und TV
+SEPA-Überweisung;29.09.2025;;1000,00 €;Anselm Josek;DE85200411110742731300;COBADEHD;2245;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Überweisung;29.09.2025;;-850,00 €;Girokonto;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Gutschrift;29.09.2025;;850,00 €;Katerina Antimisaris;DE36500240241918347001;DEFFDEFFXXX;;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Gutschrift;29.09.2025;;850,00 €;Anselm Josek;DE83500240244858835001;DEFFDEFFXXX;;;32090596;Girokonto;Umbuchung;Umbuchung
+Gutschrift;29.09.2025;;64,00 €;Laura Sandmann;DE48100110012626657197;NTSBDEB1XXX;Gesendet mit N26;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;29.09.2025;;-37,07 €;Obi;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;OBI.SAGT.DANKE/Isny;32090596;Girokonto;Wohnen & Haushalt;Heimwerken & Garten
+Gutschrift;29.09.2025;;6,04 €;Octopus Energy;FR7630004021180001015506292;;OCTOPUSGMBH-H28Y8X6Q9QE4D9Z2KNAEV54YPAETFCD88CW6MMAFFYV3X8JY9AQDCXST4BHMZBJF9C3SNZVB7JTTHSA47B7H4QMZ5VWCDGQGEXGQZ25VSB3CGHDT2PM9KY22MAK7253Y AWV-MELDEPFLICHT BEACHTEN HOTLINE BUNDESBANK (0800) 1234-111;Octopus Energy Germany GmbH;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;25.09.2025;;-4,53 €;UNICREDIT BANK;DE91670201900024581730;HYVEDEMM489;RAV25P330279;Unicredit Bank AG Hypover.;32090596;Girokonto;Kredit;Kreditrate & -zinsen
+Abbuchung;25.09.2025;;-29,63 €;goldgas;DE72760400610521264201;COBADEFFXXX;KD.-NR. 1000095681 29,63 - VR1000623068 GAS - GOLDGAS SAGT DANKE;goldgas GmbH ..;32090596;Girokonto;Energie;Gas
+Abbuchung;25.09.2025;;-12,02 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;25.09.2025;;-5,85 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;DM.Drogerie.Markt/Isny.im.Allga;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;23.09.2025;;-8,76 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;REWE.Samuel.Schoenle.oH/Isny.im.Allga;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Gutschrift;22.09.2025;;100,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Treppenhausreinigung Aug. +Sept.;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Gutschrift;22.09.2025;;2460,00 €;Reinhard und Gertrud Frommeld;DE78720900000303201171;GENODEF1AUB;Erstattung Kaution WE2;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;22.09.2025;;-12,26 €;Feneberg;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;FENEBERG.XL.ISNY.9100/ISNY;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;22.09.2025;;-24,49 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;22.09.2025;;-4,39 €;Obi;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;OBI.SAGT.DANKE/Isny;32090596;Girokonto;Wohnen & Haushalt;Heimwerken & Garten
+Abbuchung;22.09.2025;;-34,29 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;22.09.2025;;-218,15 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;DM.Drogerie.Markt/Isny.im.Allga;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;22.09.2025;;-6,03 €;MUeLLER.ISNY.1.2.ECC/Isny;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;22.09.2025;;-8,98 €;TGTG.3qgv8tj1qgvr0/toogoodtogo.d;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Lebensmittel;Sonstiges Lebensmittel
+Abbuchung;18.09.2025;;-80,00 €;VB.AllgaeuOberschwaben/Isny.Bahnh;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;18.09.2025;;-32,75 €;S. Digits Payment GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372001051732259251 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;17.09.2025;;-36,00 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1044887874462/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;15.09.2025;;-34,13 €;Octopus Energy;FR7617118820080000002438012;;REF-AE79C06A6568EE6BEB;GC RE OCTOPUS ENERGY GERMANY GMBH;32090596;Girokonto;Energie;Sonstiges Energie
+Abbuchung;15.09.2025;;-20,75 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;DM.Drogerie.Markt/Isny.im.Allga;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;11.09.2025;;-64,00 €;Laura Sandmann;DE48100110012626657197;NTSBDEB1XXX;vodafone router 6660 inkl. Versand. Danke;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;11.09.2025;;-50,00 €;VB.AllgaeuOberschwaben/Isny.Bahnh;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;11.09.2025;;-58,22 €;S. Digits Payment GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372001046398252251 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+SEPA-Lastschrift;10.09.2025;;-171,96 €;Stadtwerke Augsburg;DE69720500000251174819;AUGSDE77XXX;370622 - Rechnungsnummer;Stadtwerke Augsburg Carsharing-GmbH;4858835001;C24 Smartkonto;Mobilität;Sharing-Angebote
+Abbuchung;09.09.2025;;-50,00 €;PayPal (Europe) S.a r.l. et Cie, S.C.A.;DE88500700100175526303;DEUTDEFFXXX;1044654793627 . , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;09.09.2025;;-3,40 €;Norma/Kempten;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;09.09.2025;;-4,00 €;Brommler.Kempten.Petten/Kempten..Allg;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Bildung & Beruf;Sonstiges Bildung & Beruf
+Abbuchung;09.09.2025;;-4,99 €;THULE.SWEDEN.AB/HILLERSTORP;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Mobilität;Tanken
+Abbuchung;08.09.2025;;-50,00 €;VB.AllgaeuOberschwaben/Isny.Bahnh;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;08.09.2025;;-60,00 €;SPC.Restaurant.Jashan/Schwabmunchen;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+Abbuchung;08.09.2025;;-27,95 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;DM.Drogerie.Markt/Isny.im.Allga;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;05.09.2025;;-8,85 €;Deutsche Post;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;Deutsche.Post.AG/Isny;32090596;Girokonto;Wohnen & Haushalt;Sonstiges Wohnen & Haushalt
+Abbuchung;04.09.2025;;-10,21 €;S. Digits Payment GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372001040880245251 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+SEPA-Lastschrift;03.09.2025;;-200,00 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1044557663519/ADD TO BALANCE;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;03.09.2025;;-56,37 €;S. Digits Payment GmbH;DE74600400710521470501;COBADEFFXXX;Lidl sagt Danke DE372002265283241251 Lidl Pay;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;02.09.2025;;-21,00 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1044541555085/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;02.09.2025;;-16,90 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;DM.Drogerie.Markt/Isny.im.Allga;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;02.09.2025;;-7,18 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+SEPA-Überweisung;01.09.2025;;121,00 €;Online Payments Stichting;DE57500700100171015100;DEUTDEFFXXX;Kleinanzeigen - Anzeigennr.: 3115720722;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Echtzeit-Überweisung;01.09.2025;;-1500,00 €;Anselm Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;01.09.2025;;-500,00 €;Girokonto;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+SEPA-Überweisung;01.09.2025;;3131,00 €;Cinify UG;DE53100180000697660634;FNOMDEB2;Lohn - Gehalt Abrechnung 08/2025;;4858835001;C24 Smartkonto;Einkommen;Lohn/ Gehalt
+Abbuchung;01.09.2025;;-14,90 €;PURNATUR.OHG/KEMPTEN;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Gutschrift;01.09.2025;;500,00 €;Anselm Josek;DE83500240244858835001;DEFFDEFFXXX;;;32090596;Girokonto;Umbuchung;Umbuchung
+Abbuchung;01.09.2025;;-1040,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Miete Fam. Josek Isny 1. OG;;32090596;Girokonto;Wohnen & Haushalt;Miete
+Abbuchung;01.09.2025;;-211,25 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;DM.Drogerie.Markt/Isny.im.Allga;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;29.08.2025;;-13,85 €;Hanseatic Bank;DE43201207002016149341;HSTBDEHHXXX;Kartenabrechnung 08/2025 Hanseatic Bank;Josek,Anselm;32090596;Girokonto;Bankkarten/ -konten;Kreditkartenabrechnung
+SEPA-Lastschrift;28.08.2025;;-100,00 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1044447549362/ADD TO BALANCE;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Überweisung;28.08.2025;;-850,00 €;Girokonto;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Abbuchung;28.08.2025;;-14,34 €;Feneberg;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;FENEBERG.XL.ISNY.9100/ISNY;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;28.08.2025;;-5,18 €;ALLGAEUEREIN/ISNY;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Gutschrift;28.08.2025;;850,00 €;Katerina Antimisaris;DE36500240241918347001;DEFFDEFFXXX;;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Gutschrift;28.08.2025;;850,00 €;Anselm Josek;DE83500240244858835001;DEFFDEFFXXX;;;32090596;Girokonto;Umbuchung;Umbuchung
+Abbuchung;26.08.2025;;-45,00 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1044393189119/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;26.08.2025;;-14,50 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1044387733037/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;26.08.2025;;-36,80 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;DM.Drogerie.Markt/Isny.im.Allga;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;26.08.2025;;-18,11 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;REWE.Samuel.Schoenle.oH/Isny.im.Allga;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;25.08.2025;;-70,84 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;21.08.2025;;-22,92 €;ALLGAEUEREIN/ISNY;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;21.08.2025;;-1,23 €;Telekom;DE07512108001095000911;SOGEDEFFXXX;Festnetz Vertragskonto 5630920969 RG 7835041745/12.08.2025;Telekom Deutschland GmbH;32090596;Girokonto;Internet & Mobilfunk;Festnetz, Internet und TV
+Abbuchung;21.08.2025;;-20,00 €;Frauenarztpraxis/Isny.im.Allga;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Gesundheit;Arztbesuch/ Krankenhaus
+Gutschrift;20.08.2025;;430,00 €;Katerina Antimisaris;DE36500240241918347001;DEFFDEFFXXX;auffüllen;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;19.08.2025;;-19,30 €;Vodafone;DE02590100660125799660;PBNKDEFFXXX;VODAFONE WEST GMBH KDNR.2074386041 RGN 00214840017 1 1 02AUGUST 2025;Vodafone West GmbH;32090596;Girokonto;Internet & Mobilfunk;Festnetz, Internet und TV
+Abbuchung;19.08.2025;;-250,00 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1044199772114/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;19.08.2025;;-67,78 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;18.08.2025;;-21,71 €;TINGTING.Asia/Feldkirch;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Lastschrift;14.08.2025;;-4,99 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1044144334839/PP.2114.PP/. Lebara Germany Limited, Ihr Einkauf bei Lebara Germany Limited;;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Sonstiges Freizeit & Unterhaltung
+Abbuchung;14.08.2025;;-34,13 €;Octopus Energy;FR7617118820080000002438012;;REF-9B006B5BA68CBF39E0;GC RE OCTOPUS ENERGY GERMANY GMBH;32090596;Girokonto;Energie;Sonstiges Energie
+SEPA-Lastschrift;12.08.2025;;-179,20 €;Stadtwerke Augsburg;DE69720500000251174819;AUGSDE77XXX;369224 - Rechnungsnummer;Stadtwerke Augsburg Carsharing-GmbH;4858835001;C24 Smartkonto;Mobilität;Sharing-Angebote
+Abbuchung;12.08.2025;;-109,90 €;IKEA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;IKEA.DEUTSCHLAND.GMBH.A/HOFHEIM.DIEDE;32090596;Girokonto;Wohnen & Haushalt;Einrichtung & Haushaltswaren
+Abbuchung;11.08.2025;;-300,79 €;eBay;DE95202208000092825035;SXPYDEHHXXX;73PFI3I mtx 0b5656179eea Transaction mt;eBay Kleinanzeigen GmbH;32090596;Girokonto;Shopping;Online-Shopping
+Abbuchung;11.08.2025;;-8,65 €;DANKEBAECKEREISCHWARZ/ISNY;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Lebensmittel;Bäckerei
+Abbuchung;11.08.2025;;-13,15 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;DM.Drogerie.Markt/Isny.im.Allga;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;08.08.2025;;-420,00 €;Sara Babur;DE82600100700623406701;PBNKDEFFXXX;Küche und Rasenmäher Ablöse;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;08.08.2025;;-29,45 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;REWE.Samuel.Schoenle.oH/Isny.im.Allga;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;06.08.2025;;-2000,00 €;Girokonto;DE85200411110742731300;COBADEHDXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Überweisung;06.08.2025;;2000,00 €;SCHNELL PETER;DE51700202700038900200;HYVEDEMMXXX;zum Einzug mit lb Gruss;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;06.08.2025;;-3700,00 €;Anselm josek;DE85200411110742731300;COBADEHDXXX;Tagesgeldkonto mit 3 zinsen;;32090596;Girokonto;Kredit;Kreditrate & -zinsen
+SEPA-Lastschrift;05.08.2025;;-61,89 €;Takeaway.com;LU89751000135104200E;PPLXLUL2;1043919186877/PP.2114.PP/. Takeaway.com Payments B.V., Ihr Einkauf bei Takeaway.com Payments B.V.;PayPal Europe S.a.r.l. et Cie S.C.A;4858835001;C24 Smartkonto;Restaurant/ Café/ Bar;Lieferservice
+Abbuchung;05.08.2025;;-15,00 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1043928020031/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;05.08.2025;;-58,48 €;Lidl;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;Lidl.sagt.Danke/Isny;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;01.08.2025;;-11,52 €;Alnatura;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;Alnatura.Produktions.u/Munchen;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;01.08.2025;;-14,54 €;Edeka;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;EDEKA.SARKIC/AUGSBURG;32090596;Girokonto;Lebensmittel;Supermarkt
+Gutschrift;31.07.2025;;4200,00 €;Adrian Lund;DE53500105175423071846;INGDDEFFXXX;Abloesevertrag Einrichtungsgegenstaende Reisingerstr. 15 86159 Augsburg;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;31.07.2025;;-19,79 €;Edeka;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;EDEKA.HILLENBRAND/AUGSBURG;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;31.07.2025;;-7,00 €;Nude.Food.UG..haftungs/Augsburg;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+Abbuchung;31.07.2025;;-207,00 €;goldgas;DE72760400610521264201;COBADEFFXXX;KD.-NR. 1000095681 207,00 - ABSCHLAG 07/25 GAS - GOLDGAS SAGT DANKE;goldgas GmbH ..;32090596;Girokonto;Energie;Gas
+Abbuchung;31.07.2025;;-495,52 €;Reinhard + Gertrud Frommeld;DE78720900000303201171;GENODEF1AUB;Miete 0,5*08.2025 Reisingerstr. 15 EG Rechts Josek und Antimisaris;;32090596;Girokonto;Wohnen & Haushalt;Miete
+Abbuchung;31.07.2025;;-2,29 €;SP.VEGANE.FLEISCHEREI/AUGSBURG;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Lebensmittel;Sonstiges Lebensmittel
+SEPA-Überweisung;30.07.2025;;-850,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Gutschrift;30.07.2025;;850,00 €;Anselm Josek;DE83500240244858835001;DEFFDEFFXXX;;;32090596;Girokonto;Umbuchung;Umbuchung
+Abbuchung;30.07.2025;;-1040,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Miete Fam. Josek Isny 1. OG;;32090596;Girokonto;Wohnen & Haushalt;Miete
+Abbuchung;30.07.2025;;-40,00 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1043810269104/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;30.07.2025;;-2,60 €;Schubert.Bio.Vollwert.B/Augsburg;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;28.07.2025;;-2000,00 €;Girokonto;DE85200411110742731300;COBADEHDXXX;Übertrag;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+SEPA-Überweisung;28.07.2025;;3131,00 €;Cinify UG;DE53100180000697660634;FNOMDEB2;Lohn - Gehalt Abrechnung 07/2025;;4858835001;C24 Smartkonto;Einkommen;Lohn/ Gehalt
+Gutschrift;28.07.2025;;850,00 €;Katerina Antimisaris;DE36500240241918347001;DEFFDEFFXXX;;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;28.07.2025;;-55,00 €;RESTAURANT.SYMPOSIUM/AUGSBURG;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+Abbuchung;25.07.2025;;-18,87 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+SEPA-Überweisung;22.07.2025;;13,00 €;Deutsche Bahn;DE08500800000091331501;COBADEFF;25V02256369 Ihr Fahrgastrechtsfall / Bahnreise am 18.07.2025/ Reisender: Josek, Anselm;DB Vertrieb GmbH;4858835001;C24 Smartkonto;Weitere Einnahmen;Erstattung
+Abbuchung;21.07.2025;;-5,17 €;Edeka;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;EDEKA.TORLAK/AUGSBURG;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;21.07.2025;;-45,87 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;21.07.2025;;-9,20 €;TAXISGARTEN.BIERGARTEN/Muenchen;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+Abbuchung;18.07.2025;;-48,00 €;Cookidoo.Vorwerk.Int./Wollerau;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Lastschrift;17.07.2025;;-4,99 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1043543415315/PP.2114.PP/. Lebara Germany Limited, Ihr Einkauf bei Lebara Germany Limited;;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Sonstiges Freizeit & Unterhaltung
+Abbuchung;17.07.2025;;-3,20 €;Baeckerei.Balletshofer/Augsburg;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Lebensmittel;Bäckerei
+SEPA-Lastschrift;15.07.2025;;-73,39 €;Takeaway.com;LU89751000135104200E;PPLXLUL2;1043469663565/PP.2114.PP/. Takeaway.com Payments B.V., Ihr Einkauf bei Takeaway.com Payments B.V.;PayPal Europe S.a.r.l. et Cie S.C.A;4858835001;C24 Smartkonto;Restaurant/ Café/ Bar;Lieferservice
+Abbuchung;14.07.2025;;-37,95 €;Telekom;DE07512108001095000911;SOGEDEFFXXX;Festnetz Vertragskonto 5630920969 RG 7815372243/03.07.2025;Telekom Deutschland GmbH;32090596;Girokonto;Internet & Mobilfunk;Festnetz, Internet und TV
+Abbuchung;14.07.2025;;-34,13 €;Octopus Energy;FR7617118820080000002438012;;REF-17C9B9CF436CDC5F4E;GC RE OCTOPUS ENERGY GERMANY GMBH;32090596;Girokonto;Energie;Sonstiges Energie
+Abbuchung;14.07.2025;;-39,50 €;Kaufland;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;KAUFLAND.AUGSBURG.GOEGG/AUGSBURG;32090596;Girokonto;Lebensmittel;Supermarkt
+Gutschrift;11.07.2025;;250,00 €;Dr. Anton Josef Bopp Hannelore Friederike Bopp-Liebig;DE40510800604486848100;DRESDEFF510;Hochzeit;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Lastschrift;10.07.2025;;-8,50 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1043383419649/PP.2114.PP/. , Ihr Einkauf bei ;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Lastschrift;09.07.2025;;-25,00 €;Stadtwerke Augsburg;DE69720500000251174819;AUGSDE77XXX;361310 - Rechnungsnummer;Stadtwerke Augsburg Carsharing-GmbH;4858835001;C24 Smartkonto;Mobilität;Sharing-Angebote
+Abbuchung;08.07.2025;;-32,77 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;08.07.2025;;-32,31 €;SOBI.GETRAENKE.MAERKTE/AUGSBURG;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Lebensmittel;Getränkehandel
+Abbuchung;04.07.2025;;-3,89 €;Edeka;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;EDEKA.SARKIC/AUGSBURG;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;04.07.2025;;-17,54 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;04.07.2025;;-29,30 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;DM.Drogerie.Markt/Augsburg;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;03.07.2025;;-46,99 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1043230411981/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;02.07.2025;;-991,04 €;Reinhard + Gertrud Frommeld;DE78720900000303201171;GENODEF1AUB;Miete 2025 Reisingerstr. 15 EG Rechts Josek und Antimisaris;;32090596;Girokonto;Wohnen & Haushalt;Miete
+Abbuchung;02.07.2025;;-77,37 €;amedes Medizinische Dienstleistungen GmbH;DE98200300000030071559;HYVEDEMM300;BC2503000924;;32090596;Girokonto;Gesundheit;Arztbesuch/ Krankenhaus
+Echtzeit-Überweisung;01.07.2025;;-2800,00 €;Anselm Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Überweisung;01.07.2025;;3131,00 €;Cinify UG;DE53100180000697660634;FNOMDEB2;Lohn - Gehalt Abrechnung 06/2025;;4858835001;C24 Smartkonto;Einkommen;Lohn/ Gehalt
+Gutschrift;01.07.2025;;350,00 €;Katerina Antimisaris;DE36500240241918347001;DEFFDEFFXXX;auffüllen;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;01.07.2025;;0,00 €;DKB AG;;;Abrechnung 30.06.2025 siehe Anlage Abrechnung 30.06.2025 Information zur Abrechnung Kontostand am 30.06.2025 2.472,21 + Abrechnungszeitraum vom 01.04.2025 bis 30.06.2025 Abrechnung 30.06.2025 0, 00+ Sollzinssätze am 30.06.2025 8,6800 v.H. für eingeräumte Kontoüberziehung (aktuell eingeräumte Kontoüberziehung 100,00) 8,6800 v.H. für geduldete Kontoüberziehung über die eingeräumte Kontoüberziehung hinaus Kontostand/Rechnungsabschluss am 30.06.2025 2.472,21 + Rechnungsnummer: 20250630-BY111-00237076161;;32090596;Girokonto;Bankkarten/ -konten;Sonstiges Bankkarten/ -konten
+Abbuchung;01.07.2025;;-50,00 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1043200262678/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;01.07.2025;;-73,60 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;01.07.2025;;0,00 €;DKB AG;;;Abrechnung 30.06.2025 siehe Anlage Abrechnung 30.06.2025 Information zur Abrechnung Kontostand am 30.06.2025 0,00 + Abrechnungszeitraum vom 01.04.2025 bis 30.06.2025 Abrechnung 30.06.2025 0, 00+ Kontostand/Rechnungsabschluss am 30.06.2025 0,00 + Rechnungsnummer: 20250630-BY111-00236453398;;32090594;Tagesgeld;Bankkarten/ -konten;Sonstiges Bankkarten/ -konten
+Echtzeit-Überweisung;30.06.2025;;600,00 €;PAYPAL;LU947510261215211218;PPLXLUL2XXX;INSTANT TRANSFER;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Überweisung;30.06.2025;;-850,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Zinszahlung;30.06.2025;;3,03 €;C24 Bank;;;;;4858835001;C24 Smartkonto;Einkommen;Kapitalerträge
+Abbuchung;30.06.2025;;-207,00 €;goldgas;DE72760400610521264201;COBADEFFXXX;KD.-NR. 1000095681 207,00 - ABSCHLAG 06/25 GAS - GOLDGAS SAGT DANKE;goldgas GmbH ..;32090596;Girokonto;Energie;Gas
+Gutschrift;30.06.2025;;916,00 €;PAYPAL;LU947510261215211218;;INSTANT TRANSFER;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Gutschrift;30.06.2025;;850,00 €;Anselm Josek;DE83500240244858835001;DEFFDEFFXXX;;;32090596;Girokonto;Umbuchung;Umbuchung
+Gutschrift;30.06.2025;;850,00 €;Katerina Antimisaris;DE36500240241918347001;DEFFDEFFXXX;;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;30.06.2025;;-414,98 €;Hanseatic Bank;DE43201207002016149341;HSTBDEHHXXX;Kartenabrechnung 06/2025 Hanseatic Bank;Josek,Anselm;32090596;Girokonto;Bankkarten/ -konten;Kreditkartenabrechnung
+Abbuchung;30.06.2025;;-16,00 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1043116101663/PP.3579.PP/. , Ihr Einkauf bei;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;27.06.2025;;800,00 €;Anselm Elias Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Gutschrift;27.06.2025;;1,00 €;Anselm Elias Josek;DE94100123450320260701;TRBKDEBBXXX;;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Lastschrift;25.06.2025;;-900,00 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1043054678599/PP.2114.PP/. karmakitchen / Liebe ist Alles, Ihr Einkauf bei karmakitchen / Liebe ist Alles;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;25.06.2025;;-900,00 €;PayPal Europe S.a.r.l. et Cie S.C.A ..;LU89751000135104200E;;1043053943861/ADD TO BALANCE;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Lastschrift;24.06.2025;;-16,00 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1043016322309/PP.2114.PP/. , Ihr Einkauf bei ;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;23.06.2025;;-39,03 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;REWE.Daniela.Rietzschel/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;23.06.2025;;-24,02 €;Edeka;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;EDEKA.SARKIC/AUGSBURG;32090596;Girokonto;Lebensmittel;Supermarkt
+SEPA-Lastschrift;19.06.2025;;-4,99 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1042937701835/PP.2114.PP/. Lebara Germany Limited, Ihr Einkauf bei Lebara Germany Limited;;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Sonstiges Freizeit & Unterhaltung
+Abbuchung;17.06.2025;;-5,80 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;DM.Drogerie.Markt/Augsburg;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;17.06.2025;;-23,50 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;DM.Drogerie.Markt/Augsburg;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;17.06.2025;;-21,91 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;16.06.2025;;-37,95 €;Telekom;DE07512108001095000911;SOGEDEFFXXX;Festnetz Vertragskonto 5630920969 RG 7798701147/04.06.2025;Telekom Deutschland GmbH;32090596;Girokonto;Internet & Mobilfunk;Festnetz, Internet und TV
+Abbuchung;16.06.2025;;-34,13 €;Octopus Energy;FR7617118820080000002438012;;REF-03A2AE50530E02E947;GC RE OCTOPUS ENERGY GERMANY GMBH;32090596;Girokonto;Energie;Sonstiges Energie
+Abbuchung;16.06.2025;;-21,00 €;GRECOS/MYKONOS;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+Abbuchung;16.06.2025;;-5,70 €;BAECKEREI.KONDITOREI/MINDELHEIM;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Lebensmittel;Bäckerei
+Abbuchung;16.06.2025;;-19,66 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;13.06.2025;;-23,00 €;KOSTANTIS.MEDITERRAN/MYKONOS;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+Abbuchung;13.06.2025;;-24,93 €;ORNOS.MARKET/MYKONOS;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Lebensmittel;Sonstiges Lebensmittel
+Abbuchung;13.06.2025;;-13,60 €;NAZOS.ATHANASIOS/MIKONOS;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Lastschrift;12.06.2025;;-17,60 €;Stadtwerke Augsburg;DE69720500000251174819;AUGSDE77XXX;356606 - Rechnungsnummer;Stadtwerke Augsburg Carsharing-GmbH;4858835001;C24 Smartkonto;Mobilität;Sharing-Angebote
+Abbuchung;12.06.2025;;-17,50 €;KOSTANTIS.MEDITERRAN/MYKONOS;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+Abbuchung;12.06.2025;;-8,68 €;AB.FOOD.MYKONOS.881/LAKKA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+Abbuchung;12.06.2025;;-17,00 €;PASTA.FRESCA.BARKIA.SA/MIKONOS;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+Abbuchung;12.06.2025;;-17,38 €;RHINO.VEGAN.STREET.FOO/MIKONOS;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Shopping;Bekleidung
+Abbuchung;11.06.2025;;-45,50 €;EGGARES.OLIVE.PRESS/NAXOS;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Freizeit & Unterhaltung;Bücher & Medien
+Abbuchung;11.06.2025;;-6,00 €;STATION.MARKET/MYKONOS;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Mobilität;Tanken
+Abbuchung;10.06.2025;;-20,90 €;ORNOS.MARKET/MYKONOS;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Lebensmittel;Sonstiges Lebensmittel
+Abbuchung;10.06.2025;;-4,60 €;NAXOS.MARKET/AGIOS.PROKOPI;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Lebensmittel;Sonstiges Lebensmittel
+Abbuchung;10.06.2025;;-15,00 €;GRATSIA.VASILIKI/NAXOS;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;10.06.2025;;-3,53 €;KOUTELIERI.AG.PROKOPIO/AG.PROKOPIOU;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;05.06.2025;;-20,06 €;KOUTELIERI.AG.PROKOPIO/AG.PROKOPIOU;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;04.06.2025;;-9,20 €;NAXOS.MARKET/AGIOS.PROKOPI;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Lebensmittel;Sonstiges Lebensmittel
+Abbuchung;03.06.2025;;-29,00 €;TAVERNA.GIANNOYLIS/NAXOS;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+Abbuchung;03.06.2025;;-12,80 €;KAVOURAS.MICHALIS/NAXOS;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;03.06.2025;;-207,00 €;goldgas;DE72760400610521264201;COBADEFFXXX;KD.-NR. 1000095681 207,00 - ABSCHLAG 05/25 GAS - GOLDGAS SAGT DANKE;goldgas GmbH ..;32090596;Girokonto;Energie;Gas
+Echtzeit-Überweisung;02.06.2025;;-1100,00 €;Anselm Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;02.06.2025;;-1500,00 €;Girokonto;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+SEPA-Überweisung;02.06.2025;;3131,00 €;Cinify UG;DE53100180000697660634;FNOMDEB2;Lohn - Gehalt Abrechnung 05/2025;;4858835001;C24 Smartkonto;Einkommen;Lohn/ Gehalt
+Abbuchung;02.06.2025;;-1,20 €;OASA.ETICKET.POS/ATHINA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;02.06.2025;;-1,20 €;OASA.ETICKET.POS/ATHINA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Gutschrift;02.06.2025;;1500,00 €;Anselm Josek;DE83500240244858835001;DEFFDEFFXXX;;;32090596;Girokonto;Umbuchung;Umbuchung
+Abbuchung;02.06.2025;;-2400,00 €;Werner Heim;DE56650910400164400010;GENODES1LEU;Kaution Josek Antimisaris Dengeltshofenerstr. 3 Isny 1. OG ab 01/08/2025;;32090596;Girokonto;Wohnen & Haushalt;Sonstiges Wohnen & Haushalt
+Abbuchung;02.06.2025;;-9,20 €;NAXOS.MARKET/AGIOS.PROKOPI;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Lebensmittel;Sonstiges Lebensmittel
+Abbuchung;02.06.2025;;-18,27 €;NAXOS.KAVOURAKIA/AGIOS.PROKOPI;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;02.06.2025;;-991,04 €;Reinhard + Gertrud Frommeld;DE78720900000303201171;GENODEF1AUB;Miete 2025 Reisingerstr. 15 EG Rechts Josek und Antimisaris;;32090596;Girokonto;Wohnen & Haushalt;Miete
+Abbuchung;02.06.2025;;-12,40 €;KOINONIKI.SYNETAIRISTIK/ATHINA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;02.06.2025;;-1,95 €;KOUTELIERI.AG.PROKOPIO/AG.PROKOPIOU;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;02.06.2025;;-6,92 €;KOUTELIERI.AG.PROKOPIO/AG.PROKOPIOU;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;02.06.2025;;-19,40 €;LEFTOS.SOUVLAKI.KEBA/NAXOS;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Überweisung;30.05.2025;;-850,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Abbuchung;30.05.2025;;-5,60 €;Planet.Foods/ATHINA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Gutschrift;30.05.2025;;850,00 €;Anselm Josek;DE83500240244858835001;DEFFDEFFXXX;;;32090596;Girokonto;Umbuchung;Umbuchung
+Abbuchung;30.05.2025;;-32,00 €;VEGANAKI.OE/ATHINA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;30.05.2025;;-15,71 €;MASOUTIS.KORAI.3.651/ATHINA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;30.05.2025;;-1,68 €;MASOUTIS.MONASTIRAKI.65/MONASTIRAK;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;30.05.2025;;-4,90 €;LOUKOUMADES.STORES/ATHINA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;30.05.2025;;-9,15 €;BAZAAR/ATHINA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Shopping;Schmuck/ Juwelier
+Abbuchung;30.05.2025;;-1,60 €;BAZAAR/ATHINA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Shopping;Schmuck/ Juwelier
+Abbuchung;30.05.2025;;-14,00 €;MAMA.TIERRA/ATHINA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Lastschrift;29.05.2025;;-83,00 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1042471209144/PP.2114.PP/. , Ihr Einkauf bei ;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;28.05.2025;;-8,80 €;Planet.Foods/ATHINA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;28.05.2025;;-28,00 €;VEGAN.BEAT.ATHENS/SYNTAGMA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Freizeit & Unterhaltung;Lotto & Glücksspiel
+Gutschrift;28.05.2025;;850,00 €;Katerina Antimisaris;DE36500240241918347001;DEFFDEFFXXX;;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;28.05.2025;;-20,00 €;OASA.ETICKET.POS/SPATA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;28.05.2025;;-25,24 €;MASOUTIS.KORAI.3.651/ATHINA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;28.05.2025;;-50,00 €;VEGANAKI.OE/ATHINA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;28.05.2025;;-13,50 €;BIOMARKET.KAMPOS.SYNTAG/SYNTAGMA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;27.05.2025;;-9,60 €;VEGAN.MS/ATHINA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;27.05.2025;;-9,48 €;STERGIOU.GEORGIOS/ATHINA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;27.05.2025;;-6,00 €;KOINONIKI.SYNETAIRISTIK/ATHINA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;27.05.2025;;-39,40 €;LOY.SYSTEM.AEKE/GLYFADA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;27.05.2025;;-17,50 €;DIMOS.KAISARIANIS/KAISARIANI;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;26.05.2025;;-0,62 €;AB.SHOP...GO/GLYFADA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;26.05.2025;;-9,00 €;HELLENIC.TRAIN.SA/AERODROMIO;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;26.05.2025;;-17,75 €;Schubert.Bio.Vollwert.B/Augsburg;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;26.05.2025;;-20,20 €;SKLAVENITIS.EKSARHEIA/EXARCHIA;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;26.05.2025;;-12,90 €;K.CHRYSAFIS.KAI.SIA.O./PALAIOU.FALIR;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Lastschrift;23.05.2025;;-10,00 €;PayPal (Europe) S.a r.l. et Cie, S.C.A.;DE88500700100175526303;DEUTDEFFXXX;1042353447905 PP.2114.PP . , Ihr Einkauf bei;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Lastschrift;23.05.2025;;-3,18 €;Deutsche Post;LU89751000135104200E;PPLXLUL2;1042347522647/PP.2114.PP/. Deutsche Post AG, Ihr Einkauf bei Deutsche Post AG;PayPal Europe S.a.r.l. et Cie S.C.A;4858835001;C24 Smartkonto;Wohnen & Haushalt;Sonstiges Wohnen & Haushalt
+Abbuchung;23.05.2025;;-11,82 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;REWE.Filialen.Voll/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;22.05.2025;;-1024,50 €;Firma Herzblut;DE96720501010030196497;BYLADEM1AUG;3457 Anselm und Katerina;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Gutschrift;22.05.2025;;1500,00 €;Katerina Antimisaris;DE36500240241918347001;DEFFDEFFXXX;auffüllen;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;21.05.2025;;-68,06 €;Hamburg Energie;DE53200505501280322254;HASPDEHHXXX;HAMBURGER ENERGIEWERKE, RG 10100153, VK 8013317770, Reisingerstr. 15, Augsburg;Hamburger Energiewerke;32090596;Girokonto;Energie;Sonstiges Energie
+Abbuchung;19.05.2025;;-39,00 €;RESTAURANT.DUDU/MUENCHEN;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+Abbuchung;16.05.2025;;-79,00 €;Standesamt.Augsburg/Augsburg;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Finanzen & Steuern;Behörden
+SEPA-Überweisung;15.05.2025;;35,00 €;Lena Sophie Hinle;DE19700400480766936900;COBADEFFXXX;Gift Trap;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;15.05.2025;;-37,95 €;Telekom;DE07512108001095000911;SOGEDEFFXXX;Festnetz Vertragskonto 5630920969 RG 7782450809/06.05.2025;Telekom Deutschland GmbH;32090596;Girokonto;Internet & Mobilfunk;Festnetz, Internet und TV
+Abbuchung;14.05.2025;;-5,49 €;Edeka;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;EDEKA.SARKIC/AUGSBURG;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;14.05.2025;;-2,68 €;Deutsche Post;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;Deutsche.Post.AG/Augsburg;32090596;Girokonto;Wohnen & Haushalt;Sonstiges Wohnen & Haushalt
+Abbuchung;14.05.2025;;-34,13 €;Octopus Energy;FR7617118820080000002438012;;REF-2124B63551194EEE11;GC RE OCTOPUS ENERGY GERMANY GMBH;32090596;Girokonto;Energie;Sonstiges Energie
+Abbuchung;13.05.2025;;-37,74 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;12.05.2025;;-127,30 €;Ferryscanner/Nicosia;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Shopping;Online-Shopping
+Abbuchung;12.05.2025;;-67,50 €;Ferryscanner/Nicosia;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Shopping;Online-Shopping
+Abbuchung;07.05.2025;;-33,46 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+SEPA-Lastschrift;06.05.2025;;-19,99 €;Immobilien Scout;LU89751000135104200E;PPLXLUL2;1041964758701/PP.2114.PP/. Immobilien Scout GmbH, Ihr Einkauf bei Immobilien Scout GmbH;PayPal Europe S.a.r.l. et Cie S.C.A;4858835001;C24 Smartkonto;Wohnen & Haushalt;Sonstiges Wohnen & Haushalt
+Abbuchung;05.05.2025;;-2,20 €;HEIGLBECK.HAUPTBF/INGOLSTADT;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;05.05.2025;;-17,57 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;REWE.Anja.Straub.oHG/Wangen;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;05.05.2025;;-19,99 €;uncredited bank ag;DE91700202700020213982;HYVEDEMMXXX;EZ2504137270 25346033;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;02.05.2025;;-991,04 €;Reinhard + Gertrud Frommeld;DE78720900000303201171;GENODEF1AUB;Miete 2025 Reisingerstr. 15 EG Rechts Josek und Antimisaris;;32090596;Girokonto;Wohnen & Haushalt;Miete
+Abbuchung;02.05.2025;;-207,00 €;goldgas;DE72760400610521264201;COBADEFFXXX;KD.-NR. 1000095681 207,00 - ABSCHLAG 04/25 GAS - GOLDGAS SAGT DANKE;goldgas GmbH ..;32090596;Girokonto;Energie;Gas
+SEPA-Überweisung;30.04.2025;;-850,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Gutschrift;30.04.2025;;850,00 €;Anselm Josek;DE83500240244858835001;DEFFDEFFXXX;;;32090596;Girokonto;Umbuchung;Umbuchung
+Abbuchung;30.04.2025;;-9,84 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;REWE.Daniela.Rietzschel/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;30.04.2025;;-14,23 €;Dirk Rossmann;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;Rossmann.3502/Augsburg;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;30.04.2025;;-16,77 €;denn's;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;denn.s.Biomarkt.Augsbur/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Echtzeit-Überweisung;29.04.2025;;-2000,00 €;Anselm Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Überweisung;29.04.2025;;3310,38 €;Cinify UG;DE53100180000697660634;FNOMDEB2;Lohn - Gehalt Abrechnung 04/2025;;4858835001;C24 Smartkonto;Einkommen;Lohn/ Gehalt
+Abbuchung;29.04.2025;;-1,75 €;Deutsche Post;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;Deutsche.Post.AG/Augsburg;32090596;Girokonto;Wohnen & Haushalt;Sonstiges Wohnen & Haushalt
+Abbuchung;29.04.2025;;-29,81 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Gutschrift;28.04.2025;;850,00 €;Katerina Antimisaris;DE36500240241918347001;DEFFDEFFXXX;;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;28.04.2025;;-5,00 €;Theresien.Apotheke/Augsburg;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Gesundheit;Apotheke
+Abbuchung;28.04.2025;;-18,00 €;GA.R.PIZZA...KEBAP/WASSERBURG;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+SEPA-Lastschrift;24.04.2025;;-4,99 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1041722389481/PP.2114.PP/. Lebara Germany Limited, Ihr Einkauf bei Lebara Germany Limited;;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Sonstiges Freizeit & Unterhaltung
+Abbuchung;24.04.2025;;-32,68 €;Edeka;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;EDEKA.SARKIC/AUGSBURG;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;23.04.2025;;-17,20 €;OEBB;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;OEBB.Ticket.Zugbegleite/Wien;32090596;Girokonto;Freizeit & Unterhaltung;Tickets
+Abbuchung;23.04.2025;;-17,93 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;REWE.Nick.Buhmann.oHG/Lindau;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;16.04.2025;;-2,88 €;denn's;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;denn.s.Biomarkt.Augsbur/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;15.04.2025;;-38,00 €;Hamburg Energie;DE53200505501280322254;HASPDEHHXXX;HAMBURGER ENERGIEWERKE, AB APRIL, VK 8013317770, Reisingerstr. 15, Augsburg;Hamburger Energiewerke;32090596;Girokonto;Energie;Sonstiges Energie
+SEPA-Lastschrift;14.04.2025;;-5,00 €;Stadtwerke Augsburg;DE69720500000251174819;AUGSDE77XXX;350922 - Rechnungsnummer;Stadtwerke Augsburg Carsharing-GmbH;4858835001;C24 Smartkonto;Mobilität;Sharing-Angebote
+Abbuchung;14.04.2025;;-37,95 €;Telekom;DE07512108001095000911;SOGEDEFFXXX;Festnetz Vertragskonto 5630920969 RG 7765903902/03.04.2025;Telekom Deutschland GmbH;32090596;Girokonto;Internet & Mobilfunk;Festnetz, Internet und TV
+Abbuchung;14.04.2025;;-12,29 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;14.04.2025;;-3,77 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;REWE.Daniela.Rietzschel/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;14.04.2025;;-35,20 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;DM.Drogerie.Markt/Augsburg;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;11.04.2025;;-6,50 €;SLEMANI.GRILL/MUENCHEN;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+SEPA-Lastschrift;09.04.2025;;-14,98 €;Immobilien Scout;LU89751000135104200E;PPLXLUL2;1041408208932/PP.2114.PP/. Immobilien Scout GmbH, Ihr Einkauf bei Immobilien Scout GmbH;PayPal Europe S.a.r.l. et Cie S.C.A;4858835001;C24 Smartkonto;Wohnen & Haushalt;Sonstiges Wohnen & Haushalt
+SEPA-Lastschrift;08.04.2025;;-404,04 €;TRIP.COM;LU89751000135104200E;PPLXLUL2;1041346004341/PP.2114.PP/. Trip.com Netherlands B.V, Ihr Einkauf bei Trip.com Netherlands B.V;PayPal Europe S.a.r.l. et Cie S.C.A;4858835001;C24 Smartkonto;Mobilität;Taxi
+Abbuchung;07.04.2025;;-27,05 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;07.04.2025;;-9,33 €;Dirk Rossmann;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;Rossmann.3502/Augsburg;32090596;Girokonto;Shopping;Drogerie
+Echtzeit-Überweisung;04.04.2025;;1000,00 €;Anselm Elias Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Überweisung;03.04.2025;;-418,44 €;Straßee Gößl Notare;DE02720500000251974820;AUGSDE77XXX;21682 Aventrix UG;;4858835001;C24 Smartkonto;Bildung & Beruf;Anwaltskosten
+Abbuchung;02.04.2025;;-991,04 €;Reinhard + Gertrud Frommeld;DE78720900000303201171;GENODEF1AUB;Miete 2025 Reisingerstr. 15 EG Rechts Josek und Antimisaris;;32090596;Girokonto;Wohnen & Haushalt;Miete
+Echtzeit-Überweisung;01.04.2025;;-258,33 €;Landesjustizkasse Bamberg;DE78700500000003024919;BYLADEMMXXX;831262121416;;4858835001;C24 Smartkonto;Finanzen & Steuern;Behörden
+Abbuchung;01.04.2025;;0,00 €;DKB AG;;;Abrechnung 31.03.2025 siehe Anlage Abrechnung 31.03.2025 Information zur Abrechnung Kontostand am 31.03.2025 3.689,43 + Abrechnungszeitraum vom 01.01.2025 bis 31.03.2025 Abrechnung 31.03.2025 0, 00+ Sollzinssätze am 30.03.2025 8,6800 v.H. für eingeräumte Kontoüberziehung (aktuell eingeräumte Kontoüberziehung 100,00) 8,6800 v.H. für geduldete Kontoüberziehung über die eingeräumte Kontoüberziehung hinaus Kontostand/Rechnungsabschluss am 31.03.2025 3.689,43 + Rechnungsnummer: 20250331-BY111-00227536628;;32090596;Girokonto;Bankkarten/ -konten;Sonstiges Bankkarten/ -konten
+Abbuchung;01.04.2025;;0,00 €;DKB AG;;;Abrechnung 31.03.2025 siehe Anlage Abrechnung 31.03.2025 Information zur Abrechnung Kontostand am 31.03.2025 0,00 + Abrechnungszeitraum vom 01.01.2025 bis 31.03.2025 Abrechnung 31.03.2025 0, 00+ Kontostand/Rechnungsabschluss am 31.03.2025 0,00 + Rechnungsnummer: 20250331-BY111-00226928426;;32090594;Tagesgeld;Bankkarten/ -konten;Sonstiges Bankkarten/ -konten
+Echtzeit-Überweisung;31.03.2025;;-2200,00 €;Anselm Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Überweisung;31.03.2025;;3136,50 €;Cinify Unternehmergesellschaft (haftungsbeschrankt);DE22110101015210347434;SOBKDEB2XXX;Lohn - Gehalt Abrechnung 03/2025;;4858835001;C24 Smartkonto;Einkommen;Lohn/ Gehalt
+SEPA-Überweisung;31.03.2025;;-850,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Zinszahlung;31.03.2025;;6,15 €;C24 Bank;;;;;4858835001;C24 Smartkonto;Einkommen;Kapitalerträge
+Gutschrift;31.03.2025;;850,00 €;Anselm Josek;DE83500240244858835001;DEFFDEFFXXX;;;32090596;Girokonto;Umbuchung;Umbuchung
+Abbuchung;31.03.2025;;-207,00 €;goldgas;DE72760400610521264201;COBADEFFXXX;KD.-NR. 1000095681 207,00 - ABSCHLAG 03/25 GAS - GOLDGAS SAGT DANKE;goldgas GmbH ..;32090596;Girokonto;Energie;Gas
+Gutschrift;28.03.2025;;850,00 €;Katerina Antimisaris;DE36500240241918347001;DEFFDEFFXXX;;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Lastschrift;27.03.2025;;-4,99 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1041123591411/PP.2114.PP/. Lebara Germany Limited, Ihr Einkauf bei Lebara Germany Limited;;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Sonstiges Freizeit & Unterhaltung
+Abbuchung;27.03.2025;;-77,84 €;amedes Medizinische Dienstleistungen GmbH;DE98200300000030071559;HYVEDEMM300;BC2503000924;;32090596;Girokonto;Gesundheit;Arztbesuch/ Krankenhaus
+Abbuchung;27.03.2025;;-13,52 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;REWE.Daniela.Rietzschel/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;26.03.2025;;-4,45 €;Baeckerei.Riegler.GmbH/Heidelberg;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Lebensmittel;Bäckerei
+Abbuchung;26.03.2025;;-46,27 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUeD/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;25.03.2025;;-7,63 €;Penny;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;Penny.Hockenheim/Hockenheim;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;21.03.2025;;-60,33 €;Frauenarztpraxis.Dr..Ka/Augsburg;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Gesundheit;Arztbesuch/ Krankenhaus
+Abbuchung;20.03.2025;;-44,00 €;KAELBERHALLE.GMBH...CO/AUGSBURG;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;19.03.2025;;-26,57 €;Dirk Rossmann;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;Rossmann.3502/Augsburg;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;18.03.2025;;-17,27 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUED/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+SEPA-Lastschrift;17.03.2025;;-10,00 €;Fit/One;DE69790200760032625649;HYVEDEMM455;FIT One GmbH 4524--0100-0000037 4524-531019 Kuendigungsgebuehr 10 31.03.25;FIT/One GmbH;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Fitnessstudio
+Abbuchung;17.03.2025;;-38,00 €;Hamburg Energie;DE53200505501280322254;HASPDEHHXXX;HAMBURGER ENERGIEWERKE, AB MAERZ, VK 8013317770, Reisingerstr. 15, Augsburg;Hamburger Energiewerke;32090596;Girokonto;Energie;Sonstiges Energie
+Abbuchung;17.03.2025;;-9,06 €;Edeka;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;EDEKA.SARKIC/AUGSBURG;32090596;Girokonto;Lebensmittel;Supermarkt
+Echtzeit-Überweisung;15.03.2025;;12,66 €;CHECK24;DE10700700100300319101;DEUTDEMMXXX;CHECK24 Punkte Auszahlung;CHECK24 GmbH;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;14.03.2025;;-37,95 €;Telekom;DE07512108001095000911;SOGEDEFFXXX;Festnetz Vertragskonto 5630920969 RG 7749396656/05.03.2025;Telekom Deutschland GmbH;32090596;Girokonto;Internet & Mobilfunk;Festnetz, Internet und TV
+Echtzeit-Überweisung;13.03.2025;;-9,20 €;Stadtwerke Augsburg;DE69720500000251174819;AUGSDE77XXX;342490 5743-0 Josek;Stadtwerke Augsburg Carsharing GmbH;4858835001;C24 Smartkonto;Mobilität;Sonstiges Mobilität
+SEPA-Lastschrift;12.03.2025;;-40,38 €;Deutsche Bahn;LU89751000135104200E;PPLXLUL2;1040794994415/PP.2114.PP/. DB Vertrieb GmbH, Ihr Einkauf bei DB Vertrieb GmbH;PayPal Europe S.a.r.l. et Cie S.C.A;4858835001;C24 Smartkonto;Mobilität;Bahntickets
+SEPA-Lastschrift;12.03.2025;;-54,69 €;Deutsche Bahn;LU89751000135104200E;PPLXLUL2;1040795014819/PP.2114.PP/. DB Vertrieb GmbH, Ihr Einkauf bei DB Vertrieb GmbH;PayPal Europe S.a.r.l. et Cie S.C.A;4858835001;C24 Smartkonto;Mobilität;Bahntickets
+Abbuchung;10.03.2025;;-50,00 €;Muehle.Dreizehn/Augsburg;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Haustiere;Sonstiges Haustiere
+Abbuchung;10.03.2025;;-35,89 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;REWE.Daniela.Rietzschel/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;10.03.2025;;-53,28 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUED/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+SEPA-Lastschrift;04.03.2025;;-50,00 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1040632527531/PP.2114.PP/. , Ihr Einkauf bei ;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Lastschrift;03.03.2025;;-39,90 €;Fit/One;DE69790200760032625649;HYVEDEMM455;FIT One GmbH 4524--0098-0000697 4524-531019 Aktionstarif ALL IN 39,9 01.03.25-31.03.25;FIT/One GmbH;4858835001;C24 Smartkonto;Gesundheit;Sonstiges Gesundheit
+Abbuchung;03.03.2025;;-991,04 €;Reinhard + Gertrud Frommeld;DE78720900000303201171;GENODEF1AUB;Miete 2025 Reisingerstr. 15 EG Rechts Josek und Antimisaris;;32090596;Girokonto;Wohnen & Haushalt;Miete
+Abbuchung;03.03.2025;;-56,44 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUED/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Echtzeit-Überweisung;28.02.2025;;-2200,00 €;Anselm Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Überweisung;28.02.2025;;3144,49 €;Cinify Unternehmergesellschaft (haftungsbeschrankt);DE22110101015210347434;SOBKDEB2XXX;Lohn - Gehalt Abrechnung 02/2025;;4858835001;C24 Smartkonto;Einkommen;Lohn/ Gehalt
+SEPA-Überweisung;28.02.2025;;-850,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Gutschrift;28.02.2025;;850,00 €;Anselm Josek;DE83500240244858835001;DEFFDEFFXXX;;;32090596;Girokonto;Umbuchung;Umbuchung
+Gutschrift;28.02.2025;;850,00 €;Katerina Antimisaris;DE36500240241918347001;DEFFDEFFXXX;;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;28.02.2025;;-207,00 €;goldgas;DE72760400610521264201;COBADEFFXXX;KD.-NR. 1000095681 207,00 - ABSCHLAG 02/25 GAS - GOLDGAS SAGT DANKE;goldgas GmbH ..;32090596;Girokonto;Energie;Gas
+Abbuchung;25.02.2025;;-10,00 €;Theresien.Apotheke/Augsburg;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Gesundheit;Apotheke
+Abbuchung;24.02.2025;;-56,81 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUED/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;24.02.2025;;-5,48 €;Dirk Rossmann;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;Rossmann.3502/Augsburg;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;17.02.2025;;-38,00 €;Hamburg Energie;DE53200505501280322254;HASPDEHHXXX;HAMBURGER ENERGIEWERKE, AB FEBRUAR, VK 8013317770, Reisingerstr. 15, Augsburg;Hamburger Energiewerke;32090596;Girokonto;Energie;Sonstiges Energie
+Abbuchung;17.02.2025;;-110,20 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;DM.Drogerie.Markt/Augsburg;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;17.02.2025;;-196,54 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUED/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;14.02.2025;;-37,95 €;Telekom;DE07512108001095000911;SOGEDEFFXXX;Festnetz Vertragskonto 5630920969 RG 7732925441/05.02.2025;Telekom Deutschland GmbH;32090596;Girokonto;Internet & Mobilfunk;Festnetz, Internet und TV
+Echtzeit-Überweisung;11.02.2025;;-3000,00 €;Anselm Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Überweisung;11.02.2025;;3000,00 €;SCHNELL PETER;DE51700202700038900200;HYVEDEMMXXX;zur Hochzeit,  viiiel Glück;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;10.02.2025;;-14,85 €;denn's;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;denn.s.Biomarkt.Augsbur/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;10.02.2025;;-3,77 €;Dirk Rossmann;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;Rossmann.3270/Augsburg;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;10.02.2025;;-27,27 €;Edeka;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;EDEKA.SARKIC/AUGSBURG;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;07.02.2025;;-10,58 €;Dirk Rossmann;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;Rossmann.3502/Augsburg;32090596;Girokonto;Shopping;Drogerie
+SEPA-Überweisung;05.02.2025;;30,00 €;Online Payments Foundation;NL35INGB0653386540;INGBNL2A;Kleinanzeigen - Anzeigennr.: 2971778153;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;05.02.2025;;-11,64 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;REWE.Daniela.Rietzschel/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;05.02.2025;;-1,65 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUED/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;05.02.2025;;-44,50 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUED/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Echtzeit-Überweisung;04.02.2025;;-1000,00 €;Anselm Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Überweisung;04.02.2025;;1769,53 €;Cinify Unternehmergesellschaft (haftungsbeschrankt);DE22110101015210347434;SOBKDEB2XXX;Lohn - Gehalt Abrechnung 01/2025;;4858835001;C24 Smartkonto;Einkommen;Lohn/ Gehalt
+SEPA-Lastschrift;03.02.2025;;-54,90 €;Fit/One;DE69790200760032625649;HYVEDEMM455;4524--0094-0000714 4524-531019 Aktionstarif ALL IN 39,9 01.02.25-28.02.25/Service- und Hygienepauschale 15 01.02.25;FIT/One GmbH;4858835001;C24 Smartkonto;Gesundheit;Sonstiges Gesundheit
+Abbuchung;03.02.2025;;-991,04 €;Reinhard + Gertrud Frommeld;DE78720900000303201171;GENODEF1AUB;Miete 2025 Reisingerstr. 15 EG Rechts Josek und Antimisaris;;32090596;Girokonto;Wohnen & Haushalt;Miete
+Abbuchung;03.02.2025;;-20,90 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;DM.Drogerie.Markt/Augsburg;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;03.02.2025;;-11,98 €;go asia;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;GO.ASIA.DEUTSCHLAND/AUGSBURG;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;03.02.2025;;-12,68 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUED/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;31.01.2025;;-207,00 €;goldgas;DE72760400610521264201;COBADEFFXXX;KD.-NR. 1000095681 207,00 - ABSCHLAG 01/25 GAS - GOLDGAS SAGT DANKE;goldgas GmbH ..;32090596;Girokonto;Energie;Gas
+SEPA-Überweisung;03.02.2025;;-0,10 €;CM.com Stichting;NL45DEUT0556977556;DEUTNL2AXXX;PID3795708100T ON THAT ASS DE276 ON THAT ASS Mitglieds;;4858835001;C24 Smartkonto;Shopping;Bekleidung
+SEPA-Überweisung;30.01.2025;;-850,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+SEPA-Lastschrift;30.01.2025;;-4,99 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1039922335900/PP.2114.PP/. Lebara Germany Limited, Ihr Einkauf bei Lebara Germany Limited;;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Sonstiges Freizeit & Unterhaltung
+Gutschrift;30.01.2025;;850,00 €;Anselm Josek;DE83500240244858835001;DEFFDEFFXXX;;;32090596;Girokonto;Umbuchung;Umbuchung
+Gutschrift;28.01.2025;;850,00 €;Katerina Antimisaris;DE36500240241918347001;DEFFDEFFXXX;;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;27.01.2025;;-33,41 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUED/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+SEPA-Lastschrift;22.01.2025;;-66,16 €;CTS EVENTIM;LU89751000135104200E;PPLXLUL2;1039756175345/PP.2114.PP/. CTS EVENTIM AG & Co. KGaA, Ihr Einkauf bei CTS EVENTIM AG & Co. KGaA;PayPal Europe S.a.r.l. et Cie S.C.A;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Gutschrift;22.01.2025;;955,61 €;goldgas;DE72760400610521264201;COBADEFFXXX;KD.-NR. 1000095681 955,61 - VR1000506218 GAS - GOLDGAS SAGT DANKE;goldgas GmbH;32090596;Girokonto;Energie;Gas
+SEPA-Lastschrift;21.01.2025;;-9,99 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1039703613262/PP.2114.PP/. Degustabox, Ihr Einkauf bei Degustabox;;4858835001;C24 Smartkonto;Lebensmittel;Lebensmittel Abo
+SEPA-Lastschrift;21.01.2025;;-120,00 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1039713553162/PP.2114.PP/. , Ihr Einkauf bei ;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;20.01.2025;;-2000,00 €;Payward Ireland Ltd.;LU354080000052357382;BCIRLULLXXX;Anselm Josek Kraken;;4858835001;C24 Smartkonto;Geldanlage;Sonstiges Sparen
+Abbuchung;20.01.2025;;-20,01 €;Edeka;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;EDEKA;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;20.01.2025;;-6,45 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;REWE;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;20.01.2025;;-8,55 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;dm-drogerie;32090596;Girokonto;Shopping;Drogerie
+Echtzeit-Überweisung;17.01.2025;;282,14 €;PAYPAL;LU947510261215211218;PPLXLUL2XXX;INSTANT TRANSFER;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;16.01.2025;;-37,95 €;Telekom;DE07512108001095000911;SOGEDEFFXXX;Festnetz Vertragskonto 5630920969 RG 7716372150/07.01.2025;Telekom Deutschland GmbH;32090596;Girokonto;Internet & Mobilfunk;Festnetz, Internet und TV
+Abbuchung;15.01.2025;;-150,00 €;Anna Schneck;DE57120300001081273821;BYLADEM1001;Hochzeir 05.07.2025 Anselm Katerina;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;15.01.2025;;-41,00 €;Hamburg Energie;DE53200505501280322254;HASPDEHHXXX;HAMBURGER ENERGIEWERKE, AB JANUAR, VK 8013317770, Reisingerstr. 15, Augsburg;Hamburger Energiewerke;32090596;Girokonto;Energie;Sonstiges Energie
+Abbuchung;15.01.2025;;-23,72 €;Deutsche Post;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Wohnen & Haushalt;Sonstiges Wohnen & Haushalt
+Abbuchung;15.01.2025;;-29,89 €;Edeka;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;EDEKA;32090596;Girokonto;Lebensmittel;Supermarkt
+Echtzeit-Überweisung;14.01.2025;;12,00 €;INA BOLS;DE49217400430860542000;COBADEFFXXX;Ina bols Diabolos;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Überweisung;14.01.2025;;2,65 €;Anselm Josek;DE77760694100000538159;GENODEF1DIM;Auflösung des Kontos       IBAN DE77760694100000538159Josek.Anselm;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Überweisung;14.01.2025;;25,00 €;JULIA DANA GREGOR;DE66545500100001447804;LUHSDE6A;Hydroponik Anzucht;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;14.01.2025;;-28,94 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUED/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+SEPA-Überweisung;13.01.2025;;32,00 €;Online Payments Foundation;NL35INGB0653386540;INGBNL2A;Kleinanzeigen - Anzeigennr.: 2970104872;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;13.01.2025;;-22,00 €;Murdocks.Irish.Pub/Augsburg;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+Abbuchung;13.01.2025;;-10,90 €;INGRID.VOTTELER.GMBH/SCHLIERSEE;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;13.01.2025;;-39,08 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUED/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;13.01.2025;;-8,60 €;CAFE.CABRESSO/AUGSBURG;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+Kartenzahlung;12.01.2025;11.01.2025 09:36;-4,00 €;CAVUSOGLU LEBENSMITTEL;;;;;4858835001;C24 Smartkonto;Lebensmittel;Supermarkt
+Kartenzahlung;10.01.2025;09.01.2025 16:05;-4,34 €;Deutsche Post;;;;Deutsche Post AG;4858835001;C24 Smartkonto;Wohnen & Haushalt;Sonstiges Wohnen & Haushalt
+Kartenzahlung;08.01.2025;07.01.2025 19:50;-27,00 €;UZR*LiLes Corner;;;;;4858835001;C24 Smartkonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+Abbuchung;06.01.2025;;-18,98 €;Edeka;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;EDEKA;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;06.01.2025;;-8,40 €;Müller;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;06.01.2025;;-18,65 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;dm-drogerie;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;06.01.2025;;-55,59 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUED/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Echtzeit-Überweisung;03.01.2025;;-41,65 €;Bundesanzeiger Verlag;DE57370100500000399509;PBNKDEFFXXX;Rechnung 95467739 Kundennr. 105448147;;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Verlag & Zeitung
+SEPA-Lastschrift;02.01.2025;;-39,90 €;Fit/One;DE69790200760032625649;HYVEDEMM455;4524--0089-0000699 4524-531019 Aktionstarif ALL IN 39,9 01.01.25-31.01.25;FIT/One GmbH;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Fitnessstudio
+Abbuchung;02.01.2025;;-991,04 €;Reinhard + Gertrud Frommeld;DE78720900000303201171;GENODEF1AUB;Miete 2025 Reisingerstr. 15 EG Rechts Josek und Antimisaris;;32090596;Girokonto;Wohnen & Haushalt;Miete
+Zinszahlung;31.12.2024;;25,45 €;C24 Bank;;;;;4858835001;C24 Smartkonto;Einkommen;Kapitalerträge
+SEPA-Überweisung;30.12.2024;;-850,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Gutschrift;30.12.2024;;850,00 €;Anselm Josek;DE83500240244858835001;DEFFDEFFXXX;;;32090596;Girokonto;Umbuchung;Umbuchung
+Gutschrift;30.12.2024;;850,00 €;Katerina Antimisaris;DE36500240241918347001;DEFFDEFFXXX;;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;30.12.2024;;0,00 €;DKB AG;;;Abrechnung 30.12.2024 siehe Anlage Abrechnung 30.12.2024 Information zur Abrechnung Kontostand am 30.12.2024 2.983,36 + Abrechnungszeitraum vom 01.10.2024 bis 31.12.2024 Abrechnung 31.12.2024 0, 00+ Sollzinssätze am 30.12.2024 8,6800 v.H. für eingeräumte Kontoüberziehung (aktuell eingeräumte Kontoüberziehung 100,00) 8,6800 v.H. für geduldete Kontoüberziehung über die eingeräumte Kontoüberziehung hinaus Kontostand/Rechnungsabschluss am 30.12.2024 2.983,36 + Rechnungsnummer: 20241230-BY111-00215909494;;32090596;Girokonto;Bankkarten/ -konten;Sonstiges Bankkarten/ -konten
+Abbuchung;30.12.2024;;0,00 €;DKB AG;;;Abrechnung 30.12.2024 siehe Anlage Abrechnung 30.12.2024 Information zur Abrechnung Kontostand am 30.12.2024 0,00 + Abrechnungszeitraum vom 01.10.2024 bis 31.12.2024 Abrechnung 31.12.2024 0, 00+ Kontostand/Rechnungsabschluss am 30.12.2024 0,00 + Rechnungsnummer: 20241230-BY111-00215356696;;32090594;Tagesgeld;Bankkarten/ -konten;Sonstiges Bankkarten/ -konten
+Abbuchung;23.12.2024;;-6,07 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;REWE;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;23.12.2024;;-15,00 €;FUGGERSCHE.STIFTUNGEN/AUGSBURG;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;20.12.2024;;-19,13 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUED/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;20.12.2024;;-30,54 €;Kaufland;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;19.12.2024;;-17,69 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUED/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;16.12.2024;;-50,84 €;Reinhard + Gertrud Frommeld;DE78720900000303201171;GENODEF1AUB;Nebenkosten 2023;;32090596;Girokonto;Wohnen & Haushalt;Wohnnebenkosten
+Abbuchung;16.12.2024;;-41,00 €;Hamburg Energie;DE53200505501280322254;HASPDEHHXXX;HAMBURGER ENERGIEWERKE, AB DEZEMBER, VK 8013317770, Reisingerstr. 15, Augsburg;Hamburger Energiewerke;32090596;Girokonto;Energie;Sonstiges Energie
+Abbuchung;16.12.2024;;-89,19 €;Kaufland;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;16.12.2024;;-22,00 €;Cafe.Dede/Augsburg;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+Abbuchung;12.12.2024;;-11,35 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;dm-drogerie;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;11.12.2024;;-37,95 €;Telekom;DE07512108001095000911;SOGEDEFFXXX;Festnetz Vertragskonto 5630920969 RG 7699735980/02.12.2024;Telekom Deutschland GmbH;32090596;Girokonto;Internet & Mobilfunk;Festnetz, Internet und TV
+Abbuchung;11.12.2024;;-5,27 €;Rewe;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;REWE;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;11.12.2024;;-38,41 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUED/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Abbuchung;09.12.2024;;-29,56 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUED/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+SEPA-Lastschrift;02.12.2024;;-39,90 €;Fit/One;DE69790200760032625649;HYVEDEMM455;4524--0082-0000709 4524-531019 Aktionstarif ALL IN 39,9 01.12.24-31.12.24;FIT/One GmbH;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Fitnessstudio
+Abbuchung;02.12.2024;;-964,94 €;Reinhard + Gertrud Frommeld;DE78720900000303201171;GENODEF1AUB;Miete 2024 Reisingerstr. 15 EG Rechts Josek und Antimisaris;;32090596;Girokonto;Wohnen & Haushalt;Miete
+Abbuchung;02.12.2024;;-207,00 €;goldgas;DE72760400610521264201;COBADEFFXXX;KD.-NR. 1000095681 207,00 - ABSCHLAG 11/24 GAS - GOLDGAS SAGT DANKE;GOLDGAS GMBH;32090596;Girokonto;Energie;Gas
+SEPA-Überweisung;28.11.2024;;-750,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Gutschrift;28.11.2024;;750,00 €;Anselm Josek;DE83500240244858835001;DEFFDEFFXXX;;;32090596;Girokonto;Umbuchung;Umbuchung
+Gutschrift;28.11.2024;;750,00 €;Katerina Antimisaris;DE36500240241918347001;DEFFDEFFXXX;;;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Kartenzahlung;26.11.2024;25.11.2024 11:21;-5,00 €;APO BERGSTRASSE AUGSBU;;;;;4858835001;C24 Smartkonto;Gesundheit;Apotheke
+Abbuchung;25.11.2024;;-14,97 €;TK Maxx;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Shopping;Kaufhaus
+Abbuchung;25.11.2024;;-40,55 €;Aldi Süd;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;ALDI.SUED/Augsburg;32090596;Girokonto;Lebensmittel;Supermarkt
+Gutschrift;25.11.2024;;175,91 €;Hamburg Energie;DE53200505501280322254;HASPDEHHXXX;HAMBURGER ENERGIEWERKE, RG 10100, VK 8013317770, Reisingerstr. 15, Augsburg;Hamburger Energiewerke;32090596;Girokonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;21.11.2024;;-5,30 €;dm;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;dm-drogerie;32090596;Girokonto;Shopping;Drogerie
+Abbuchung;18.11.2024;;-6,97 €;Spar;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;EUROSPAR;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;17.11.2024;;-150,00 €;Anselm Josek;DE77760694100000538159;GENODEF1DIM;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;13.11.2024;;-37,95 €;Telekom;DE07512108001095000911;SOGEDEFFXXX;Festnetz Vertragskonto 5630920969 RG 7683268204/04.11.2024;Telekom Deutschland GmbH ..;32090596;Girokonto;Internet & Mobilfunk;Festnetz, Internet und TV
+Abbuchung;13.11.2024;;-4,91 €;Norma/Gersthofen;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Weitere Ausgaben;Weitere Ausgaben
+Abbuchung;11.11.2024;;-26,77 €;Edeka;DE96120300009005290904;BYLADEM1001;VISA Debitkartenumsatz;;32090596;Girokonto;Lebensmittel;Supermarkt
+SEPA-Lastschrift;01.11.2024;;-39,90 €;Fit/One;DE69790200760032625649;HYVEDEMM455;4524--0078-0000707 4524-531019 Aktionstarif ALL IN 39,9 01.11.24-30.11.24;FIT/One GmbH;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Fitnessstudio
+Online-Kartenzahlung;29.10.2024;28.10.2024 19:37;-9,95 €;Audible;;;;Audible Gmbh*TR83R3Z64;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Streaming & Pay TV
+SEPA-Überweisung;28.10.2024;;-750,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Echtzeit-Überweisung;23.10.2024;;-100,00 €;Anselm Josek;DE77760694100000538159;GENODEF1DIM;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Lastschrift;01.10.2024;;-100,18 €;Fit/One;DE69790200760032625649;HYVEDEMM455;4524--0074-0000721 4524-531019 Aktionstarif ALL IN 39,9 01.10.24-31.10.24/Startpaket 39 01.10.24/Aktionstarif ALL IN 21,28 15.09.24-30.09.24;FIT/One GmbH;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Sonstiges Freizeit & Unterhaltung
+SEPA-Überweisung;30.09.2024;;-750,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Zinszahlung;30.09.2024;;40,26 €;C24 Bank;;;;;4858835001;C24 Smartkonto;Einkommen;Kapitalerträge
+Kartenzahlung;22.09.2024;21.09.2024 09:35;-15,00 €;Theresien-Apotheke;;;;;4858835001;C24 Smartkonto;Gesundheit;Apotheke
+Kartenzahlung;18.09.2024;17.09.2024 12:17;-6,41 €;Norma;;;;;4858835001;C24 Smartkonto;Lebensmittel;Supermarkt
+Echtzeit-Überweisung;11.09.2024;;-15,56 €;Physiotherapie L hnert;DE52720500000240470302;AUGSDE77XXX;R24-736;;4858835001;C24 Smartkonto;Gesundheit;Arztbesuch/ Krankenhaus
+SEPA-Lastschrift;11.09.2024;;-49,00 €;Deutsche Bahn;DE02100100100152517108;PBNKDEFFXXX;Abo 196422916 zum 01.09.2024;DB Vertrieb GmbH;4858835001;C24 Smartkonto;Mobilität;Bahntickets
+SEPA-Lastschrift;10.09.2024;;-553,85 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1036770651811/PP.2114.PP/. , Ihr Einkauf bei ;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Überweisung;09.09.2024;;750,00 €;Anselm Elias Josek;DE94100123450320260701;TRBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Echtzeit-Überweisung;07.09.2024;;-750,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+SEPA-Überweisung;28.08.2024;;-750,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Kartenzahlung;23.08.2024;22.08.2024 12:10;-3,33 €;Norma - Augsburg, DEU;;;;;4858835001;C24 Smartkonto;Lebensmittel;Supermarkt
+SEPA-Überweisung;19.08.2024;;284,01 €;Anselm Josek;DE77760694100000538159;GENODEF1DIM;;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Rückerstattung;18.08.2024;17.08.2024 00:00;8,99 €;Amazon;;;;AMZNPrime DE - amzn.de/info, LUX;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Digitale Produkte & Dienste
+Online-Kartenzahlung;18.08.2024;17.08.2024 15:56;-8,99 €;Amazon;;;;AMZNPrime DE*U75FD90S5 - amzn.de/info, LUX;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Digitale Produkte & Dienste
+SEPA-Lastschrift;14.08.2024;;-49,00 €;Deutsche Bahn;DE02100100100152517108;PBNKDEFFXXX;Abo 054729585 zum 01.08.2024;DB Vertrieb GmbH;4858835001;C24 Smartkonto;Mobilität;Bahntickets
+Kartenzahlung;14.08.2024;12.08.2024 09:41;-42,85 €;VALYAROV EOOD - CAREVO, BGR;;;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Kartenzahlung;12.08.2024;10.08.2024 05:32;-0,82 €;CityGate Sofia Transit - SOFIA, BGR;;;;;4858835001;C24 Smartkonto;Mobilität;Sonstiges Mobilität
+Kartenzahlung;10.08.2024;09.08.2024 15:42;-0,82 €;CityGate Sofia Transit - SOFIA, BGR;;;;;4858835001;C24 Smartkonto;Mobilität;Sonstiges Mobilität
+Kartenzahlung;10.08.2024;09.08.2024 08:09;-3,39 €;COOP MARKET EOOD - SOFIYA, BGR;;;;;4858835001;C24 Smartkonto;Lebensmittel;Sonstiges Lebensmittel
+Kartenzahlung;09.08.2024;08.08.2024 18:09;-4,28 €;Rewe;;;;REWE Almir Schalla - Muenchen-Flug, DEU;4858835001;C24 Smartkonto;Lebensmittel;Supermarkt
+SEPA-Überweisung;05.08.2024;;2450,00 €;Anselm Josek;DE77760694100000538159;GENODEF1DIM;;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Kartenzahlung;31.07.2024;30.07.2024 12:13;-8,17 €;Norma - Augsburg, DEU;;;;;4858835001;C24 Smartkonto;Lebensmittel;Supermarkt
+SEPA-Überweisung;29.07.2024;;-750,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Kartenzahlung;26.07.2024;25.07.2024 11:28;-40,00 €;APO BERGSTRASSE AUGSBU - Augsburg, DEU;;;;;4858835001;C24 Smartkonto;Gesundheit;Apotheke
+Kartenzahlung;25.07.2024;24.07.2024 10:09;-96,00 €;dm;;;;DM-Drogerie Markt - Augsburg, DEU;4858835001;C24 Smartkonto;Shopping;Drogerie
+SEPA-Überweisung;04.07.2024;;2450,00 €;Anselm Josek;DE77760694100000538159;GENODEF1DIM;;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Lastschrift;01.07.2024;;-6,45 €;McFIT Global Group;DE62740201000208500944;RZOODE77XXX;A0003--0114-0003724 A0003-17711 John Reed II: Januarkampagne Flex 2024 6,45 01.07.24-05.07.24;RSG Group GmbH;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Fitnessstudio
+Zinszahlung;30.06.2024;;22,29 €;C24 Bank;;;;;4858835001;C24 Smartkonto;Einkommen;Kapitalerträge
+SEPA-Überweisung;28.06.2024;;-750,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+SEPA-Lastschrift;10.06.2024;;-49,00 €;Deutsche Bahn;DE02100100100152517108;PBNKDEFFXXX;Abo 936973037 zum 01.06.2024;DB Vertrieb GmbH;4858835001;C24 Smartkonto;Mobilität;Bahntickets
+SEPA-Überweisung;04.06.2024;;2450,00 €;Anselm Josek;DE77760694100000538159;GENODEF1DIM;;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Überweisung;03.06.2024;;-750,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+SEPA-Lastschrift;03.06.2024;;-40,00 €;RSG Group;DE62740201000208500944;RZOODE77XXX;A0003--0110-0003750 A0003-17711 John Reed II: Januarkampagne Flex 2024 40 01.06.24-30.06.24;RSG Group GmbH;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Fitnessstudio
+SEPA-Überweisung;29.05.2024;;252,00 €;booking.com;DE65743200730000801119;HYVEDEMM433;4098477455 Handvorschuss, Booking.com, UEbernachtung  408/153501-2/1535 54741  -5Hochschule fuer angewandte Wissenschaften Augsburg;STAATSOBERK.BAY.I.LA;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Überweisung;23.05.2024;;115,20 €;STAATSOBERK.BAY.I.LA;DE65743200730000801119;HYVEDEMM433;4532545280 Handvorschuss, Bristol Hotel, UEbern.21.-23.05.24                     408/153501-2/1535 54741  -5Hochschule fuer angewandte Wisse;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Überweisung;23.05.2024;;23,90 €;STAATSOBERK.BAY.I.LA;DE65743200730000801119;HYVEDEMM433;2024268700465220 Handvorschuss, Erst.Fahrtkosten, Bahnticket                     408/153501-2/1535 54741  -5Hochschule fuer angewandte Wisse;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Überweisung;23.05.2024;;153,60 €;STAATSOBERK.BAY.I.LA;DE65743200730000801119;HYVEDEMM433;RK STOINSKI Handvorschuss, RK Erst. Stoinski, Zugfahrt408/153501-2/1535 54741  -5Hochschule fuer angewandte Wissenschaften Augsburg;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Überweisung;23.05.2024;;57,80 €;Deutsche Bahn;DE65743200730000801119;HYVEDEMM433;468758063150 Handvorschuss, Deutsche Bahn, Bahnticket 408/153501-2/1535 54741  -5Hochschule fuer angewandte Wissenschaften Augsburg;STAATSOBERK.BAY.I.LA;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Echtzeit-Überweisung;14.05.2024;;-2500,00 €;Anselm Josek;DE63120700700120776750;DEUTDEFFVAC;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Kartenzahlung;07.05.2024;06.05.2024 19:14;-16,68 €;Norma - Bobingen, DEU;;;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Überweisung;06.05.2024;;2450,00 €;Anselm Josek;DE77760694100000538159;GENODEF1DIM;;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Überweisung;03.05.2024;;137,75 €;STAATSOBERK.BAY.I.LA;DE65743200730000801119;HYVEDEMM433;13317545 Handvorschuss, Tarabai Omar, Kryterion       408/153501-2/1535 54741  -5Hochschule fuer angewandte Wissenschaften Augsburg;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Lastschrift;03.05.2024;;-30,00 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1034093889853/PP.2114.PP/. , Ihr Einkauf bei ;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Überweisung;02.05.2024;;0,03 €;Anselm Josek;DE64500240243677250698;DEFFDEFFXXX;Auszahlung CHECK24 Anlagekonto;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+SEPA-Überweisung;02.05.2024;;-750,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+SEPA-Lastschrift;02.05.2024;;-40,00 €;McFIT Global Group;DE62740201000208500944;RZOODE77XXX;A0003--0106-0003641 A0003-17711 John Reed II: Januarkampagne Flex 2024 40 01.05.24-31.05.24;RSG Group GmbH;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Fitnessstudio
+Echtzeit-Überweisung;25.04.2024;;-13,99 €;SYNLAB Augsburg;DE63600202900611058586;HYVEDEMM473;2200102404104670 vom 11.04.2024 QR;;4858835001;C24 Smartkonto;Gesundheit;Sonstiges Gesundheit
+Echtzeit-Überweisung;13.04.2024;;-70,00 €;Andre Ducran;ES2821001511830200244662;CAIXESBBXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Überweisung;04.04.2024;;2450,00 €;Anselm Josek;DE77760694100000538159;GENODEF1DIM;;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Echtzeit-Überweisung;03.04.2024;;-60,00 €;Kennedy Tookey;ES5500812803120006910603;BSABESBBXXX;;;4858835001;C24 Smartkonto;Wohnen & Haushalt;Wohnnebenkosten
+SEPA-Lastschrift;03.04.2024;;-120,00 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1033478439773/PP.2114.PP/. , Ihr Einkauf bei ;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Lastschrift;03.04.2024;;-544,52 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1033476265302/PP.2114.PP/. , Ihr Einkauf bei ;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Kartenzahlung;03.04.2024;02.04.2024 12:42;-14,80 €;AVG Augsburger Verkehr - Augsburg, DEU;;;;;4858835001;C24 Smartkonto;Mobilität;Öffentlicher Nahverkehr
+SEPA-Überweisung;02.04.2024;;-750,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+SEPA-Lastschrift;02.04.2024;;-40,00 €;McFIT Global Group;DE62740201000208500944;RZOODE77XXX;A0003--0102-0003809 A0003-17711 John Reed II: Januarkampagne Flex 2024 40 01.04.24-30.04.24;RSG Group GmbH;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Fitnessstudio
+Zinszahlung;31.03.2024;;41,40 €;C24 Bank;;;;;4858835001;C24 Smartkonto;Einkommen;Kapitalerträge
+SEPA-Lastschrift;28.03.2024;;-44,80 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1033380102461/PP.2114.PP/. DB Vertrieb GmbH, Ihr Einkauf bei DB Vertrieb GmbH;;4858835001;C24 Smartkonto;Mobilität;Bahntickets
+Echtzeit-Überweisung;27.03.2024;;-62,50 €;Andre Ducran;ES2821001511830200244662;CAIXESBBXXX;50 percent down payment of photoshoot on lanzarote;;4858835001;C24 Smartkonto;Reisen & Urlaub;Sonstiges Reisen & Urlaub
+SEPA-Lastschrift;26.03.2024;;-19,80 €;Deutsche Bahn;LU89751000135104200E;PPLXLUL2;1033341050803/PP.2114.PP/. DB Vertrieb GmbH, Ihr Einkauf bei DB Vertrieb GmbH;PayPal Europe S.a.r.l. et Cie S.C.A;4858835001;C24 Smartkonto;Mobilität;Bahntickets
+SEPA-Lastschrift;26.03.2024;;-27,85 €;Deutsche Bahn;LU89751000135104200E;PPLXLUL2;1033309206908/PP.2114.PP/. DB Vertrieb GmbH, Ihr Einkauf bei DB Vertrieb GmbH;PayPal Europe S.a.r.l. et Cie S.C.A;4858835001;C24 Smartkonto;Mobilität;Bahntickets
+SEPA-Lastschrift;26.03.2024;;-18,80 €;Deutsche Bahn;LU89751000135104200E;PPLXLUL2;1033333145269/PP.2114.PP/. DB Vertrieb GmbH, Ihr Einkauf bei DB Vertrieb GmbH;PayPal Europe S.a.r.l. et Cie S.C.A;4858835001;C24 Smartkonto;Mobilität;Bahntickets
+Kartenzahlung;24.03.2024;23.03.2024 19:37;-14,90 €;monte mare - Schliersee, DEU;;;;;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Schwimmbad/ Therme
+Kartenzahlung;24.03.2024;23.03.2024 14:05;-41,50 €;monte mare - Schliersee, DEU;;;;;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Schwimmbad/ Therme
+Kartenzahlung;16.03.2024;15.03.2024 17:34;-32,99 €;Thalia;;;;THALIA BUCHHANDLUNG - Augsburg, DEU;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Bücher & Medien
+Echtzeit-Überweisung;12.03.2024;;-70,00 €;Landesjustizkasse Bamberg;DE78700500000003024919;BYLADEMMXXX;831262042225;;4858835001;C24 Smartkonto;Finanzen & Steuern;Behörden
+Echtzeit-Überweisung;12.03.2024;;-476,79 €;Notare Dr. Strasser und Dr. Goessl;DE02720500000251974820;AUGSDE77XXX;URNr. 361 U/24, ReNr. 16782 vom 22.02.2024;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Lastschrift;12.03.2024;;-65,00 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1033053290657/PP.2114.PP/. , Ihr Einkauf bei;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Lastschrift;12.03.2024;;-90,00 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1033055831087/PP.2114.PP/. , Ihr Einkauf bei;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Lastschrift;12.03.2024;;-35,00 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1033037758188/PP.2114.PP/. , Ihr Einkauf bei;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Überweisung;04.03.2024;;2618,13 €;Anselm Josek;DE77760694100000538159;GENODEF1DIM;;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Überweisung;01.03.2024;;-750,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+SEPA-Lastschrift;01.03.2024;;-40,00 €;McFIT Global Group;DE62740201000208500944;RZOODE77XXX;A0003--0098-0003778 A0003-17711 John Reed II: Januarkampagne Flex 2024 40 01.03.24-31.03.24;RSG Group GmbH;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Fitnessstudio
+SEPA-Lastschrift;23.02.2024;;-88,66 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1032668423186/PP.2114.PP/. buroshop24 GmbH, Ihr Einkauf bei buroshop24 GmbH;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;22.02.2024;;-157,53 €;Notare Dr. Strasser und Dr. Goessl;DE02720500000251974820;AUGSDE77XXX;URNr. 219 U/24, ReNr. 16533 vom 05.02.2024;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;22.02.2024;;1350,00 €;Traderepublic;DE17100701000322055500;DEUTDEBB101;Deine Auszahlung vom Trade Republic Verrechnungskonto. Bitte ueberweise kein Geld auf diese IBAN. ZahlungsId 20240221-cbeef147-ba3d;Trade Republic Bank GmbH;4858835001;C24 Smartkonto;Einkommen;Kapitalerträge
+SEPA-Lastschrift;20.02.2024;;-291,30 €;PayPal (Europe) S.a r.l. et Cie, S.C.A.;DE88500700100175526303;DEUTDEFFXXX;1032610708510 PP.2114.PP . Mayur Gevariya, Ihr Einkauf bei Mayur Gevariya;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;15.02.2024;;-14000,00 €;AventriX UG;DE92110101002897948673;SOBKDEBBXXX;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;15.02.2024;;1400,00 €;Traderepublic;DE17100701000322055500;DEUTDEBB101;Deine Auszahlung vom Trade Republic Verrechnungskonto. Bitte ueberweise kein Geld auf diese IBAN. ZahlungsId 20240214-8d4c22ea-cde5;Trade Republic Bank GmbH;4858835001;C24 Smartkonto;Einkommen;Kapitalerträge
+SEPA-Lastschrift;15.02.2024;;-58,10 €;McFIT Global Group;DE62740201000208500944;RZOODE77XXX;A0003--0096-0000189 A0003-17711 John Reed II: Januarkampagne Flex 2024 33,1 06.02.24-29.02.24/Aktivierungsgebuehr (MemberCard) 25 06.02.24;RSG Group GmbH;4858835001;C24 Smartkonto;Freizeit & Unterhaltung;Fitnessstudio
+SEPA-Überweisung;12.02.2024;;5000,00 €;Anselm Josek;DE77760694100000538159;GENODEF1DIM;;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Lastschrift;12.02.2024;;-9,12 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1032408574734/PP.2114.PP/. , Ihr Einkauf bei;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Lastschrift;09.02.2024;;-4,50 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1032394477508/PP.2114.PP/. Augsburg OnStage, Ihr Einkauf bei Augsburg OnStage;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Kartenzahlung;09.02.2024;08.02.2024 13:52;-10,00 €;Pho3 - Augsburg, DEU;;;;;4858835001;C24 Smartkonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+SEPA-Lastschrift;08.02.2024;;-47,80 €;Takeaway.com;DE88500700100175526303;DEUTDEFFXXX;1032314692903 PP.2114.PP . Takeaway.com Payments B.V., Ihr Einkauf bei Takeaway.com Payments B.V.;PayPal (Europe) S.a r.l. et Cie, S.C.A.;4858835001;C24 Smartkonto;Restaurant/ Café/ Bar;Lieferservice
+SEPA-Lastschrift;07.02.2024;;-252,00 €;booking.com;LU89751000135104200E;PPLXLUL2;1032356620178/PP.2114.PP/. Booking.com BV, Ihr Einkauf bei Booking.com BV;PayPal Europe S.a.r.l. et Cie S.C.A;4858835001;C24 Smartkonto;Reisen & Urlaub;Hotel & Urlaubswohnungen
+Echtzeit-Überweisung;06.02.2024;;-150,00 €;Landesjustizkasse Bamberg;DE78700500000003024919;BYLADEMMXXX;61 AR 124/24 Registergericht Augsburg;Landesjustizkasse Bayern;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Lastschrift;06.02.2024;;-80,80 €;Deutsche Bahn;LU89751000135104200E;PPLXLUL2;1032292674121/PP.2114.PP/. DB Vertrieb GmbH, Ihr Einkauf bei DB Vertrieb GmbH;PayPal Europe S.a.r.l. et Cie S.C.A;4858835001;C24 Smartkonto;Mobilität;Bahntickets
+Online-Kartenzahlung;04.02.2024;03.02.2024 12:13;-45,00 €;Race Result - Pfinztal, DEU;;;;;4858835001;C24 Smartkonto;Shopping;Sport Shop
+Echtzeit-Überweisung;03.02.2024;;-10000,00 €;Anselm Josek;DE63120700700120776750;DEUTDEFFVAC;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Pocket-Umbuchung;03.02.2024;;-1,25 €;C24 Smartkonto;;;;Anselm Josek;4858835030;Tagesgeld;Umbuchung;Umbuchung
+Pocket-Umbuchung;03.02.2024;;1,25 €;Tagesgeld;;;;Anselm Josek;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+SEPA-Lastschrift;02.02.2024;;-29,00 €;Deutsche Bahn;DE88500700100175526303;DEUTDEFFXXX;1032240583885 PP.2114.PP . DB Vertrieb GmbH, Ihr Einkauf bei DB Vertrieb GmbH;PayPal (Europe) S.a r.l. et Cie, S.C.A.;4858835001;C24 Smartkonto;Mobilität;Bahntickets
+SEPA-Lastschrift;02.02.2024;;-21,00 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1032246428295/PP.2114.PP/. , Ihr Einkauf bei;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Kartenzahlung;02.02.2024;01.02.2024 18:11;-7,36 €;Rewe;;;;REWE Daniela Rietzsche - Augsburg, DEU;4858835001;C24 Smartkonto;Lebensmittel;Supermarkt
+SEPA-Überweisung;01.02.2024;;-750,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Wohnen & Haushalt;Miete
+Zinszahlung;31.01.2024;;1,25 €;C24 Bank;;;;;4858835030;Tagesgeld;Einkommen;Kapitalerträge
+Echtzeit-Überweisung;30.01.2024;;-500,00 €;Aventrix UG;DE92110101002897948673;SOBKDEBBXXX;Stammkapital Einzahlung Aventrix UG;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Kartenzahlung;31.01.2024;30.01.2024 12:42;-9,50 €;Pho3 - Augsburg, DEU;;;;;4858835001;C24 Smartkonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+Echtzeit-Überweisung;26.01.2024;;-162,39 €;Notare Dr. Strasser und Dr. Goessl;DE02720500000251974820;AUGSDE77XXX;URNr. 27 U/24, ReNr. 16174 vom 09.01.2024;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Kartenzahlung;19.01.2024;18.01.2024 13:11;-9,50 €;Pho3 - Augsburg, DEU;;;;;4858835001;C24 Smartkonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+SEPA-Überweisung;16.01.2024;;2,00 €;Traderepublic;DE17100701000322055500;DEUTDEBB101;Deine Auszahlung vom Trade Republic Verrechnungskonto. Bitte ueberweise kein Geld auf diese IBAN. ZahlungsId 20240113-7c34c440-6b6f;Trade Republic Bank GmbH;4858835001;C24 Smartkonto;Einkommen;Kapitalerträge
+SEPA-Überweisung;16.01.2024;;1380,00 €;Katerina Antimisaris und Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Echtzeit-Überweisung;15.01.2024;;1000,00 €;Traderepublic;DE17100701000322055500;DEUTDEBB101;Deine Auszahlung vom Trade Republic Verrechnungskonto. Bitte ueberweise kein Geld auf diese IBAN. ZahlungsId 20240113-1e1965e9-31d7;Trade Republic Bank GmbH;4858835001;C24 Smartkonto;Einkommen;Kapitalerträge
+Echtzeit-Überweisung;15.01.2024;;17653,00 €;Traderepublic;DE17100701000322055500;DEUTDEBB101;Deine Auszahlung vom Trade Republic Verrechnungskonto. Bitte ueberweise kein Geld auf diese IBAN. ZahlungsId 20240112-13f7701a-f08a;Trade Republic Bank GmbH;4858835001;C24 Smartkonto;Einkommen;Kapitalerträge
+Kartenzahlung;10.01.2024;09.01.2024 12:38;-4,42 €;Norma - Augsburg, DEU;;;;;4858835001;C24 Smartkonto;Lebensmittel;Supermarkt
+SEPA-Lastschrift;09.01.2024;;-39,00 €;Deutsche Bahn;LU89751000135104200E;PPLXLUL2;1031768146232/PP.2114.PP/. DB Vertrieb GmbH, Ihr Einkauf bei DB Vertrieb GmbH;PayPal Europe S.a.r.l. et Cie S.C.A;4858835001;C24 Smartkonto;Mobilität;Bahntickets
+SEPA-Überweisung;08.01.2024;;51,73 €;C24 Bank GmbH;DE64500240243677250698;DEFFDEFFXXX;Auszahlung CHECK24 Anlagekonto;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Echtzeit-Überweisung;07.01.2024;;-9300,00 €;Anselm Josek;DE63120700700120776750;DEUTDEFFVAC;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Pocket-Umbuchung;07.01.2024;;-9000,00 €;C24 Smartkonto;;;;Anselm Josek;4858835030;Tagesgeld;Umbuchung;Umbuchung
+Pocket-Umbuchung;07.01.2024;;9000,00 €;Tagesgeld;;;;Anselm Josek;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Pocket-Umbuchung;05.01.2024;;9000,00 €;C24 Smartkonto;;;;Anselm Josek;4858835030;Tagesgeld;Umbuchung;Umbuchung
+Pocket-Umbuchung;05.01.2024;;-9000,00 €;Tagesgeld;;;;Anselm Josek;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+SEPA-Überweisung;05.01.2024;;4000,00 €;Katerina Antimisaris;DE36500240241918347001;DEFFDEFFXXX;;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Überweisung;05.01.2024;;5317,79 €;eToro;DE37500700100176158400;DEUTDEFFXXX;WID 120585810;eToro (Europe) Limited;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Lastschrift;04.01.2024;;-10,00 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1031676477802/PP.2114.PP/. , Ihr Einkauf bei;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Lastschrift;03.01.2024;;-5,00 €;PayPal Europe S.a.r.l. et Cie S.C.A;LU89751000135104200E;PPLXLUL2;1031617667547/PP.2114.PP/. , Ihr Einkauf bei;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+SEPA-Überweisung;02.01.2024;;-750,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Gutschrift;01.01.2024;;25,00 €;C24 Bank;;;Bonus für Ihr Tagesgeld;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Überweisung;31.12.2023;;-51,73 €;Anselm Josek;DE64500240243677250698;DEFFDEFFXXX;Umbuchung XVSDDRY-1;;4858835030;Tagesgeld;Umbuchung;Umbuchung
+Zinszahlung;31.12.2023;;51,73 €;C24 Bank;;;;;4858835030;Tagesgeld;Einkommen;Kapitalerträge
+Zinszahlung;31.12.2023;;2,00 €;C24 Bank;;;;;4858835001;C24 Smartkonto;Einkommen;Kapitalerträge
+Echtzeit-Überweisung;28.12.2023;;-6500,00 €;Anselm Josek;DE63120700700120776750;DEUTDEFFVAC;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Echtzeit-Überweisung;27.12.2023;;-10000,00 €;Anselm Josek;DE63120700700120776750;DEUTDEFFVAC;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Pocket-Umbuchung;27.12.2023;;-17375,90 €;C24 Smartkonto;;;;Anselm Josek;4858835030;Tagesgeld;Umbuchung;Umbuchung
+Pocket-Umbuchung;27.12.2023;;17375,90 €;Tagesgeld;;;;Anselm Josek;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Echtzeit-Überweisung;21.12.2023;;-250,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Pocket-Umbuchung;21.12.2023;;250,00 €;Tagesgeld;;;;Anselm Josek;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Pocket-Umbuchung;21.12.2023;;-250,00 €;C24 Smartkonto;;;;Anselm Josek;4858835030;Tagesgeld;Umbuchung;Umbuchung
+Kartenzahlung;17.12.2023;16.12.2023 12:26;-26,40 €;AVG Augsburger Verkehr - Augsburg, DEU;;;;;4858835001;C24 Smartkonto;Mobilität;Öffentlicher Nahverkehr
+Kartenzahlung;17.12.2023;16.12.2023 11:49;-1,08 €;dm;;;;DM-Drogerie Markt - Augsburg, DEU;4858835001;C24 Smartkonto;Shopping;Drogerie
+Echtzeit-Überweisung;16.12.2023;;-30,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Echtzeit-Überweisung;16.12.2023;;-80,00 €;Anselm Josek;DE48120300001082275023;BYLADEM1001;;;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Kartenzahlung;11.12.2023;09.12.2023 16:47;-7,20 €;CAFE AM MILCHBERG - AUGSBURG, DEU;;;;;4858835001;C24 Smartkonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+Kartenzahlung;08.12.2023;07.12.2023 18:24;-7,40 €;dm;;;;DM-Drogerie Markt - Augsburg, DEU;4858835001;C24 Smartkonto;Shopping;Drogerie
+Pocket-Umbuchung;04.12.2023;;2200,00 €;C24 Smartkonto;;;;Anselm Josek;4858835030;Tagesgeld;Umbuchung;Umbuchung
+Pocket-Umbuchung;04.12.2023;;-2200,00 €;Tagesgeld;;;;Anselm Josek;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Kartenzahlung;02.12.2023;01.12.2023 18:04;-18,77 €;Rewe;;;;REWE Daniela Rietzsche - Augsburg, DEU;4858835001;C24 Smartkonto;Lebensmittel;Supermarkt
+Zinszahlung;30.11.2023;;50,62 €;C24 Bank;;;;;4858835030;Tagesgeld;Einkommen;Kapitalerträge
+SEPA-Überweisung;29.11.2023;;2500,00 €;STAATSOBERK.BAY.I.LA;DE65743200730000801119;HYVEDEMM433;EXIST Gruenderstipendium 03EGTBY010 408/153501-2/1535 54771 -8Hochschule fuer angewandte Wissenschaften Augsburg;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Kartenzahlung;26.11.2023;25.11.2023 11:55;-24,22 €;Edeka;;;;EDEKA Hillenbrand - Augsburg, DEU;4858835001;C24 Smartkonto;Lebensmittel;Supermarkt
+Kartenzahlung;22.11.2023;21.11.2023 13:57;-9,50 €;Pho3 - Augsburg, DEU;;;;;4858835001;C24 Smartkonto;Restaurant/ Café/ Bar;Restaurant/ Café/ Bar
+Pocket-Umbuchung;10.11.2023;;-100,00 €;C24 Smartkonto;;;;Anselm Josek;4858835030;Tagesgeld;Umbuchung;Umbuchung
+Pocket-Umbuchung;10.11.2023;;100,00 €;Tagesgeld;;;;Anselm Josek;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Pocket-Umbuchung;08.11.2023;;1332,00 €;C24 Smartkonto;;;;Anselm Josek;4858835030;Tagesgeld;Umbuchung;Umbuchung
+Pocket-Umbuchung;08.11.2023;;-1332,00 €;Tagesgeld;;;;Anselm Josek;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+SEPA-Überweisung;08.11.2023;;1232,80 €;STAATSOBERK.BAY.I.LA;DE65743200730000801119;HYVEDEMM433;8185637699 30.10.2023 Handvorschuss-Al Ecosytem Pass - 2 Tickets Event 408/153501-2/1535 54771 -8Hochschule fuer angewandte Wisse;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Überweisung;06.11.2023;;-1008,20 €;Anselm Josek;DE77760694100000538159;GENODEF1DIM;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Pocket-Umbuchung;04.11.2023;;-1000,00 €;C24 Smartkonto;;;;Anselm Josek;4858835030;Tagesgeld;Umbuchung;Umbuchung
+Pocket-Umbuchung;04.11.2023;;1000,00 €;Tagesgeld;;;;Anselm Josek;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Kartenzahlung;05.11.2023;04.11.2023 13:32;-14,07 €;Aldi Süd;;;;ALDI SUED - Augsburg, DEU;4858835001;C24 Smartkonto;Lebensmittel;Supermarkt
+Kartenzahlung;03.11.2023;02.11.2023 18:11;-13,20 €;AVG Augsburger Verkehr - Augsburg, DEU;;;;;4858835001;C24 Smartkonto;Mobilität;Öffentlicher Nahverkehr
+Kartenzahlung;01.11.2023;31.10.2023 18:16;-14,53 €;Norma - Augsburg, DEU;;;;;4858835001;C24 Smartkonto;Lebensmittel;Supermarkt
+SEPA-Überweisung;31.10.2023;;-1300,00 €;Anselm Josek;DE77760694100000538159;GENODEF1DIM;;;4858835001;C24 Smartkonto;Weitere Ausgaben;Weitere Ausgaben
+Zinszahlung;31.10.2023;;46,32 €;C24 Bank;;;;;4858835030;Tagesgeld;Einkommen;Kapitalerträge
+Pocket-Umbuchung;30.10.2023;;1200,00 €;C24 Smartkonto;;;;Anselm Josek;4858835030;Tagesgeld;Umbuchung;Umbuchung
+Pocket-Umbuchung;30.10.2023;;-1200,00 €;Tagesgeld;;;;Anselm Josek;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+SEPA-Überweisung;30.10.2023;;2500,00 €;STAATSOBERK.BAY.I.LA;DE65743200730000801119;HYVEDEMM433;EXIST Gruenderstipendium 03EGTBY010 408/153501-2/1535 54771 -8Hochschule fuer angewandte Wissenschaften Augsburg;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Echtzeit-Überweisung;30.10.2023;;150,00 €;Christoph Neumaier;DE82100110012621414317;NTSBDEB1XXX;Speaker Gehalt;;4858835001;C24 Smartkonto;Einkommen;Lohn/ Gehalt
+Pocket-Umbuchung;19.10.2023;;320,92 €;C24 Smartkonto;;;;Anselm Josek;4858835030;Tagesgeld;Umbuchung;Umbuchung
+Pocket-Umbuchung;19.10.2023;;-320,92 €;Tagesgeld;;;;Anselm Josek;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+SEPA-Überweisung;19.10.2023;;40,00 €;STAATSOBERK.BAY.I.LA;DE65743200730000801119;HYVEDEMM433;1037-1795 26.09.2023 Handvorschuss - Summit Saturday Pass Startup 408/153501-2/1535 54771 -8Hochschule fuer angewandte Wisse;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+SEPA-Überweisung;19.10.2023;;280,54 €;STAATSOBERK.BAY.I.LA;DE65743200730000801119;HYVEDEMM433;12222772 26.09.2023 Handvorschuss - HubSpot Marketing Hub Starter 408/153501-2/1535 54771 -8Hochschule fuer angewandte Wisse;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Gutschrift;02.10.2023;;0,38 €;C24 Bank GmbH;;;Rückerstattung Steuern;;4858835001;C24 Smartkonto;Finanzen & Steuern;Steuern und Abgaben
+Pocket-Umbuchung;02.10.2023;;4500,00 €;C24 Smartkonto;;;;Anselm Josek;4858835030;Tagesgeld;Umbuchung;Umbuchung
+Pocket-Umbuchung;02.10.2023;;-4500,00 €;Tagesgeld;;;;Anselm Josek;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+SEPA-Überweisung;02.10.2023;;4500,00 €;Anselm Josek;DE77760694100000538159;GENODEF1DIM;;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Abbuchung;30.09.2023;;-0,38 €;C24 Bank GmbH;;;Steuerabrechnung Zinsgutschrift;;4858835030;Tagesgeld;Finanzen & Steuern;Steuern und Abgaben
+Zinszahlung;30.09.2023;;1,42 €;C24 Bank;;;;;4858835030;Tagesgeld;Einkommen;Kapitalerträge
+Pocket-Umbuchung;29.09.2023;;5500,00 €;C24 Smartkonto;;;;Anselm Josek;4858835030;Tagesgeld;Umbuchung;Umbuchung
+Pocket-Umbuchung;29.09.2023;;-5500,00 €;Tagesgeld;;;;Anselm Josek;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+SEPA-Überweisung;29.09.2023;;5500,00 €;Anselm Josek;DE77760694100000538159;GENODEF1DIM;;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Pocket-Umbuchung;28.09.2023;;3500,00 €;C24 Smartkonto;;;;Anselm Josek;4858835030;Tagesgeld;Umbuchung;Umbuchung
+Pocket-Umbuchung;28.09.2023;;-3500,00 €;Tagesgeld;;;;Anselm Josek;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+SEPA-Überweisung;28.09.2023;;3500,00 €;Anselm Josek;DE77760694100000538159;GENODEF1DIM;;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen
+Pocket-Umbuchung;26.09.2023;;75,00 €;C24 Smartkonto;;;;Anselm Josek;4858835030;Tagesgeld;Umbuchung;Umbuchung
+Pocket-Umbuchung;26.09.2023;;-75,00 €;Tagesgeld;;;;Anselm Josek;4858835001;C24 Smartkonto;Umbuchung;Umbuchung
+Gutschrift;26.09.2023;;75,00 €;C24 Bank;;;Gutschrift der C24 Bank;;4858835001;C24 Smartkonto;Weitere Einnahmen;Weitere Einnahmen

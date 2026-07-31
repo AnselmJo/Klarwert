@@ -52,9 +52,9 @@ export async function getRulesForCategory(categoryId: number): Promise<RuleWithC
   return all.filter((r) => r.category_id === categoryId);
 }
 
-/** Live-Vorschau: wie viele unkategorisierte/alle Transaktionen matchen die Bedingungen (UND-verknüpft)? */
-export async function countRuleMatches(conditions: RuleConditionInput[]): Promise<number> {
-  if (conditions.length === 0) return 0;
+/** Live-Vorschau: wie viele unkategorisierte/alle Transaktionen matchen die Bedingungen (UND-verknüpft)? + Sample */
+export async function previewRuleMatches(conditions: RuleConditionInput[]): Promise<{ count: number; sample: any[] }> {
+  if (conditions.length === 0) return { count: 0, sample: [] };
   const db = await getDb();
   const clauses: string[] = ["is_deleted = 0"];
   const params: unknown[] = [];
@@ -92,16 +92,26 @@ export async function countRuleMatches(conditions: RuleConditionInput[]): Promis
       i += 1;
     }
   }
-  const rows = await db.select<{ count: number }[]>(
-    `select count(*) as count from transactions where ${clauses.join(" and ")}`,
+  const whereClause = clauses.join(" and ");
+  const countRows = await db.select<{ count: number }[]>(
+    `select count(*) as count from transactions where ${whereClause}`,
     params,
   );
-  return rows[0]?.count ?? 0;
+  const sampleRows = await db.select<{ booking_date: string; counterparty: string; purpose: string | null; amount_cents: number }[]>(
+    `select booking_date, counterparty, purpose, amount_cents from transactions where ${whereClause} order by booking_date desc limit 10`,
+    params,
+  );
+  return {
+    count: countRows[0]?.count ?? 0,
+    sample: sampleRows,
+  };
 }
 
 export async function createRule(
   conditions: RuleConditionInput[],
   actions: RuleActionsInput,
+  createdFrom: "manual" | "aufraeumen" | "vertrag" = "manual",
+  sourceContractId: number | null = null
 ): Promise<number> {
   const db = await getDb();
   const maxPriority = await db.select<{ max: number | null }[]>(
@@ -109,8 +119,8 @@ export async function createRule(
   );
   const priority = (maxPriority[0]?.max ?? 0) + 1;
   const result = await db.execute(
-    `insert into rules (priority, category_id, tag_id, mark_as_transfer, mark_as_saving, sparzweck_id)
-     values ($1, $2, $3, $4, $5, $6)`,
+    `insert into rules (priority, category_id, tag_id, mark_as_transfer, mark_as_saving, sparzweck_id, created_from, source_contract_id)
+     values ($1, $2, $3, $4, $5, $6, $7, $8)`,
     [
       priority,
       actions.category_id,
@@ -118,6 +128,8 @@ export async function createRule(
       actions.mark_as_transfer ? 1 : 0,
       actions.mark_as_saving ? 1 : 0,
       actions.sparzweck_id,
+      createdFrom,
+      sourceContractId
     ],
   );
   const ruleId = result.lastInsertId as number;

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CategorySelect } from "@/components/CategorySelect";
@@ -21,6 +22,7 @@ import {
 } from "@/lib/transactionBulkActions";
 import { getHistoryEntry } from "@/db/repositories/historyLog";
 import { toast } from "sonner";
+import { CreateContractFromTransactionsModal } from "./CreateContractFromTransactionsModal";
 
 interface BulkActionBarProps {
   selectedIds: number[];
@@ -32,6 +34,7 @@ export function BulkActionBar({ selectedIds, onClearSelection, onChanged }: Bulk
   const { data: sparzwecke } = useSparzwecke();
   const { data: tags } = useTags();
   const { data: collections } = useCollections();
+  const [contractModalOpen, setContractModalOpen] = useState(false);
 
   async function runAction(fields: Parameters<typeof applyBulkFieldUpdate>[1], description: string) {
     const historyId = await applyBulkFieldUpdate(selectedIds, fields, description);
@@ -181,10 +184,29 @@ export function BulkActionBar({ selectedIds, onClearSelection, onChanged }: Bulk
         Aus Statistik entfernen
       </Button>
 
+      <Button
+        size="sm"
+        variant="ghost"
+        className="text-card hover:text-charcoal"
+        onClick={() => setContractModalOpen(true)}
+      >
+        Als Vertrag zusammenfassen
+      </Button>
+
       <Button size="sm" variant="ghost" className="ml-auto text-card hover:text-charcoal" onClick={onClearSelection}>
         <X className="mr-1 size-4" />
         Auswahl aufheben
       </Button>
+
+      <CreateContractFromTransactionsModal
+        open={contractModalOpen}
+        onOpenChange={setContractModalOpen}
+        selectedIds={selectedIds}
+        onCompleted={() => {
+          onChanged();
+          onClearSelection();
+        }}
+      />
     </div>
   );
 }

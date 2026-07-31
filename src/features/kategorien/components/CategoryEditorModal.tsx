@@ -19,9 +19,10 @@ import {
 } from "@/components/ui/select";
 import * as Icons from "lucide-react";
 import { useCategories } from "@/hooks/useCategories";
-import { createCategory, updateCategory } from "@/db/repositories/categories";
+import { createCategory, updateCategory, getCategoryAliases, addCategoryAlias, removeCategoryAlias } from "@/db/repositories/categories";
 import type { Category } from "@/db/types";
 import { toast } from "sonner";
+import { X, Plus } from "lucide-react";
 
 const COLOR_SWATCHES = [
   "#1d4750",
@@ -74,7 +75,11 @@ export function CategoryEditorModal({ open, category, onOpenChange, onSaved }: C
   const [color, setColor] = useState(COLOR_SWATCHES[0]);
   const [icon, setIcon] = useState(ICON_CHOICES[0]);
   const [parentId, setParentId] = useState<number | null>(null);
+  const [aliases, setAliases] = useState<string[]>([]);
+  const [newAlias, setNewAlias] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  const isOwnCategory = !!category && category.is_template === 0 && category.is_system === 0;
 
   useEffect(() => {
     if (!open) return;
@@ -84,12 +89,19 @@ export function CategoryEditorModal({ open, category, onOpenChange, onSaved }: C
       setColor(category.color);
       setIcon(category.icon ?? ICON_CHOICES[0]);
       setParentId(category.parent_id);
+      if (category.is_template === 0 && category.is_system === 0) {
+        getCategoryAliases(category.id).then(setAliases);
+      } else {
+        setAliases([]);
+      }
     } else {
       setLevel("parent");
       setName("");
       setColor(COLOR_SWATCHES[0]);
       setIcon(ICON_CHOICES[0]);
       setParentId(topLevel[0]?.id ?? null);
+      setAliases([]);
+      setNewAlias("");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, category]);
@@ -224,6 +236,69 @@ export function CategoryEditorModal({ open, category, onOpenChange, onSaved }: C
           )}
         </div>
 
+        {isOwnCategory && (
+          <div className="space-y-2">
+            <Label>Suchaliase</Label>
+            <div className="flex flex-wrap gap-1.5">
+              {aliases.map((alias) => (
+                <span
+                  key={alias}
+                  className="inline-flex items-center gap-1 rounded-pill border border-border bg-accent px-2 py-0.5 text-xs"
+                >
+                  {alias}
+                  <button
+                    type="button"
+                    aria-label={`Alias '${alias}' entfernen`}
+                    className="text-slate hover:text-brick"
+                    onClick={async () => {
+                      await removeCategoryAlias(category!.id, alias);
+                      setAliases((prev) => prev.filter((a) => a !== alias));
+                    }}
+                  >
+                    <X className="size-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <Input
+                value={newAlias}
+                placeholder="Alias hinzufügen…"
+                maxLength={40}
+                onChange={(e) => setNewAlias(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && newAlias.trim()) {
+                    e.preventDefault();
+                    const trimmed = newAlias.trim();
+                    if (!aliases.includes(trimmed)) {
+                      void addCategoryAlias(category!.id, trimmed).then(() => {
+                        setAliases((prev) => [...prev, trimmed]);
+                        setNewAlias("");
+                      });
+                    }
+                  }
+                }}
+              />
+              <Button
+                type="button"
+                size="icon"
+                variant="outline"
+                aria-label="Alias hinzufügen"
+                disabled={!newAlias.trim() || aliases.includes(newAlias.trim())}
+                onClick={async () => {
+                  const trimmed = newAlias.trim();
+                  if (trimmed && !aliases.includes(trimmed)) {
+                    await addCategoryAlias(category!.id, trimmed);
+                    setAliases((prev) => [...prev, trimmed]);
+                    setNewAlias("");
+                  }
+                }}
+              >
+                <Plus className="size-4" />
+              </Button>
+            </div>
+          </div>
+        )}
         <DialogFooter>
           <Button variant="ghost" onClick={() => onOpenChange(false)}>
             Abbrechen

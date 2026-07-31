@@ -1,5 +1,4 @@
 import Papa from "papaparse";
-import * as XLSX from "xlsx";
 import {
   detectDateFormat,
   detectDecimalFormat,
@@ -35,6 +34,7 @@ export async function parseRawGrid(file: File): Promise<RawGridResult> {
   const isXlsx = /\.xlsx?$/i.test(file.name);
 
   if (isXlsx) {
+    const XLSX = await import("xlsx");
     const buffer = await file.arrayBuffer();
     const workbook = XLSX.read(buffer, { type: "array", cellDates: true });
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -62,7 +62,11 @@ export async function parseRawGrid(file: File): Promise<RawGridResult> {
 }
 
 function looksLikeHeaderRow(row: string[]): boolean {
-  return row.every((cell) => cell.trim() !== "" && !isParsableDate(cell) && !isNumericAmount(cell));
+  // Toleriere leere Felder am Ende (z.B. durch trailing commas).
+  // Es muss mindestens 2 nicht-leere Spalten geben, die keine Daten sind.
+  const nonEmpties = row.filter(c => c.trim() !== "");
+  if (nonEmpties.length < 2) return false;
+  return nonEmpties.every((cell) => !isParsableDate(cell) && !isNumericAmount(cell));
 }
 
 /**
@@ -76,7 +80,7 @@ export function detectHeaderRowIndex(grid: string[][]): number | null {
     if (len <= 1 || !looksLikeHeaderRow(grid[r])) continue;
     let consistent = true;
     for (let i = r; i < grid.length; i += 1) {
-      if (grid[i].length !== len) {
+      if (grid[i].length > len) {
         consistent = false;
         break;
       }

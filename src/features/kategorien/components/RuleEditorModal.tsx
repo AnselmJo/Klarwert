@@ -22,21 +22,26 @@ import { Plus, Trash2 } from "lucide-react";
 import { useTags } from "@/hooks/useTags";
 import { useSparzwecke } from "@/hooks/useSparzwecke";
 import { useAssets } from "@/hooks/useAssets";
+import { reevaluateAllRuleBasedTransactions } from "@/lib/pipeline";
 import {
   createRule,
   updateRule,
-  countRuleMatches,
+  previewRuleMatches,
   type RuleConditionInput,
   type RuleWithConditions,
 } from "@/db/repositories/rules";
 import type { RuleField, RuleOperator } from "@/db/types";
 import { toast } from "sonner";
+import { formatEur } from "@/lib/money";
+import { formatDate } from "@/lib/dates";
+import { useSettingsStore } from "@/stores/settingsStore";
 
 const FIELD_LABELS: Record<RuleField, string> = {
   purpose: "Verwendungszweck",
   counterparty: "Empfänger",
   amount: "Betrag",
   asset: "Konto",
+  custom: "Zusatzfeld",
 };
 const OPERATOR_LABELS: Record<RuleOperator, string> = {
   contains: "enthält",
@@ -48,25 +53,28 @@ interface RuleEditorModalProps {
   open: boolean;
   rule: RuleWithConditions | null;
   defaultCategoryId?: number | null;
+  defaultConditions?: RuleConditionInput[];
   onOpenChange: (open: boolean) => void;
   onSaved: () => void;
 }
 
-export function RuleEditorModal({ open, rule, defaultCategoryId, onOpenChange, onSaved }: RuleEditorModalProps) {
-  const [conditions, setConditions] = useState<RuleConditionInput[]>([
-    { field: "counterparty", operator: "contains", value: "" },
-  ]);
+export function RuleEditorModal({ open, rule, defaultCategoryId, defaultConditions, onOpenChange, onSaved }: RuleEditorModalProps) {
+  const [conditions, setConditions] = useState<RuleConditionInput[]>(
+    defaultConditions ?? [{ field: "counterparty", operator: "contains", value: "" }]
+  );
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [tagId, setTagId] = useState<number | null>(null);
   const [markAsTransfer, setMarkAsTransfer] = useState(false);
   const [markAsSaving, setMarkAsSaving] = useState(false);
   const [sparzweckId, setSparzweckId] = useState<number | null>(null);
   const [matchCount, setMatchCount] = useState<number | null>(null);
+  const [matchSample, setMatchSample] = useState<{ booking_date: string; counterparty: string; purpose: string | null; amount_cents: number }[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
   const { data: tags } = useTags();
   const { data: sparzwecke } = useSparzwecke();
   const { data: assets } = useAssets(false);
+  const dateDisplayFormat = useSettingsStore((s) => s.dateDisplayFormat);
 
   useEffect(() => {
     if (!open) return;
@@ -78,7 +86,7 @@ export function RuleEditorModal({ open, rule, defaultCategoryId, onOpenChange, o
       setMarkAsSaving(!!rule.mark_as_saving);
       setSparzweckId(rule.sparzweck_id);
     } else {
-      setConditions([{ field: "counterparty", operator: "contains", value: "" }]);
+      setConditions(defaultConditions ?? [{ field: "counterparty", operator: "contains", value: "" }]);
       setCategoryId(defaultCategoryId ?? null);
       setTagId(null);
       setMarkAsTransfer(false);
@@ -95,7 +103,10 @@ export function RuleEditorModal({ open, rule, defaultCategoryId, onOpenChange, o
       return;
     }
     const timeout = setTimeout(() => {
-      countRuleMatches(validConditions).then(setMatchCount);
+      previewRuleMatches(validConditions).then((res) => {
+        setMatchCount(res.count);
+        setMatchSample(res.sample);
+      });
     }, 300);
     return () => clearTimeout(timeout);
   }, [conditions, open]);
@@ -120,6 +131,7 @@ export function RuleEditorModal({ open, rule, defaultCategoryId, onOpenChange, o
       } else {
         await createRule(validConditions, actions);
       }
+      await reevaluateAllRuleBasedTransactions();
       toast.success(rule ? "Regel gespeichert" : "Regel angelegt");
       onSaved();
       onOpenChange(false);
@@ -265,7 +277,38 @@ export function RuleEditorModal({ open, rule, defaultCategoryId, onOpenChange, o
           </div>
 
           {matchCount !== null && (
-            <p className="text-sm text-slate">{matchCount} Transaktionen treffen aktuell zu.</p>
+            <div className="space-y-2">
+              <p className="text-sm text-slate">
+                {matchCount} Transaktionen treffen aktuell zu.
+              </p>
+              {matchSample.length > 0 && (
+                <div className="max-h-[150px] overflow-auto rounded-klein border border-border">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="border-b border-border bg-accent text-left text-slate">
+                        <th className="p-2 font-medium">Datum</th>
+                        <th className="p-2 font-medium">Empfänger</th>
+                        <th className="p-2 font-medium">Zweck</th>
+                        <th className="p-2 font-medium text-right">Betrag</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {matchSample.map((tx, i) => (
+                        <tr key={i} className="border-b border-border last:border-0 hover:bg-accent/50">
+                          <td className="p-2 whitespace-nowrap">{formatDate(tx.booking_date, dateDisplayFormat)}</td>
+                          <td className="p-2 truncate max-w-[130px]">{tx.counterparty}</td>
+                          <td className="p-2 truncate max-w-[150px] text-slate">{tx.purpose}</td>
+                          <td className={`p-2 whitespace-nowrap text-right font-mono ${tx.amount_cents < 0 ? "text-red-500" : "text-green-600"}`}>{formatEur(tx.amount_cents)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              {matchCount > 10 && (
+                <p className="text-xs text-slate text-center">und {matchCount - 10} weitere...</p>
+              )}
+            </div>
           )}
         </div>
 

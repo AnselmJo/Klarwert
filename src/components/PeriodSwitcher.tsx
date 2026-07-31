@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { getPeriodRange, shiftPeriod, type PeriodType } from "@/lib/periods";
-import { usePeriodStore } from "@/stores/periodStore";
+import { usePeriodStore, type PeriodScope } from "@/stores/periodStore";
 
 const TYPE_LABELS: Record<PeriodType, string> = {
   week: "Woche",
@@ -11,10 +11,14 @@ const TYPE_LABELS: Record<PeriodType, string> = {
   year: "Jahr",
 };
 
-/** C7 Zeitraum-Switcher – Zeitraum-Typ als Reihe einzeln umrandeter Boxen (A4), Zustand geteilt via periodStore. */
-export function PeriodSwitcher() {
-  const type = usePeriodStore((s) => s.type);
-  const anchorIso = usePeriodStore((s) => s.anchorIso);
+interface PeriodSwitcherProps {
+  scope?: PeriodScope;
+}
+
+/** C7 Zeitraum-Switcher – Zeitraum-Typ als Reihe einzeln umrandeter Boxen (A4), Zustand bereichsspezifisch getrennt. */
+export function PeriodSwitcher({ scope = "uebersicht" }: PeriodSwitcherProps) {
+  const type = usePeriodStore((s) => s.scopes[scope]?.type ?? s.type);
+  const anchorIso = usePeriodStore((s) => s.scopes[scope]?.anchorIso ?? s.anchorIso);
   const setType = usePeriodStore((s) => s.setType);
   const setAnchorIso = usePeriodStore((s) => s.setAnchorIso);
 
@@ -22,7 +26,7 @@ export function PeriodSwitcher() {
   const range = getPeriodRange(type, anchor);
 
   function shift(dir: 1 | -1) {
-    setAnchorIso(shiftPeriod(type, anchor, dir).toISOString().slice(0, 10));
+    setAnchorIso(scope, shiftPeriod(type, anchor, dir).toISOString().slice(0, 10));
   }
 
   return (
@@ -34,7 +38,7 @@ export function PeriodSwitcher() {
             type="button"
             role="radio"
             aria-checked={type === t}
-            onClick={() => setType(t)}
+            onClick={() => setType(scope, t)}
             className={cn(
               "px-3 py-1.5 text-sm transition-colors",
               i > 0 && "border-l border-border",
@@ -57,10 +61,11 @@ export function PeriodSwitcher() {
       <button
         type="button"
         className="text-xs text-petrol underline"
-        onClick={() => setAnchorIso(new Date().toISOString().slice(0, 10))}
+        onClick={() => setAnchorIso(scope, new Date().toISOString().slice(0, 10))}
       >
         Aktueller Zeitraum
       </button>
     </div>
   );
 }
+

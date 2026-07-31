@@ -6,6 +6,9 @@ export interface OptionalColumn {
 }
 
 export const OPTIONAL_COLUMNS: OptionalColumn[] = [
+  { key: "purpose", label: "Verwendungszweck" },
+  { key: "asset_name", label: "Quellkonto" },
+  { key: "external_id", label: "Buchungs-ID" },
   { key: "tags", label: "Tags" },
   { key: "transaction_type", label: "Transaktionstyp" },
   { key: "card_payment_at", label: "Karteneinsatz-Zeitpunkt" },

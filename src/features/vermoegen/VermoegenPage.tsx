@@ -8,13 +8,13 @@ import { AssetListRow } from "@/features/vermoegen/components/AssetListRow";
 import { CreateAssetModal } from "@/features/vermoegen/components/CreateAssetModal";
 import { EditAssetModal } from "@/features/vermoegen/components/EditAssetModal";
 import { UpdateValueModal } from "@/features/vermoegen/components/UpdateValueModal";
-import { SavingByPurposeWidget } from "@/features/vermoegen/components/SavingByPurposeWidget";
 import { ImportWizard } from "@/features/import/ImportWizard";
 import { useAssets } from "@/hooks/useAssets";
 import { usePersons } from "@/hooks/usePersons";
-import { useUiStore } from "@/stores/uiStore";
 import { useSettingsStore } from "@/stores/settingsStore";
 import { useGlobalFilterStore } from "@/stores/globalFilterStore";
+import { useNavigationStore } from "@/stores/navigationStore";
+import { useUiStore } from "@/stores/uiStore";
 import {
   countAssetTransactions,
   deleteAsset,
@@ -64,6 +64,8 @@ export function VermoegenPage() {
   const importReminderDays = useSettingsStore((s) => s.importReminderDays);
   const selectedAccountId = useGlobalFilterStore((s) => s.selectedAccountId);
   const selectedPersonId = useGlobalFilterStore((s) => s.selectedPersonId);
+  const setSelectedAccountId = useGlobalFilterStore((s) => s.setSelectedAccountId);
+  const navigate = useNavigationStore((s) => s.navigate);
 
   const pendingOpenCreateAsset = useUiStore((s) => s.pendingOpenCreateAsset);
   const consumeOpenCreateAssetRequest = useUiStore((s) => s.consumeOpenCreateAssetRequest);
@@ -75,6 +77,7 @@ export function VermoegenPage() {
     null,
   );
   const [importAssetId, setImportAssetId] = useState<number | null>(null);
+  const [editImportFormatAssetId, setEditImportFormatAssetId] = useState<number | null>(null);
 
   useEffect(() => {
     if (pendingOpenCreateAsset) {
@@ -236,17 +239,9 @@ export function VermoegenPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div className="rounded-standard border border-border bg-card p-4">
-          <h2 className="mb-3 text-sm font-semibold text-charcoal">Vermögensentwicklung</h2>
-          {netWorthSeries && <NetWorthLineChart data={netWorthSeries} />}
-        </div>
-        <div className="rounded-standard border border-border bg-card p-4">
-          <h2 className="mb-3 text-sm font-semibold text-charcoal">
-            Sparen nach Zweck – Gesamtstand
-          </h2>
-          <SavingByPurposeWidget />
-        </div>
+      <div className="rounded-standard border border-border bg-card p-4">
+        <h2 className="mb-3 text-sm font-semibold text-charcoal">Vermögensentwicklung</h2>
+        {netWorthSeries && <NetWorthLineChart data={netWorthSeries} />}
       </div>
 
       <div className="rounded-standard border border-border bg-card p-2">
@@ -266,10 +261,15 @@ export function VermoegenPage() {
                 persons={persons ?? []}
                 isStale={staleAssetIds.has(asset.id)}
                 hasAnchor={asset.kind === "valuable" || (anchorIds?.has(asset.id) ?? false)}
+                onRowClick={asset.kind === "account" ? () => {
+                  setSelectedAccountId(asset.id);
+                  navigate("transaktionen");
+                } : undefined}
                 onEdit={() => setEditAsset(asset)}
                 onDelete={() => void handleDeleteClick(asset)}
                 onUpdateValue={() => setValueAsset(asset)}
                 onNewImport={() => setImportAssetId(asset.id)}
+                onEditImportFormat={() => setEditImportFormatAssetId(asset.id)}
               />
               {mismatch && (
                 <div className="mx-3 mb-2 rounded-klein bg-brick/10 px-3 py-2 text-xs text-brick">
@@ -307,6 +307,15 @@ export function VermoegenPage() {
           assetId={importAssetId}
           onOpenChange={(o) => !o && setImportAssetId(null)}
           onCompleted={invalidateAll}
+        />
+      )}
+      {editImportFormatAssetId !== null && (
+        <ImportWizard
+          open={editImportFormatAssetId !== null}
+          assetId={editImportFormatAssetId}
+          onOpenChange={(o) => !o && setEditImportFormatAssetId(null)}
+          onCompleted={invalidateAll}
+          forceMappingMode={true}
         />
       )}
       <EditAssetModal

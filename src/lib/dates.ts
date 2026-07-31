@@ -40,3 +40,18 @@ export function isoDayBefore(iso: string): string {
   d.setUTCDate(d.getUTCDate() - 1);
   return d.toISOString().slice(0, 10);
 }
+
+export type DisplayDateFormat = "dd.MM.yyyy" | "yyyy-MM-dd";
+
+/**
+ * Formats an ISO date (yyyy-MM-dd) for display according to the user's preference.
+ * Falls back to dd.MM.yyyy if format is unset.
+ */
+export function formatDate(iso: string, format: DisplayDateFormat = "dd.MM.yyyy"): string {
+  if (!iso || iso.length < 10) return iso;
+  const year = iso.slice(0, 4);
+  const month = iso.slice(5, 7);
+  const day = iso.slice(8, 10);
+  if (format === "yyyy-MM-dd") return `${year}-${month}-${day}`;
+  return `${day}.${month}.${year}`;
+}

@@ -1,4 +1,5 @@
 import { getDb } from "@/db/client";
+import { generateRuleForContract } from "@/db/repositories/contracts";
 import type { RecurringPayment } from "@/db/types";
 
 export async function listRecurringPayments(): Promise<RecurringPayment[]> {
@@ -11,6 +12,11 @@ export async function listRecurringPayments(): Promise<RecurringPayment[]> {
 export async function renameRecurringPayment(id: number, name: string): Promise<void> {
   const db = await getDb();
   await db.execute("update recurring_payments set name = $1 where id = $2", [name, id]);
+}
+
+export async function updateRecurringPaymentCategory(id: number, categoryId: number | null): Promise<void> {
+  const db = await getDb();
+  await db.execute("update recurring_payments set category_id = $1 where id = $2", [categoryId, id]);
 }
 
 export async function dismissRecurringPayment(id: number): Promise<void> {
@@ -39,6 +45,8 @@ export async function upgradeToContract(id: number, categoryId: number | null): 
     [contractId, categoryId, id],
   );
   await db.execute("update recurring_payments set is_deleted = 1 where id = $1", [id]);
+  
+  await generateRuleForContract(contractId);
   return contractId;
 }
 

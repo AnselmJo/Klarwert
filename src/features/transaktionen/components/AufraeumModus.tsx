@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -7,6 +7,11 @@ import { useCategories } from "@/hooks/useCategories";
 import { listTransactions, updateTransaction, type TransactionWithTags } from "@/db/repositories/transactions";
 import { createRule } from "@/db/repositories/rules";
 import { formatEur } from "@/lib/money";
+import { formatDate } from "@/lib/dates";
+import { useSettingsStore } from "@/stores/settingsStore";
+import { suggestCategory } from "@/lib/pipeline/suggest-category";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 interface AufraeumModusProps {
   open: boolean;
@@ -24,19 +29,30 @@ function normalize(text: string): string {
 
 export function AufraeumModus({ open, dateFrom, dateTo, assetId, personId, onOpenChange, onDone }: AufraeumModusProps) {
   const { data: categories } = useCategories();
+  const dateDisplayFormat = useSettingsStore((s) => s.dateDisplayFormat);
   const [items, setItems] = useState<TransactionWithTags[]>([]);
+  const [groups, setGroups] = useState<TransactionWithTags[][]>([]);
+  const [singles, setSingles] = useState<TransactionWithTags[]>([]);
+  
+  const [phase, setPhase] = useState<"stapel" | "einzeln">("stapel");
   const [index, setIndex] = useState(0);
+  
   const [recentCategoryIds, setRecentCategoryIds] = useState<number[]>([]);
   const [categorizedCount, setCategorizedCount] = useState(0);
   const [rulesCreatedCount, setRulesCreatedCount] = useState(0);
-  const [ruleSuggestion, setRuleSuggestion] = useState<{ counterparty: string; count: number; categoryId: number } | null>(null);
+  
   const [finished, setFinished] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  // Für Phase 1
+  const [createRuleChecked, setCreateRuleChecked] = useState(true);
+  const [suggestedCategoryId, setSuggestedCategoryId] = useState<number | null>(null);
 
   useEffect(() => {
     if (!open) return;
     setLoading(true);
     setFinished(false);
+    setPhase("stapel");
     setIndex(0);
     setCategorizedCount(0);
     setRulesCreatedCount(0);
@@ -51,65 +67,107 @@ export function AufraeumModus({ open, dateFrom, dateTo, assetId, personId, onOpe
       limit: 500,
     }).then((rows) => {
       setItems(rows);
+      
+      const groupsMap = new Map<string, TransactionWithTags[]>();
+      for (const item of rows) {
+        const key = normalize(item.counterparty);
+        if (!groupsMap.has(key)) groupsMap.set(key, []);
+        groupsMap.get(key)!.push(item);
+      }
+      
+      const g = Array.from(groupsMap.values()).filter(arr => arr.length >= 2).sort((a, b) => b.length - a.length);
+      const s = Array.from(groupsMap.values()).filter(arr => arr.length === 1).map(arr => arr[0]);
+      
+      setGroups(g);
+      setSingles(s);
+      
+      if (g.length === 0) {
+        setPhase("einzeln");
+      }
       setLoading(false);
     });
   }, [open, dateFrom, dateTo, assetId, personId]);
 
-  const current = items[index];
-
-  const occurrenceCount = useMemo(() => {
-    if (!current) return 0;
-    const key = normalize(current.counterparty);
-    return items.filter((i) => normalize(i.counterparty) === key).length;
-  }, [items, current]);
+  const currentGroup = phase === "stapel" ? groups[index] : null;
+  const currentSingle = phase === "einzeln" ? singles[index] : null;
+  const currentTotalCount = phase === "stapel" ? groups.length : singles.length;
+  
+  // Effekt, um Suggestion bei jedem neuen Item in Einzeln oder Stapel zu berechnen
+  useEffect(() => {
+    const tx = phase === "stapel" ? currentGroup?.[0] : currentSingle;
+    if (tx) {
+      suggestCategory({
+        asset_id: tx.asset_id,
+        counterparty: tx.counterparty,
+        purpose: tx.purpose,
+        amount_cents: tx.amount_cents
+      }).then((catId) => {
+        setSuggestedCategoryId(catId);
+        setCreateRuleChecked(true); // default on
+      });
+    } else {
+      setSuggestedCategoryId(null);
+    }
+  }, [phase, index, currentGroup, currentSingle]);
 
   async function advance() {
-    if (index + 1 >= items.length) {
-      setFinished(true);
+    if (index + 1 >= currentTotalCount) {
+      if (phase === "stapel") {
+        if (singles.length > 0) {
+          setPhase("einzeln");
+          setIndex(0);
+        } else {
+          setFinished(true);
+        }
+      } else {
+        setFinished(true);
+      }
     } else {
       setIndex((i) => i + 1);
     }
-    setRuleSuggestion(null);
   }
 
-  async function handleCategorize(categoryId: number) {
-    if (!current) return;
-    await updateTransaction(current.id, { category_id: categoryId, categorization_source: "manual" });
-    setCategorizedCount((c) => c + 1);
-    setRecentCategoryIds((prev) => [categoryId, ...prev.filter((id) => id !== categoryId)].slice(0, 6));
+  async function handleCategorize(categoryId: number | null) {
+    if (phase === "stapel" && currentGroup) {
+      // Apply to whole group
+      for (const tx of currentGroup) {
+        await updateTransaction(tx.id, { 
+          category_id: categoryId, 
+          categorization_source: categoryId ? (createRuleChecked ? "rule" : "manual") : "none" 
+        });
+        if (categoryId) setCategorizedCount((c) => c + 1);
+      }
+      if (categoryId && createRuleChecked) {
+        await createRule(
+          [{ field: "counterparty", operator: "contains", value: currentGroup[0].counterparty }],
+          {
+            category_id: categoryId,
+            tag_id: null,
+            mark_as_transfer: false,
+            mark_as_saving: false,
+            sparzweck_id: null,
+          },
+        );
+        setRulesCreatedCount((c) => c + 1);
+      }
+      if (categoryId) {
+        setRecentCategoryIds((prev) => [categoryId, ...prev.filter((id) => id !== categoryId)].slice(0, 6));
+      }
+      await advance();
+    } else if (phase === "einzeln" && currentSingle) {
+      await updateTransaction(currentSingle.id, { 
+        category_id: categoryId, 
+        categorization_source: categoryId ? "manual" : "none" 
+      });
+      if (categoryId) setCategorizedCount((c) => c + 1);
+      
+      if (categoryId !== null) {
+        setRecentCategoryIds((prev) => [categoryId, ...prev.filter((id) => id !== categoryId)].slice(0, 6));
+      }
 
-    if (occurrenceCount >= 2) {
-      setRuleSuggestion({ counterparty: current.counterparty, count: occurrenceCount, categoryId });
-      return;
+      // No rule suggestion here since occurrenceCount === 1 for singles
+      await advance();
     }
-    await advance();
-  }
-
-  async function handleCreateRuleAndApply() {
-    if (!ruleSuggestion || !current) return;
-    await createRule(
-      [{ field: "counterparty", operator: "contains", value: ruleSuggestion.counterparty }],
-      {
-        category_id: ruleSuggestion.categoryId,
-        tag_id: null,
-        mark_as_transfer: false,
-        mark_as_saving: false,
-        sparzweck_id: null,
-      },
-    );
-    setRulesCreatedCount((c) => c + 1);
-    // Wendet die Regel sofort auf passende unkategorisierte Zeilen im Stapel an und überspringt sie.
-    const key = normalize(ruleSuggestion.counterparty);
-    const matchingIds = new Set(
-      items.filter((i) => normalize(i.counterparty).includes(key) && !i.category_id).map((i) => i.id),
-    );
-    for (const id of matchingIds) {
-      if (id === current.id) continue;
-      await updateTransaction(id, { category_id: ruleSuggestion.categoryId, categorization_source: "rule" });
-      setCategorizedCount((c) => c + 1);
-    }
-    setItems((prev) => prev.filter((i) => !matchingIds.has(i.id) || i.id === current.id));
-    await advance();
   }
 
   function handleClose() {
@@ -125,9 +183,9 @@ export function AufraeumModus({ open, dateFrom, dateTo, assetId, personId, onOpe
         <div className="flex shrink-0 items-center justify-between border-b border-border px-6 py-4">
           <div className="flex-1">
             <p className="text-sm text-charcoal">
-              {Math.min(index + 1, items.length)} von {items.length}
+              {phase === "stapel" ? "Phase 1: Stapel" : "Phase 2: Einzeln"} ({index + 1} von {currentTotalCount})
             </p>
-            <Progress value={items.length ? ((index + 1) / items.length) * 100 : 0} className="mt-1 h-1.5" />
+            <Progress value={currentTotalCount ? ((index + 1) / currentTotalCount) * 100 : 0} className="mt-1 h-1.5" />
           </div>
           <div className="ml-4 flex gap-2">
             <Button variant="ghost" size="sm" onClick={() => void advance()} disabled={finished}>
@@ -154,13 +212,34 @@ export function AufraeumModus({ open, dateFrom, dateTo, assetId, personId, onOpe
             </div>
           )}
 
-          {!loading && !finished && current && (
+          {!loading && !finished && (phase === "stapel" ? currentGroup : currentSingle) && (
             <div className="mx-auto max-w-lg space-y-5">
               <div className="text-center">
-                <p className="text-xs text-slate">{current.booking_date}</p>
-                <h2 className="font-heading text-2xl text-charcoal">{current.counterparty}</h2>
-                {current.purpose && <p className="mt-1 text-sm text-slate">{current.purpose}</p>}
-                <p className="num mt-2 text-xl text-charcoal">{formatEur(current.amount_cents)}</p>
+                {phase === "einzeln" && currentSingle && (
+                  <>
+                    <p className="text-xs text-slate">{formatDate(currentSingle.booking_date, dateDisplayFormat)}</p>
+                    <h2 className="font-heading text-2xl text-charcoal">{currentSingle.counterparty}</h2>
+                    {currentSingle.purpose && <p className="mt-1 text-sm text-slate">{currentSingle.purpose}</p>}
+                    <p className="num mt-2 text-xl text-charcoal">{formatEur(currentSingle.amount_cents)}</p>
+                  </>
+                )}
+                {phase === "stapel" && currentGroup && (
+                  <>
+                    <p className="text-xs font-semibold text-petrol mb-1">{currentGroup.length}× unkategorisiert</p>
+                    <h2 className="font-heading text-2xl text-charcoal">{currentGroup[0].counterparty}</h2>
+                    <p className="mt-1 text-sm text-slate">z.B. {currentGroup[0].purpose || "Ohne Verwendungszweck"}</p>
+                    <div className="mt-4 flex items-center justify-center gap-2">
+                      <Checkbox 
+                        id="createRule" 
+                        checked={createRuleChecked} 
+                        onCheckedChange={(c) => setCreateRuleChecked(!!c)} 
+                      />
+                      <Label htmlFor="createRule" className="cursor-pointer">
+                        Zukünftig automatisch kategorisieren (Regel erstellen)
+                      </Label>
+                    </div>
+                  </>
+                )}
               </div>
 
               {recentCategories.length > 0 && (
@@ -178,23 +257,17 @@ export function AufraeumModus({ open, dateFrom, dateTo, assetId, personId, onOpe
                 </div>
               )}
 
-              <CategorySelect value={null} onChange={(id) => id !== null && void handleCategorize(id)} allowNone={false} />
-
-              {ruleSuggestion && (
-                <div className="rounded-klein bg-accent p-3 text-sm">
-                  <p>
-                    "{ruleSuggestion.counterparty}" kommt {ruleSuggestion.count}× vor. Regel erstellen: Empfänger enthält
-                    "{ruleSuggestion.counterparty}" → {categories?.find((c) => c.id === ruleSuggestion.categoryId)?.name}?
-                  </p>
-                  <div className="mt-2 flex gap-2">
-                    <Button size="sm" onClick={() => void handleCreateRuleAndApply()}>
-                      Regel erstellen & anwenden
-                    </Button>
-                    <Button size="sm" variant="ghost" onClick={() => void advance()}>
-                      Nur diese
-                    </Button>
-                  </div>
-                </div>
+              <CategorySelect 
+                value={suggestedCategoryId} 
+                onChange={(id) => void handleCategorize(id)} 
+                allowNone={true} 
+                amountCents={currentGroup?.[0]?.amount_cents ?? currentSingle?.amount_cents}
+              />
+              
+              {suggestedCategoryId !== null && (
+                <p className="text-center text-xs text-slate mt-2">
+                  (Vorausgewählt aufgrund früherer Zuordnung oder Alias)
+                </p>
               )}
             </div>
           )}

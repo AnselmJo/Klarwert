@@ -105,7 +105,7 @@ export function BudgetsPage() {
   const queryClient = useQueryClient();
   const selectedAccountId = useGlobalFilterStore((s) => s.selectedAccountId);
   const selectedPersonId = useGlobalFilterStore((s) => s.selectedPersonId);
-  const anchorIso = usePeriodStore((s) => s.anchorIso);
+  const anchorIso = usePeriodStore((s) => s.scopes.budgets.anchorIso);
   const { data: categories } = useCategories();
   const [editorOpen, setEditorOpen] = useState(false);
   const [editing, setEditing] = useState<BudgetSummary | null>(null);
