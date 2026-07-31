@@ -95,7 +95,15 @@ export interface ImportProfile {
   column_map_json: string;
   source_version?: string | null;
   import_all_columns: 0 | 1;
+  account_column_index: number | null;
   is_deleted: 0 | 1;
+}
+
+export interface ImportProfileAccountMap {
+  id: number;
+  import_profile_id: number;
+  source_value: string;
+  asset_id: number;
 }
 
 export interface Asset {

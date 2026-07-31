@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Dialog,
   DialogContent,
@@ -20,8 +21,16 @@ import {
 import { StepDots } from "@/components/StepDots";
 import { cn } from "@/lib/utils";
 import { useAssets } from "@/hooks/useAssets";
+import { usePersons } from "@/hooks/usePersons";
+import { createAsset } from "@/db/repositories/assets";
 import { getAnchor } from "@/db/repositories/valueHistory";
-import { findByFingerprint, createImportProfile } from "@/db/repositories/importProfiles";
+import {
+  findByFingerprint,
+  createImportProfile,
+  updateImportProfile,
+  listAccountMapForProfile,
+  setAccountMapping,
+} from "@/db/repositories/importProfiles";
 import { computeHeaderFingerprint } from "@/lib/import/fingerprint";
 import {
   MAX_IMPORT_FILE_BYTES,
@@ -34,7 +43,13 @@ import {
 } from "@/lib/import/parseFile";
 import { guessColumnRoles } from "@/lib/import/heuristics";
 import { BUILTIN_BANK_PROFILES, EXTRA_FIELD_ROLES, type ColumnMap, type ColumnRole } from "@/lib/import/bankProfiles";
-import { runImport, detectBankAccountLabels, type RunImportResult } from "@/lib/import/runImport";
+import {
+  runImport,
+  runMultiAccountImport,
+  detectBankAccountLabels,
+  type RunImportResult,
+  type MultiAccountImportResult,
+} from "@/lib/import/runImport";
 import { parseAmountWithFormat, formatEur, parseAmountToCents } from "@/lib/money";
 import { parseDateWithFormat } from "@/lib/dates";
 import type { ImportMode } from "@/db/types";
@@ -68,15 +83,19 @@ const EXTRA_ROLE_LABELS: Record<ColumnRole, string> = {
   bank_account_label: "Kontoname/Kontonummer (Bank)",
 };
 
-type WizardStep = "file" | "headerConfirm" | "mapping" | "preview" | "progress" | "result";
+type WizardStep = "file" | "headerConfirm" | "mapping" | "accountMapping" | "preview" | "progress" | "result";
 const STEP_DOT_INDEX: Record<WizardStep, number> = {
   file: 0,
   headerConfirm: 0,
   mapping: 1,
+  accountMapping: 1,
   preview: 2,
   progress: 3,
   result: 4,
 };
+
+/** Sentinel-Wert im Konto-Select der Kontokennungs-Zuordnung: "neues Konto anlegen". */
+const NEW_ACCOUNT_VALUE = "__new__";
 
 interface ImportWizardProps {
   open: boolean;
@@ -87,6 +106,7 @@ interface ImportWizardProps {
 }
 
 export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: ImportWizardProps) {
+  const queryClient = useQueryClient();
   const [step, setStep] = useState<WizardStep>("file");
   const [selectedAssetId, setSelectedAssetId] = useState(assetId);
   const [file, setFile] = useState<File | null>(null);
@@ -110,6 +130,14 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
   const [isFirstImport, setIsFirstImport] = useState(false);
 
   const [result, setResult] = useState<RunImportResult | null>(null);
+  const [multiResult, setMultiResult] = useState<MultiAccountImportResult | null>(null);
+
+  // --- Mehrkonto-Import (z. B. C24) ---
+  const { data: persons } = usePersons();
+  const [useMultiAccount, setUseMultiAccount] = useState(false);
+  const [accountMapDraft, setAccountMapDraft] = useState<Record<string, number | typeof NEW_ACCOUNT_VALUE>>({});
+  const [newAccountNames, setNewAccountNames] = useState<Record<string, string>>({});
+  const [savingAccountMapping, setSavingAccountMapping] = useState(false);
   
   // Progress state
   const [progressPhase, setProgressPhase] = useState<"reading" | "saving" | "pipeline" | "finalizing" | null>(null);
@@ -139,6 +167,10 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
       setBalanceInput("");
       setBalanceUnknown(false);
       setResult(null);
+      setMultiResult(null);
+      setUseMultiAccount(false);
+      setAccountMapDraft({});
+      setNewAccountNames({});
       setProgressPhase(null);
       setProgressDone(0);
       setProgressTotal(0);
@@ -281,26 +313,21 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
   }
 
   function mappingReason(): string | null {
-    if (mappingComplete()) {
-      if (accountLabels.length > 1 && !selectedAccountLabel) {
-        return "Bitte das passende Konto auswählen.";
-      }
-      return null;
-    }
+    if (mappingComplete()) return null;
     return "Bitte Datum, Betrag und Empfänger zuordnen.";
   }
 
   async function handleContinueFromStep2() {
     if (!parsedFile || !mappingComplete()) return;
-    if (accountLabels.length > 1 && !selectedAccountLabel) return;
     const columnMap: ColumnMap = {};
     for (const [colStr, role] of Object.entries(roleByColumn)) {
       if (role === "ignore" || role === "keep") continue;
       columnMap[role as ColumnRole] = parsedFile.headers[Number(colStr)];
     }
     const asset = accountAssets.find((a) => a.id === selectedAssetId);
-    if (!matchedProfileId) {
-      const profileId = await createImportProfile({
+    let profileId = matchedProfileId;
+    if (!profileId) {
+      profileId = await createImportProfile({
         name: `${asset?.name ?? "Konto"} – eigenes Format`,
         is_builtin: false,
         header_fingerprint: computeHeaderFingerprint(parsedFile.headers),
@@ -312,7 +339,61 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
       });
       setMatchedProfileId(profileId);
     }
+
+    if (accountLabels.length > 1) {
+      setUseMultiAccount(true);
+      const existingMap = await listAccountMapForProfile(profileId);
+      const draft: Record<string, number | typeof NEW_ACCOUNT_VALUE> = {};
+      for (const label of accountLabels) {
+        const mapped = existingMap.find((m) => m.source_value === label);
+        if (mapped) draft[label] = mapped.asset_id;
+      }
+      setAccountMapDraft(draft);
+      setStep("accountMapping");
+      return;
+    }
+
+    setUseMultiAccount(false);
     setStep("preview");
+  }
+
+  function accountMappingComplete(): boolean {
+    return accountLabels.every((label) => {
+      const value = accountMapDraft[label];
+      if (value === undefined) return false;
+      if (value === NEW_ACCOUNT_VALUE) return !!newAccountNames[label]?.trim();
+      return true;
+    });
+  }
+
+  async function handleContinueFromAccountMapping() {
+    if (!matchedProfileId || !parsedFile || !accountMappingComplete()) return;
+    setSavingAccountMapping(true);
+    try {
+      const firstPersonId = persons?.[0]?.id;
+      for (const label of accountLabels) {
+        let value = accountMapDraft[label];
+        if (value === NEW_ACCOUNT_VALUE) {
+          if (!firstPersonId) throw new Error("Keine Person vorhanden, um ein neues Konto anzulegen.");
+          const newAssetId = await createAsset({
+            name: newAccountNames[label].trim(),
+            kind: "account",
+            account_type: "giro",
+            owner_ids: [firstPersonId],
+          });
+          value = newAssetId;
+          setAccountMapDraft((prev) => ({ ...prev, [label]: newAssetId }));
+        }
+        await setAccountMapping(matchedProfileId, label, value);
+      }
+      if (roleToIndex.bank_account_label !== undefined) {
+        await updateImportProfile(matchedProfileId, { account_column_index: roleToIndex.bank_account_label });
+      }
+      queryClient.invalidateQueries({ queryKey: ["assets"] });
+      setStep("preview");
+    } finally {
+      setSavingAccountMapping(false);
+    }
   }
 
   const previewRows = useMemo(() => {
@@ -347,6 +428,37 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
     if (!parsedFile || !file) return;
     setStep("progress");
     const cents = balanceUnknown || !balanceInput.trim() ? null : parseAmountToCents(balanceInput);
+
+    if (useMultiAccount && matchedProfileId && roleToIndex.bank_account_label !== undefined) {
+      const accountMap: Record<string, number> = {};
+      for (const [label, value] of Object.entries(accountMapDraft)) {
+        if (typeof value === "number") accountMap[label] = value;
+      }
+      const multiImportResult = await runMultiAccountImport({
+        filename: file.name,
+        profileId: matchedProfileId,
+        headers: parsedFile.headers,
+        rows: parsedFile.rows,
+        roleToIndex,
+        roleByColumn,
+        extractCounterpartyFromPurpose,
+        dateFormat: parsedFile.detected.dateFormat,
+        decimalFormat: parsedFile.detected.decimalFormat,
+        mode,
+        accountColumnIndex: roleToIndex.bank_account_label,
+        accountMap,
+        onProgress: (phase, done, total) => {
+          setProgressPhase(phase);
+          setProgressDone(done);
+          setProgressTotal(total);
+        },
+      });
+      setMultiResult(multiImportResult);
+      setStep("result");
+      onCompleted();
+      return;
+    }
+
     const importResult = await runImport({
       assetId: selectedAssetId,
       filename: file.name,
@@ -596,23 +708,59 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
               {mappingComplete() && accountLabels.length > 1 && (
                 <div className="space-y-1.5 rounded-klein bg-accent p-3">
                   <p className="text-sm text-charcoal">
-                    Diese Datei enthält {accountLabels.length} Konten: {accountLabels.join(", ")} – welches
-                    gehört zu {accountAssets.find((a) => a.id === selectedAssetId)?.name}?
+                    Diese Datei enthält {accountLabels.length} Konten: {accountLabels.join(", ")}. Im nächsten Schritt
+                    ordnest du jedes einmalig einem Klarwert-Konto zu – danach werden alle in einem Durchlauf
+                    importiert.
                   </p>
-                  <Select value={selectedAccountLabel ?? undefined} onValueChange={setSelectedAccountLabel}>
-                    <SelectTrigger className="max-w-sm">
-                      <SelectValue placeholder="Konto wählen" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {accountLabels.map((label) => (
-                        <SelectItem key={label} value={label}>
-                          {label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
                 </div>
               )}
+            </div>
+          )}
+
+          {step === "accountMapping" && (
+            <div className="space-y-4">
+              <p className="text-sm text-slate">
+                Ordne jeden in der Datei gefundenen Kontokennungs-Wert einem bestehenden oder neu anzulegenden
+                Klarwert-Konto zu. Beim nächsten Import mit diesem Profil entfällt dieser Schritt.
+              </p>
+              <div className="space-y-3">
+                {accountLabels.map((label) => (
+                  <div key={label} className="space-y-1.5 rounded-klein border border-border p-3">
+                    <p className="text-sm font-medium text-charcoal">{label}</p>
+                    <Select
+                      value={
+                        accountMapDraft[label] === undefined ? undefined : String(accountMapDraft[label])
+                      }
+                      onValueChange={(v) =>
+                        setAccountMapDraft((prev) => ({
+                          ...prev,
+                          [label]: v === NEW_ACCOUNT_VALUE ? NEW_ACCOUNT_VALUE : Number(v),
+                        }))
+                      }
+                    >
+                      <SelectTrigger className="max-w-sm">
+                        <SelectValue placeholder="Konto wählen" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {accountAssets.map((a) => (
+                          <SelectItem key={a.id} value={String(a.id)}>
+                            {a.name}
+                          </SelectItem>
+                        ))}
+                        <SelectItem value={NEW_ACCOUNT_VALUE}>+ Neues Konto anlegen</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {accountMapDraft[label] === NEW_ACCOUNT_VALUE && (
+                      <Input
+                        placeholder="Name des neuen Kontos"
+                        value={newAccountNames[label] ?? ""}
+                        onChange={(e) => setNewAccountNames((prev) => ({ ...prev, [label]: e.target.value }))}
+                        className="max-w-sm"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
@@ -656,6 +804,25 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
                 </table>
               </div>
 
+              {useMultiAccount && (
+                <div className="space-y-1 rounded-klein bg-accent p-3">
+                  <p className="text-sm font-medium text-charcoal">Aufschlüsselung je Konto</p>
+                  {accountLabels.map((label) => {
+                    const count = parsedFile.rows.filter(
+                      (row) => roleToIndex.bank_account_label !== undefined && (row[roleToIndex.bank_account_label] ?? "").trim() === label,
+                    ).length;
+                    const value = accountMapDraft[label];
+                    const assetName =
+                      typeof value === "number" ? accountAssets.find((a) => a.id === value)?.name ?? "?" : "?";
+                    return (
+                      <p key={label} className="text-xs text-slate">
+                        {label} → {assetName}: {count} Zeilen
+                      </p>
+                    );
+                  })}
+                </div>
+              )}
+
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
@@ -681,33 +848,40 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
                 </button>
               </div>
 
-              <div className="space-y-1.5">
-                <Label htmlFor="current-balance">
-                  Aktueller Kontostand laut Banking{isFirstImport ? " (Pflicht)" : " (optional)"}
-                </Label>
-                <Input
-                  id="current-balance"
-                  inputMode="decimal"
-                  placeholder="0,00"
-                  value={balanceInput}
-                  disabled={balanceUnknown}
-                  onChange={(e) => setBalanceInput(e.target.value)}
-                />
-                {balanceHint && (
-                  <p className="text-xs text-sage">
-                    Aus Datei übernommen ({balanceHint.date}) – bitte prüfen.
-                  </p>
-                )}
-                {isFirstImport && (
-                  <button
-                    type="button"
-                    className="text-xs text-petrol underline"
-                    onClick={() => setBalanceUnknown((v) => !v)}
-                  >
-                    {balanceUnknown ? "Doch angeben" : "Weiß ich gerade nicht"}
-                  </button>
-                )}
-              </div>
+              {useMultiAccount ? (
+                <p className="text-xs text-slate">
+                  Kontostände werden bei Mehrkonto-Dateien nicht hier abgefragt – bitte nach dem Import je Konto auf
+                  der Vermögen-Seite bestätigen.
+                </p>
+              ) : (
+                <div className="space-y-1.5">
+                  <Label htmlFor="current-balance">
+                    Aktueller Kontostand laut Banking{isFirstImport ? " (Pflicht)" : " (optional)"}
+                  </Label>
+                  <Input
+                    id="current-balance"
+                    inputMode="decimal"
+                    placeholder="0,00"
+                    value={balanceInput}
+                    disabled={balanceUnknown}
+                    onChange={(e) => setBalanceInput(e.target.value)}
+                  />
+                  {balanceHint && (
+                    <p className="text-xs text-sage">
+                      Aus Datei übernommen ({balanceHint.date}) – bitte prüfen.
+                    </p>
+                  )}
+                  {isFirstImport && (
+                    <button
+                      type="button"
+                      className="text-xs text-petrol underline"
+                      onClick={() => setBalanceUnknown((v) => !v)}
+                    >
+                      {balanceUnknown ? "Doch angeben" : "Weiß ich gerade nicht"}
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
@@ -765,6 +939,39 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
               )}
             </div>
           )}
+
+          {step === "result" && multiResult && (
+            <div className="space-y-3 text-sm">
+              {multiResult.status === "failed" ? (
+                <div className="rounded-klein bg-brick/10 p-3 text-brick">
+                  Import fehlgeschlagen: {multiResult.errorMessage}
+                  <br />
+                  Der Altbestand ist unverändert.
+                </div>
+              ) : (
+                <ul className="space-y-2">
+                  {multiResult.perAccount.map((acc) => (
+                    <li key={acc.assetId} className="rounded-klein border border-border p-2">
+                      <p className="font-medium text-charcoal">{accountAssets.find((a) => a.id === acc.assetId)?.name ?? acc.label}</p>
+                      <p className="text-xs text-slate">
+                        {acc.rowsNew} neu · {acc.rowsUpdated} aktualisiert · {acc.rowsSkipped} übersprungen ·{" "}
+                        {acc.rowsAutoCategorized} automatisch kategorisiert
+                        {acc.transfersFound > 0 ? ` · ${acc.transfersFound} Transfers erkannt` : ""}
+                      </p>
+                      {acc.balanceUnconfirmed && (
+                        <p className="text-xs text-gold">Saldo unbestätigt – nachholbar auf der Vermögen-Seite.</p>
+                      )}
+                    </li>
+                  ))}
+                  {multiResult.rowsIgnoredUnmapped > 0 && (
+                    <li className="text-xs text-gold">
+                      {multiResult.rowsIgnoredUnmapped} Zeilen ohne zuordenbare Kontokennung ignoriert.
+                    </li>
+                  )}
+                </ul>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="flex shrink-0 items-center justify-end gap-2 border-t border-border px-6 py-4">
@@ -784,15 +991,28 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
               </Button>
             </>
           )}
+          {step === "accountMapping" && (
+            <>
+              {!accountMappingComplete() && (
+                <span className="text-xs text-brick">Bitte jeden Wert einem Konto zuordnen.</span>
+              )}
+              <Button
+                onClick={() => void handleContinueFromAccountMapping()}
+                disabled={!accountMappingComplete() || savingAccountMapping}
+              >
+                Weiter
+              </Button>
+            </>
+          )}
           {step === "preview" && (
             <Button
               onClick={() => void handleRunImport()}
-              disabled={isFirstImport && !balanceUnknown && !balanceInput.trim()}
+              disabled={!useMultiAccount && isFirstImport && !balanceUnknown && !balanceInput.trim()}
             >
               Import starten
             </Button>
           )}
-          {step === "result" && result?.status === "failed" && (
+          {step === "result" && (result?.status === "failed" || multiResult?.status === "failed") && (
             <>
               <Button variant="ghost" onClick={handleClose}>
                 Schließen
@@ -800,7 +1020,9 @@ export function ImportWizard({ open, assetId, onOpenChange, onCompleted }: Impor
               <Button onClick={() => setStep("file")}>Andere Datei wählen</Button>
             </>
           )}
-          {step === "result" && result?.status === "success" && <Button onClick={handleClose}>Fertig</Button>}
+          {step === "result" && (result?.status === "success" || multiResult?.status === "success") && (
+            <Button onClick={handleClose}>Fertig</Button>
+          )}
         </div>
       </DialogContent>
     </Dialog>

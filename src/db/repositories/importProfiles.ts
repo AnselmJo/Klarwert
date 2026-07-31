@@ -1,5 +1,5 @@
 import { getDb } from "@/db/client";
-import type { ImportProfile } from "@/db/types";
+import type { ImportProfile, ImportProfileAccountMap } from "@/db/types";
 
 export async function listImportProfiles(): Promise<ImportProfile[]> {
   const db = await getDb();
@@ -27,14 +27,15 @@ export interface CreateImportProfileInput {
   decimal_format: "de" | "en";
   column_map_json: string;
   import_all_columns?: boolean;
+  account_column_index?: number | null;
 }
 
 export async function createImportProfile(input: CreateImportProfileInput): Promise<number> {
   const db = await getDb();
   const result = await db.execute(
     `insert into import_profiles
-      (name, is_builtin, header_fingerprint, delimiter, encoding, date_format, decimal_format, column_map_json, import_all_columns)
-     values ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      (name, is_builtin, header_fingerprint, delimiter, encoding, date_format, decimal_format, column_map_json, import_all_columns, account_column_index)
+     values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
     [
       input.name,
       input.is_builtin ? 1 : 0,
@@ -45,6 +46,7 @@ export async function createImportProfile(input: CreateImportProfileInput): Prom
       input.decimal_format,
       input.column_map_json,
       input.import_all_columns ? 1 : 0,
+      input.account_column_index ?? null,
     ],
   );
   return result.lastInsertId as number;
@@ -63,8 +65,9 @@ export async function updateImportProfile(
       date_format = coalesce($4, date_format),
       decimal_format = coalesce($5, decimal_format),
       column_map_json = coalesce($6, column_map_json),
-      import_all_columns = coalesce($7, import_all_columns)
-     where id = $8`,
+      import_all_columns = coalesce($7, import_all_columns),
+      account_column_index = coalesce($8, account_column_index)
+     where id = $9`,
     [
       input.header_fingerprint ?? null,
       input.delimiter ?? null,
@@ -73,8 +76,28 @@ export async function updateImportProfile(
       input.decimal_format ?? null,
       input.column_map_json ?? null,
       input.import_all_columns === undefined ? null : (input.import_all_columns ? 1 : 0),
+      input.account_column_index ?? null,
       id,
     ],
+  );
+}
+
+/** Kontokennungs-Mapping (Mehrkonto-Dateien, z. B. C24): source_value (z. B. Kontoname/-nummer laut Bank-Export) -> Klarwert-Konto. */
+export async function listAccountMapForProfile(profileId: number): Promise<ImportProfileAccountMap[]> {
+  const db = await getDb();
+  return db.select<ImportProfileAccountMap[]>(
+    "select * from import_profile_account_map where import_profile_id = $1",
+    [profileId],
+  );
+}
+
+export async function setAccountMapping(profileId: number, sourceValue: string, assetId: number): Promise<void> {
+  const db = await getDb();
+  await db.execute(
+    `insert into import_profile_account_map (import_profile_id, source_value, asset_id)
+     values ($1, $2, $3)
+     on conflict (import_profile_id, source_value) do update set asset_id = excluded.asset_id`,
+    [profileId, sourceValue, assetId],
   );
 }
 

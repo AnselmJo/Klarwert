@@ -1,4 +1,5 @@
-import { withTransaction } from "@/db/client";
+import { runInTransaction } from "@/db/client";
+import type Database from "@tauri-apps/plugin-sql";
 import { runPipelineForTransactions } from "@/lib/pipeline";
 import { detectRecurringPatterns } from "@/lib/contractDetection";
 import { normalizeFingerprint } from "@/db/repositories/transactions";
@@ -16,6 +17,8 @@ export interface RunImportInput {
   headers: string[];
   rows: string[][];
   roleToIndex: Partial<Record<ColumnRole, number>>;
+  roleByColumn?: Record<number, ColumnRole | "keep" | "ignore">;
+  dataTypeByColumn?: Record<number, string>;
   extractCounterpartyFromPurpose?: boolean;
   dateFormat: string;
   decimalFormat: "de" | "en";
@@ -24,6 +27,11 @@ export interface RunImportInput {
   currentBalanceInput: number | null;
   /** Mehrkonten-Datei: nur Zeilen importieren, deren bank_account_label diesem Wert entspricht. */
   bankAccountLabelFilter?: string | null;
+  /**
+   * Progress-Callback: wird pro Phase aufgerufen.
+   * phase: 'reading' | 'saving' | 'pipeline' | 'finalizing'
+   */
+  onProgress?: (phase: "reading" | "saving" | "pipeline" | "finalizing", done: number, total: number) => void;
 }
 
 export interface RunImportResult {
@@ -43,6 +51,7 @@ export interface RunImportResult {
 
 interface ParsedRow {
   booking_date: string;
+  value_date: string | null;
   counterparty: string;
   purpose: string | null;
   amount_cents: number;
@@ -64,6 +73,8 @@ function extractCounterparty(text: string): { counterparty: string; purpose: str
 function buildExtraFields(
   row: string[],
   roleToIndex: Partial<Record<ColumnRole, number>>,
+  roleByColumn?: Record<number, ColumnRole | "keep" | "ignore">,
+  headers?: string[],
 ): string | null {
   const entries: [string, string][] = [];
   for (const role of EXTRA_FIELD_ROLES) {
@@ -72,6 +83,18 @@ function buildExtraFields(
     const value = (row[idx] ?? "").trim();
     if (value) entries.push([role, value]);
   }
+  
+  if (roleByColumn && headers) {
+    for (const [colStr, role] of Object.entries(roleByColumn)) {
+      if (role === "keep") {
+        const idx = Number(colStr);
+        const value = (row[idx] ?? "").trim();
+        const key = headers[idx] || `Spalte_${idx}`;
+        if (value) entries.push([key, value]);
+      }
+    }
+  }
+
   return entries.length > 0 ? JSON.stringify(Object.fromEntries(entries)) : null;
 }
 
@@ -107,14 +130,43 @@ function parseRows(input: RunImportInput): { parsed: ParsedRow[]; skipped: numbe
     try {
       const dateIdx = roleToIndex.date;
       const amountIdx = roleToIndex.amount;
-      const counterpartyIdx = roleToIndex.counterparty;
-      if (dateIdx === undefined || amountIdx === undefined || counterpartyIdx === undefined) {
+      // Mindest-Anforderung: Datum + Betrag + (Empfänger ODER richtungsabhängige Rollen)
+      if (dateIdx === undefined || amountIdx === undefined) {
         skipped += 1;
         continue;
       }
+
       const booking_date = parseDateWithFormat(row[dateIdx], dateFormat);
+      const value_date =
+        roleToIndex.value_date !== undefined && row[roleToIndex.value_date]
+          ? parseDateWithFormat(row[roleToIndex.value_date], dateFormat)
+          : null;
       const amount_cents = parseAmountWithFormat(row[amountIdx], decimalFormat);
-      let counterparty = (row[counterpartyIdx] ?? "").trim();
+
+      // Richtungsabhängige Empfänger-Spalte (Punkt 7 / Product Spec Kap. 6):
+      // Betrag < 0 → counterparty_outgoing; Betrag > 0 → counterparty_incoming.
+      // Wenn nur eine Rolle gesetzt ist, gilt sie unabhängig vom Vorzeichen.
+      let counterparty: string;
+      const outgoingIdx = roleToIndex.counterparty_outgoing;
+      const incomingIdx = roleToIndex.counterparty_incoming;
+      const counterpartyIdx = roleToIndex.counterparty;
+
+      if (outgoingIdx !== undefined && incomingIdx !== undefined) {
+        // Beide Rollen gesetzt → richtungsabhängig mit Fallback
+        counterparty = amount_cents < 0
+          ? ((row[outgoingIdx] ?? "").trim() || (row[incomingIdx] ?? "").trim())
+          : ((row[incomingIdx] ?? "").trim() || (row[outgoingIdx] ?? "").trim());
+      } else if (outgoingIdx !== undefined) {
+        counterparty = (row[outgoingIdx] ?? "").trim();
+      } else if (incomingIdx !== undefined) {
+        counterparty = (row[incomingIdx] ?? "").trim();
+      } else if (counterpartyIdx !== undefined) {
+        counterparty = (row[counterpartyIdx] ?? "").trim();
+      } else {
+        skipped += 1;
+        continue;
+      }
+
       let purpose =
         roleToIndex.purpose !== undefined ? (row[roleToIndex.purpose] ?? "").trim() : null;
 
@@ -136,12 +188,13 @@ function parseRows(input: RunImportInput): { parsed: ParsedRow[]; skipped: numbe
 
       parsed.push({
         booking_date,
+        value_date,
         counterparty,
         purpose: purpose || null,
         amount_cents,
         external_id,
         fingerprint: normalizeFingerprint(booking_date, amount_cents, counterparty),
-        extra_fields_json: buildExtraFields(row, roleToIndex),
+        extra_fields_json: buildExtraFields(row, roleToIndex, input.roleByColumn, input.headers),
       });
     } catch {
       skipped += 1;
@@ -151,213 +204,272 @@ function parseRows(input: RunImportInput): { parsed: ParsedRow[]; skipped: numbe
   return { parsed, skipped, ignoredOtherAccount };
 }
 
-export async function runImport(input: RunImportInput): Promise<RunImportResult> {
-  const { parsed, skipped: parseSkipped, ignoredOtherAccount } = parseRows(input);
+interface AccountImportOutcome {
+  rowsNew: number;
+  rowsUpdated: number;
+  rowsSkipped: number;
+  lostMetadataCount: number;
+  balanceUnconfirmed: boolean;
+  balanceMismatchCents: number | null;
+  newlyInsertedIds: number[];
+  pipelineResult: { categorized: number; transfersFound: number };
+}
 
-  try {
-    const result = await withTransaction(async (db) => {
-      let rowsNew = 0;
-      let rowsUpdated = 0;
-      let rowsSkipped = parseSkipped;
-      let lostMetadataCount = 0;
-      const newlyInsertedIds: number[] = [];
+/**
+ * Importiert bereits geparste Zeilen für EIN Konto auf einer bereits offenen Transaktion/Connection
+ * (`db`). Öffnet selbst kein eigenes BEGIN/COMMIT (CLAUDE.md Transaktions-Disziplin) – der Aufrufer
+ * (runImport für Einzelkonto, runMultiAccountImport für Mehrkonten-Dateien) umschließt den kompletten
+ * Durchlauf mit genau einer äußeren Transaktion.
+ */
+async function importAccountRows(
+  db: Database,
+  assetId: number,
+  profileId: number | null,
+  mode: ImportMode,
+  currentBalanceInput: number | null,
+  parsed: ParsedRow[],
+  onProgress?: RunImportInput["onProgress"],
+): Promise<AccountImportOutcome> {
+  let rowsNew = 0;
+  let rowsUpdated = 0;
+  let rowsSkipped = 0;
+  let lostMetadataCount = 0;
+  const newlyInsertedIds: number[] = [];
 
-      const anchorBefore = await getAnchor(input.assetId);
-      const isFirstImport = !anchorBefore;
+  const anchorBefore = await getAnchor(assetId);
+  const isFirstImport = !anchorBefore;
 
-      if (input.mode === "replace_all") {
-        interface Preserved {
-          category_id: number | null;
-          categorization_source: string;
-          is_reviewed: 0 | 1;
-          is_saving: 0 | 1;
-          sparzweck_id: number | null;
-          exclude_from_stats: 0 | 1;
-          tag_ids: number[];
-        }
-        const existing = await db.select<
-          {
-            id: number;
-            fingerprint: string;
-            category_id: number | null;
-            categorization_source: string;
-            is_reviewed: 0 | 1;
-            is_saving: 0 | 1;
-            sparzweck_id: number | null;
-            exclude_from_stats: 0 | 1;
-          }[]
-        >(
-          "select id, fingerprint, category_id, categorization_source, is_reviewed, is_saving, sparzweck_id, exclude_from_stats from transactions where asset_id = $1 and source = 'import'",
-          [input.assetId],
+  onProgress?.("saving", 0, parsed.length);
+
+  if (mode === "replace_all") {
+    interface Preserved {
+      category_id: number | null;
+      categorization_source: string;
+      is_reviewed: 0 | 1;
+      is_saving: 0 | 1;
+      sparzweck_id: number | null;
+      exclude_from_stats: 0 | 1;
+      tag_ids: number[];
+    }
+    const existing = await db.select<
+      {
+        id: number;
+        fingerprint: string;
+        category_id: number | null;
+        categorization_source: string;
+        is_reviewed: 0 | 1;
+        is_saving: 0 | 1;
+        sparzweck_id: number | null;
+        exclude_from_stats: 0 | 1;
+      }[]
+    >(
+      "select id, fingerprint, category_id, categorization_source, is_reviewed, is_saving, sparzweck_id, exclude_from_stats from transactions where asset_id = $1 and source = 'import'",
+      [assetId],
+    );
+    const preserved = new Map<string, Preserved>();
+    for (const row of existing) {
+      const tagRows = await db.select<{ tag_id: number }[]>(
+        "select tag_id from transaction_tags where transaction_id = $1",
+        [row.id],
+      );
+      preserved.set(row.fingerprint, { ...row, tag_ids: tagRows.map((t) => t.tag_id) });
+    }
+
+    await db.execute("delete from transactions where asset_id = $1 and source = 'import'", [assetId]);
+
+    const matchedFingerprints = new Set<string>();
+    const CHUNK = 200;
+    for (let ci = 0; ci < parsed.length; ci += CHUNK) {
+      const chunk = parsed.slice(ci, ci + CHUNK);
+      for (const row of chunk) {
+        const meta = preserved.get(row.fingerprint);
+        if (meta) matchedFingerprints.add(row.fingerprint);
+        const insertResult = await db.execute(
+          `insert into transactions
+            (asset_id, booking_date, value_date, counterparty, purpose, amount_cents, source, external_id, fingerprint, extra_fields_json, category_id, categorization_source, is_reviewed, is_saving, sparzweck_id, exclude_from_stats)
+           values ($1, $2, $3, $4, $5, $6, 'import', $7, $8, $9, $10, $11, $12, $13, $14, $15)`,
+          [
+            assetId,
+            row.booking_date,
+            row.value_date,
+            row.counterparty,
+            row.purpose,
+            row.amount_cents,
+            row.external_id,
+            row.fingerprint,
+            row.extra_fields_json,
+            meta?.category_id ?? null,
+            meta?.categorization_source ?? "none",
+            meta?.is_reviewed ?? 1,
+            meta?.is_saving ?? 0,
+            meta?.sparzweck_id ?? null,
+            meta?.exclude_from_stats ?? 0,
+          ],
         );
-        const preserved = new Map<string, Preserved>();
-        for (const row of existing) {
-          const tagRows = await db.select<{ tag_id: number }[]>(
-            "select tag_id from transaction_tags where transaction_id = $1",
-            [row.id],
+        const newId = insertResult.lastInsertId as number;
+        if (meta) {
+          if (meta.tag_ids.length > 0) {
+            const tagPlaceholders = meta.tag_ids.map((_, k) => `($1, $${k + 2})`).join(", ");
+            await db.execute(
+              `insert into transaction_tags (transaction_id, tag_id) values ${tagPlaceholders}`,
+              [newId, ...meta.tag_ids],
+            );
+          }
+        } else {
+          newlyInsertedIds.push(newId);
+        }
+        rowsNew += 1;
+      }
+      onProgress?.("saving", Math.min(ci + CHUNK, parsed.length), parsed.length);
+    }
+    lostMetadataCount = preserved.size - matchedFingerprints.size;
+  } else {
+    // Upsert-Modus
+    const CHUNK = 200;
+    for (let ci = 0; ci < parsed.length; ci += CHUNK) {
+      const chunk = parsed.slice(ci, ci + CHUNK);
+      for (const row of chunk) {
+        let existingId: number | null = null;
+        if (row.external_id) {
+          const rows = await db.select<{ id: number }[]>(
+            "select id from transactions where asset_id = $1 and external_id = $2 and source = 'import'",
+            [assetId, row.external_id],
           );
-          preserved.set(row.fingerprint, { ...row, tag_ids: tagRows.map((t) => t.tag_id) });
+          existingId = rows[0]?.id ?? null;
+        } else {
+          const rows = await db.select<{ id: number }[]>(
+            "select id from transactions where asset_id = $1 and fingerprint = $2 and source = 'import'",
+            [assetId, row.fingerprint],
+          );
+          existingId = rows[0]?.id ?? null;
         }
 
-        await db.execute("delete from transactions where asset_id = $1 and source = 'import'", [
-          input.assetId,
-        ]);
-
-        const matchedFingerprints = new Set<string>();
-        for (const row of parsed) {
-          const meta = preserved.get(row.fingerprint);
-          if (meta) matchedFingerprints.add(row.fingerprint);
+        if (existingId) {
+          if (row.external_id) {
+            await db.execute(
+              `update transactions set booking_date = $1, value_date = $2, counterparty = $3, purpose = $4, amount_cents = $5, fingerprint = $6, extra_fields_json = $7
+               where id = $8`,
+              [
+                row.booking_date,
+                row.value_date,
+                row.counterparty,
+                row.purpose,
+                row.amount_cents,
+                row.fingerprint,
+                row.extra_fields_json,
+                existingId,
+              ],
+            );
+            rowsUpdated += 1;
+          } else {
+            rowsSkipped += 1;
+          }
+        } else {
           const insertResult = await db.execute(
             `insert into transactions
-              (asset_id, booking_date, counterparty, purpose, amount_cents, source, external_id, fingerprint, extra_fields_json, category_id, categorization_source, is_reviewed, is_saving, sparzweck_id, exclude_from_stats)
-             values ($1, $2, $3, $4, $5, 'import', $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
+              (asset_id, booking_date, value_date, counterparty, purpose, amount_cents, source, external_id, fingerprint, extra_fields_json)
+             values ($1, $2, $3, $4, $5, $6, 'import', $7, $8, $9)`,
             [
-              input.assetId,
+              assetId,
               row.booking_date,
+              row.value_date,
               row.counterparty,
               row.purpose,
               row.amount_cents,
               row.external_id,
               row.fingerprint,
               row.extra_fields_json,
-              meta?.category_id ?? null,
-              meta?.categorization_source ?? "none",
-              meta?.is_reviewed ?? 1,
-              meta?.is_saving ?? 0,
-              meta?.sparzweck_id ?? null,
-              meta?.exclude_from_stats ?? 0,
             ],
           );
-          const newId = insertResult.lastInsertId as number;
-          if (meta) {
-            for (const tagId of meta.tag_ids) {
-              await db.execute(
-                "insert into transaction_tags (transaction_id, tag_id) values ($1, $2)",
-                [newId, tagId],
-              );
-            }
-          } else {
-            newlyInsertedIds.push(newId);
-          }
+          newlyInsertedIds.push(insertResult.lastInsertId as number);
           rowsNew += 1;
         }
-        lostMetadataCount = preserved.size - matchedFingerprints.size;
-      } else {
-        for (const row of parsed) {
-          let existingId: number | null = null;
-          if (row.external_id) {
-            const rows = await db.select<{ id: number }[]>(
-              "select id from transactions where asset_id = $1 and external_id = $2 and source = 'import'",
-              [input.assetId, row.external_id],
-            );
-            existingId = rows[0]?.id ?? null;
-          } else {
-            const rows = await db.select<{ id: number }[]>(
-              "select id from transactions where asset_id = $1 and fingerprint = $2 and source = 'import'",
-              [input.assetId, row.fingerprint],
-            );
-            existingId = rows[0]?.id ?? null;
-          }
-
-          if (existingId) {
-            if (row.external_id) {
-              await db.execute(
-                `update transactions set booking_date = $1, counterparty = $2, purpose = $3, amount_cents = $4, fingerprint = $5, extra_fields_json = $6
-                 where id = $7`,
-                [
-                  row.booking_date,
-                  row.counterparty,
-                  row.purpose,
-                  row.amount_cents,
-                  row.fingerprint,
-                  row.extra_fields_json,
-                  existingId,
-                ],
-              );
-              rowsUpdated += 1;
-            } else {
-              rowsSkipped += 1;
-            }
-          } else {
-            const insertResult = await db.execute(
-              `insert into transactions
-                (asset_id, booking_date, counterparty, purpose, amount_cents, source, external_id, fingerprint, extra_fields_json)
-               values ($1, $2, $3, $4, $5, 'import', $6, $7, $8)`,
-              [
-                input.assetId,
-                row.booking_date,
-                row.counterparty,
-                row.purpose,
-                row.amount_cents,
-                row.external_id,
-                row.fingerprint,
-                row.extra_fields_json,
-              ],
-            );
-            newlyInsertedIds.push(insertResult.lastInsertId as number);
-            rowsNew += 1;
-          }
-        }
       }
+      onProgress?.("saving", Math.min(ci + CHUNK, parsed.length), parsed.length);
+    }
+  }
 
-      let balanceUnconfirmed = false;
-      let balanceMismatchCents: number | null = null;
+  // Phase C: Kategorisierungs-Pipeline + Contract-Erkennung (innerhalb der Transaktion!)
+  onProgress?.("pipeline", 0, 1);
+  const pipelineResult = await runPipelineForTransactions(newlyInsertedIds, db);
+  await detectRecurringPatterns(assetId, db);
+  onProgress?.("pipeline", 1, 1);
 
-      if (isFirstImport) {
-        if (input.currentBalanceInput !== null) {
-          const sumImported = parsed.reduce((s, r) => s + r.amount_cents, 0);
-          const anchorValue = input.currentBalanceInput - sumImported;
-          const earliestDate = parsed.reduce(
-            (min, r) => (r.booking_date < min ? r.booking_date : min),
-            parsed[0]?.booking_date ?? todayIso(),
-          );
-          await addValueHistoryEntry({
-            asset_id: input.assetId,
-            valued_at: isoDayBefore(earliestDate),
-            value_cents: anchorValue,
-            source: "anchor",
-          });
-          await db.execute(
-            "update assets set last_confirmed_balance_cents = $1 where id = $2",
-            [input.currentBalanceInput, input.assetId],
-          );
-        } else {
-          balanceUnconfirmed = true;
-        }
-      } else if (input.currentBalanceInput !== null) {
-        const totalRows = await db.select<{ total: number | null }[]>(
-          "select sum(amount_cents) as total from transactions where asset_id = $1 and is_deleted = 0",
-          [input.assetId],
-        );
-        const anchorValue = anchorBefore?.value_cents ?? 0;
-        const computed = anchorValue + (totalRows[0]?.total ?? 0);
-        const diff = computed - input.currentBalanceInput;
-        if (Math.abs(diff) >= 1) balanceMismatchCents = diff;
-        await db.execute(
-          "update assets set last_confirmed_balance_cents = $1 where id = $2",
-          [input.currentBalanceInput, input.assetId],
-        );
-      }
+  // Kontostand-Verifikation
+  let balanceUnconfirmed = false;
+  let balanceMismatchCents: number | null = null;
 
-      await db.execute(
-        "update assets set last_import_at = $1, import_profile_id = coalesce($2, import_profile_id) where id = $3",
-        [new Date().toISOString(), input.profileId, input.assetId],
+  if (isFirstImport) {
+    if (currentBalanceInput !== null) {
+      const sumImported = parsed.reduce((s, r) => s + r.amount_cents, 0);
+      const anchorValue = currentBalanceInput - sumImported;
+      const earliestDate = parsed.reduce(
+        (min, r) => (r.booking_date < min ? r.booking_date : min),
+        parsed[0]?.booking_date ?? todayIso(),
       );
+      await addValueHistoryEntry({
+        asset_id: assetId,
+        valued_at: isoDayBefore(earliestDate),
+        value_cents: anchorValue,
+        source: "anchor",
+      });
+      await db.execute("update assets set last_confirmed_balance_cents = $1 where id = $2", [
+        currentBalanceInput,
+        assetId,
+      ]);
+    } else {
+      balanceUnconfirmed = true;
+    }
+  } else if (currentBalanceInput !== null) {
+    const totalRows = await db.select<{ total: number | null }[]>(
+      "select sum(amount_cents) as total from transactions where asset_id = $1 and is_deleted = 0",
+      [assetId],
+    );
+    const anchorValue = anchorBefore?.value_cents ?? 0;
+    const computed = anchorValue + (totalRows[0]?.total ?? 0);
+    const diff = computed - currentBalanceInput;
+    if (Math.abs(diff) >= 1) balanceMismatchCents = diff;
+    await db.execute("update assets set last_confirmed_balance_cents = $1 where id = $2", [
+      currentBalanceInput,
+      assetId,
+    ]);
+  }
 
-      return {
-        rowsNew,
-        rowsUpdated,
-        rowsSkipped,
-        lostMetadataCount,
-        balanceUnconfirmed,
-        balanceMismatchCents,
-        newlyInsertedIds,
-      };
-    });
+  await db.execute(
+    "update assets set last_import_at = $1, import_profile_id = coalesce($2, import_profile_id) where id = $3",
+    [new Date().toISOString(), profileId, assetId],
+  );
 
-    const pipelineResult = await runPipelineForTransactions(result.newlyInsertedIds);
-    await detectRecurringPatterns(input.assetId);
+  return {
+    rowsNew,
+    rowsUpdated,
+    rowsSkipped,
+    lostMetadataCount,
+    balanceUnconfirmed,
+    balanceMismatchCents,
+    newlyInsertedIds,
+    pipelineResult,
+  };
+}
 
+export async function runImport(input: RunImportInput): Promise<RunImportResult> {
+  const { onProgress } = input;
+
+  // Phase A: Zeilen parsen (synchron, sehr schnell)
+  onProgress?.("reading", 0, 1);
+  const { parsed, skipped: parseSkipped, ignoredOtherAccount } = parseRows(input);
+  onProgress?.("reading", 1, 1);
+
+  try {
+    // Phase B + C + D laufen als EINE Datenbank-Transaktion (CLAUDE.md Transaktions-Disziplin):
+    // BEGIN ganz am Anfang, COMMIT ganz am Ende, ROLLBACK im Catch.
+    const outcome = await runInTransaction((db) =>
+      importAccountRows(db, input.assetId, input.profileId, input.mode, input.currentBalanceInput, parsed, onProgress),
+    );
+    const result = { ...outcome, rowsSkipped: outcome.rowsSkipped + parseSkipped };
+
+    // Phase D: Import-Protokoll (außerhalb der Transaktion – unkritisch, darf schief gehen)
+    onProgress?.("finalizing", 0, 1);
     await createImportRecord({
       asset_id: input.assetId,
       profile_id: input.profileId,
@@ -368,8 +480,9 @@ export async function runImport(input: RunImportInput): Promise<RunImportResult>
       rows_new: result.rowsNew,
       rows_updated: result.rowsUpdated,
       rows_skipped: result.rowsSkipped,
-      rows_auto_categorized: pipelineResult.categorized,
+      rows_auto_categorized: result.pipelineResult.categorized,
     });
+    onProgress?.("finalizing", 1, 1);
 
     return {
       status: "success" as const,
@@ -377,22 +490,25 @@ export async function runImport(input: RunImportInput): Promise<RunImportResult>
       rowsNew: result.rowsNew,
       rowsUpdated: result.rowsUpdated,
       rowsSkipped: result.rowsSkipped,
-      rowsAutoCategorized: pipelineResult.categorized,
-      transfersFound: pipelineResult.transfersFound,
+      rowsAutoCategorized: result.pipelineResult.categorized,
+      transfersFound: result.pipelineResult.transfersFound,
       rowsIgnoredOtherAccount: ignoredOtherAccount,
       lostMetadataCount: result.lostMetadataCount,
       balanceUnconfirmed: result.balanceUnconfirmed,
       balanceMismatchCents: result.balanceMismatchCents,
     };
   } catch (e) {
-    await createImportRecord({
-      asset_id: input.assetId,
-      profile_id: input.profileId,
-      filename: input.filename,
-      mode: input.mode,
-      status: "failed",
-      error_message: String(e),
-    });
+    const errorMessage = e instanceof Error ? `${e.message}` : String(e);
+    try {
+      await createImportRecord({
+        asset_id: input.assetId,
+        profile_id: input.profileId,
+        filename: input.filename,
+        mode: input.mode,
+        status: "failed",
+        error_message: errorMessage,
+      });
+    } catch { /* Import-Protokoll-Fehler nicht weiterwerfen */ }
     return {
       status: "failed",
       rowsRead: input.rows.length,
@@ -405,7 +521,147 @@ export async function runImport(input: RunImportInput): Promise<RunImportResult>
       lostMetadataCount: 0,
       balanceUnconfirmed: false,
       balanceMismatchCents: null,
-      errorMessage: String(e),
+      // Originale Fehlermeldung der DB/des Parsers, nicht generisch (CLAUDE.md Fehlermeldungen)
+      errorMessage,
     };
+  }
+}
+
+export interface MultiAccountImportInput {
+  filename: string;
+  profileId: number;
+  headers: string[];
+  rows: string[][];
+  roleToIndex: Partial<Record<ColumnRole, number>>;
+  roleByColumn?: Record<number, ColumnRole | "keep" | "ignore">;
+  extractCounterpartyFromPurpose?: boolean;
+  dateFormat: string;
+  decimalFormat: "de" | "en";
+  mode: ImportMode;
+  /** Spaltenindex der Kontokennung (Kontoname/Kontonummer laut Bank-Export). */
+  accountColumnIndex: number;
+  /** Kontokennungs-Wert (aus der Datei) -> Klarwert-Konto-ID, siehe import_profile_account_map. */
+  accountMap: Record<string, number>;
+  /** Optional: manuell bestätigter Kontostand je Konto (nur relevant beim jeweiligen Erstimport). */
+  currentBalanceInputByAsset?: Record<number, number | null>;
+  onProgress?: (phase: "reading" | "saving" | "pipeline" | "finalizing", done: number, total: number) => void;
+}
+
+export interface MultiAccountImportAccountResult {
+  assetId: number;
+  label: string;
+  rowsRead: number;
+  rowsNew: number;
+  rowsUpdated: number;
+  rowsSkipped: number;
+  rowsAutoCategorized: number;
+  transfersFound: number;
+  balanceUnconfirmed: boolean;
+  balanceMismatchCents: number | null;
+}
+
+export interface MultiAccountImportResult {
+  status: "success" | "failed";
+  perAccount: MultiAccountImportAccountResult[];
+  rowsIgnoredUnmapped: number;
+  errorMessage?: string;
+}
+
+/**
+ * Importiert eine Mehrkonten-Datei (z. B. C24-Export mit mehreren Unterkonten in einer Datei) in
+ * EINEM Durchlauf: Zeilen werden nach der Kontokennungs-Spalte gruppiert, jede Gruppe läuft durch
+ * dieselbe Pro-Konto-Logik wie ein Einzelkonto-Import (Löschen bei "Komplett neu laden" + Einfügen +
+ * Pipeline + Kontostand-Verifikation) – alles innerhalb EINER äußeren Transaktion (CLAUDE.md
+ * Transaktions-Disziplin, kein verschachteltes BEGIN/COMMIT). Jede Kontogruppe erzeugt danach eine
+ * eigene Zeile in `imports` mit dem jeweiligen `asset_id`.
+ */
+export async function runMultiAccountImport(input: MultiAccountImportInput): Promise<MultiAccountImportResult> {
+  const { onProgress } = input;
+
+  const rowsByLabel = new Map<string, string[][]>();
+  let rowsIgnoredUnmapped = 0;
+  for (const row of input.rows) {
+    const label = (row[input.accountColumnIndex] ?? "").trim();
+    const assetId = label ? input.accountMap[label] : undefined;
+    if (!label || assetId === undefined) {
+      rowsIgnoredUnmapped += 1;
+      continue;
+    }
+    const list = rowsByLabel.get(label) ?? [];
+    list.push(row);
+    rowsByLabel.set(label, list);
+  }
+
+  const groups = [...rowsByLabel.entries()];
+  const perAccount: MultiAccountImportAccountResult[] = [];
+
+  try {
+    await runInTransaction(async (db) => {
+      for (const [label, groupRows] of groups) {
+        const assetId = input.accountMap[label];
+        const { parsed, skipped } = parseRows({
+          assetId,
+          filename: input.filename,
+          profileId: input.profileId,
+          headers: input.headers,
+          rows: groupRows,
+          roleToIndex: input.roleToIndex,
+          roleByColumn: input.roleByColumn,
+          extractCounterpartyFromPurpose: input.extractCounterpartyFromPurpose,
+          dateFormat: input.dateFormat,
+          decimalFormat: input.decimalFormat,
+          mode: input.mode,
+          currentBalanceInput: null,
+        });
+        const currentBalanceInput = input.currentBalanceInputByAsset?.[assetId] ?? null;
+        const outcome = await importAccountRows(db, assetId, input.profileId, input.mode, currentBalanceInput, parsed, onProgress);
+        perAccount.push({
+          assetId,
+          label,
+          rowsRead: groupRows.length,
+          rowsNew: outcome.rowsNew,
+          rowsUpdated: outcome.rowsUpdated,
+          rowsSkipped: outcome.rowsSkipped + skipped,
+          rowsAutoCategorized: outcome.pipelineResult.categorized,
+          transfersFound: outcome.pipelineResult.transfersFound,
+          balanceUnconfirmed: outcome.balanceUnconfirmed,
+          balanceMismatchCents: outcome.balanceMismatchCents,
+        });
+      }
+    });
+
+    onProgress?.("finalizing", 0, 1);
+    for (const acc of perAccount) {
+      await createImportRecord({
+        asset_id: acc.assetId,
+        profile_id: input.profileId,
+        filename: input.filename,
+        mode: input.mode,
+        status: "success",
+        rows_read: acc.rowsRead,
+        rows_new: acc.rowsNew,
+        rows_updated: acc.rowsUpdated,
+        rows_skipped: acc.rowsSkipped,
+        rows_auto_categorized: acc.rowsAutoCategorized,
+      });
+    }
+    onProgress?.("finalizing", 1, 1);
+
+    return { status: "success", perAccount, rowsIgnoredUnmapped };
+  } catch (e) {
+    const errorMessage = e instanceof Error ? `${e.message}` : String(e);
+    for (const assetId of new Set(Object.values(input.accountMap))) {
+      try {
+        await createImportRecord({
+          asset_id: assetId,
+          profile_id: input.profileId,
+          filename: input.filename,
+          mode: input.mode,
+          status: "failed",
+          error_message: errorMessage,
+        });
+      } catch { /* Import-Protokoll-Fehler nicht weiterwerfen */ }
+    }
+    return { status: "failed", perAccount: [], rowsIgnoredUnmapped, errorMessage };
   }
 }
